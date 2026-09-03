@@ -94,123 +94,163 @@ async def accept_cookie_if_present(page):
     )
 
 async def fill_address(page):
-    # Several fallbacks because Conad changes placeholder/labels over time.
-    candidates=[
-        page.get_by_placeholder(re.compile(r"indirizzo|cap|dove",re.I)),
-        page.get_by_label(re.compile(r"indirizzo|cap|dove",re.I)),
-        page.locator('input[type="text"]'),
-        page.locator('input[type="search"]'),
-    ]
-    target=None
-    for loc in candidates:
-        try:
-            n=await loc.count()
-            for i in range(n):
-                el=loc.nth(i)
-                if await el.is_visible():
-                    target=el; break
-            if target: break
-        except Exception:
-            pass
-    if not target:
-        raise RuntimeError("Campo indirizzo non trovato.")
-    await target.fill(ADDRESS_QUERY)
-    await page.wait_for_timeout(1800)
+    # Use the exact Conad onboarding field, never the product search bar.
+    field=page.locator("#googleInputOnboardingStep0Line1")
+    if not await field.count():
+        raise RuntimeError("Campo indirizzo onboarding Conad non trovato.")
 
-    # Prefer autocomplete suggestion containing CAPODRISE.
-    try:
-        cand=page.get_by_text(re.compile(r"CAPODRISE",re.I), exact=False)
-        if await cand.count():
-            await cand.last.click(timeout=3000)
-            return
-    except Exception:
-        pass
-    await target.press("Enter")
+    # If the onboarding component is present but hidden, open it through the visible entry CTA.
+    if not await field.first.is_visible():
+        await click_text_any(
+            page,
+            [r"inizia la spesa", r"verifica i servizi", r"modifica.*negozio"],
+            timeout=3500
+        )
+        await page.wait_for_timeout(900)
 
-async def select_store(page):
-    # Cookie overlay must be gone before onboarding buttons are clickable.
-    await accept_cookie_if_present(page)
-
-    # The entry page may already have an address selected after Google autocomplete.
-    body=(await page.locator("body").inner_text()).lower()
-    if "capodrise" not in body:
-        await fill_address(page)
-        await page.wait_for_timeout(1800)
-
-    # Re-accept in case OneTrust rendered late.
-    await accept_cookie_if_present(page)
-
-    # Use Conad's own explicit ORDER_AND_COLLECT action rather than guessing by text.
-    pickup=page.locator('button[onclick*="GoogleUtils.loadStores"][onclick*="ORDER_AND_COLLECT"]')
-    if not await pickup.count():
-        # Sometimes service cards are one step deeper in the onboarding modal.
-        await click_text_any(page,[r"inizia.*spesa",r"verifica"],timeout=3000)
+    if not await field.first.is_visible():
+        # Conad keeps the onboarding component in DOM; /entry normally makes it active.
+        await page.goto("https://spesaonline.conad.it/entry",wait_until="domcontentloaded")
         await page.wait_for_timeout(1200)
         await accept_cookie_if_present(page)
-        pickup=page.locator('button[onclick*="GoogleUtils.loadStores"][onclick*="ORDER_AND_COLLECT"]')
-    if not await pickup.count():
-        raise RuntimeError("Pulsante ORDER_AND_COLLECT non trovato.")
 
-    await pickup.first.click(timeout=5000)
+    if not await field.first.is_visible():
+        raise RuntimeError("Campo indirizzo onboarding presente ma non visibile.")
 
-    # Store list is populated asynchronously by Conad/GoogleUtils.
-    ul=page.locator("#ordina-ritira-scelta-pdv .lista-negozi-section ul.uk-list")
-    try:
-        await page.wait_for_function(
-            """() => {
-              const ul=document.querySelector('#ordina-ritira-scelta-pdv .lista-negozi-section ul.uk-list');
-              return ul && ul.children.length > 0;
-            }""",
-            timeout=15000
-        )
-    except Exception:
-        # Do not immediately fail: inspect all page text once, useful if markup changed.
-        pass
+    # Search using the actual target store street so the pickup list is geographically anchored.
+    await field.first.fill("Via Retella, Capodrise CE")
+    await page.wait_for_timeout(2200)
 
-    # Match exact target by address or known store code if exposed.
-    candidates=[
-        page.get_by_text(re.compile(r"VIA RETELLA.*GIARD",re.I), exact=False),
-        page.get_by_text(re.compile(r"010548",re.I), exact=False),
-        page.locator('#ordina-ritira-scelta-pdv li').filter(has_text=re.compile(r"RETELLA",re.I)),
+    # Google/Conad autocomplete suggestions are rendered inside pac containers.
+    suggestions=[
+        page.locator(".pac-container-custom .pac-item").filter(has_text=re.compile(r"Retella|Capodrise",re.I)),
+        page.locator(".pac-container .pac-item").filter(has_text=re.compile(r"Retella|Capodrise",re.I)),
+        page.locator(".pac-item").filter(has_text=re.compile(r"Capodrise",re.I)),
     ]
-    target=None
-    for loc in candidates:
+    chosen=False
+    for loc in suggestions:
         try:
-            if await loc.count():
-                target=loc.first
+            if await loc.count() and await loc.first.is_visible():
+                await loc.first.click(timeout=4000)
+                chosen=True
                 break
         except Exception:
             pass
 
-    if target is None:
-        count=await ul.locator("li").count() if await ul.count() else 0
-        raise RuntimeError(f"Punto vendita Via Retella non trovato; negozi caricati nella lista: {count}.")
+    if not chosen:
+        raise RuntimeError("Autocomplete indirizzo Conad/Google non ha restituito Capodrise.")
 
-    # Prefer clicking the store card/list item, then its select button if present.
+    await page.wait_for_timeout(700)
+
+    # If Conad exposes a separate civic-number field after autocomplete, use SNC-compatible fallback 1.
+    civ=page.locator("#googleInputOnboardingStep0Line2")
     try:
-        li=target.locator("xpath=ancestor::li[1]")
-        if await li.count():
-            buttons=li.locator("button, a")
-            if await buttons.count():
-                await buttons.last.click(timeout=5000)
-            else:
-                await li.click(timeout=5000)
-        else:
-            await target.click(timeout=5000)
+        if await civ.count() and await civ.first.is_visible():
+            await civ.first.fill("1")
     except Exception:
+        pass
+
+    verify=page.locator("#verificaButton")
+    if not await verify.count():
+        raise RuntimeError("Pulsante Verifica indirizzo non trovato.")
+    await verify.first.click(timeout=5000)
+    await page.wait_for_timeout(2200)
+
+async def select_store(page):
+    await accept_cookie_if_present(page)
+
+    # Always establish a valid address through the real onboarding.
+    await fill_address(page)
+    await accept_cookie_if_present(page)
+
+    # Select Conad's explicit pickup service.
+    pickup=page.locator('button[onclick*="GoogleUtils.loadStores"][onclick*="ORDER_AND_COLLECT"]')
+    visible_pickup=None
+    for i in range(await pickup.count()):
+        if await pickup.nth(i).is_visible():
+            visible_pickup=pickup.nth(i)
+            break
+    if visible_pickup is None:
+        # Text fallback limited to the Ordina e ritira card.
+        card=page.locator("#ordina-e-ritira")
+        if await card.count():
+            btn=card.locator("button").filter(has_text=re.compile(r"Seleziona",re.I))
+            if await btn.count() and await btn.first.is_visible():
+                visible_pickup=btn.first
+    if visible_pickup is None:
+        raise RuntimeError("Pulsante visibile ORDER_AND_COLLECT non trovato dopo verifica indirizzo.")
+
+    await visible_pickup.click(timeout=5000)
+
+    # Wait for real store results.
+    try:
+        await page.wait_for_function(
+            """() => {
+              const root=document.querySelector('#ordina-ritira-scelta-pdv');
+              if (!root) return false;
+              const txt=(root.innerText||'').toLowerCase();
+              return txt.includes('retella') || txt.includes('010548') ||
+                     root.querySelectorAll('li, .store, .card').length > 0;
+            }""",
+            timeout=18000
+        )
+    except Exception:
+        pass
+
+    # Find target only inside pickup-store modal/section.
+    root=page.locator("#ordina-ritira-scelta-pdv")
+    candidates=[
+        root.get_by_text(re.compile(r"VIA RETELLA.*GIARD",re.I), exact=False),
+        root.get_by_text(re.compile(r"RETELLA",re.I), exact=False),
+        root.get_by_text(re.compile(r"010548",re.I), exact=False),
+    ]
+    target=None
+    for loc in candidates:
+        try:
+            if await loc.count() and await loc.first.is_visible():
+                target=loc.first
+                break
+        except Exception:
+            pass
+    if target is None:
+        txt=""
+        try: txt=(await root.inner_text())[:2000]
+        except Exception: pass
+        raise RuntimeError("Store 010548/Via Retella non presente nella lista ritiro. Lista: "+txt)
+
+    # Click store card or its explicit select/confirm control.
+    clicked=False
+    for ancestor in ("xpath=ancestor::li[1]","xpath=ancestor::*[contains(@class,'card')][1]"):
+        try:
+            box=target.locator(ancestor)
+            if await box.count():
+                controls=box.locator("button, a").filter(has_text=re.compile(r"seleziona|scegli|conferma",re.I))
+                if await controls.count() and await controls.first.is_visible():
+                    await controls.first.click(timeout=5000); clicked=True; break
+        except Exception:
+            pass
+    if not clicked:
         await target.click(timeout=5000)
 
+    await page.wait_for_timeout(1200)
+    # Some Conad flows require a separate confirmation button.
+    await click_text_any(page,[r"conferma il negozio",r"conferma"],timeout=2500)
     await page.wait_for_timeout(2500)
 
 async def verify_store(page):
-    body=await page.content()
-    s=parse_store(body)
-    if not s:
-        # Navigate to a search page where the global store object is normally present.
-        await page.goto("https://spesaonline.conad.it/search?query=latte",wait_until="domcontentloaded")
-        await page.wait_for_timeout(1500)
+    # Give Conad time to persist the anonymous cart/store session.
+    for _ in range(8):
         body=await page.content()
         s=parse_store(body)
+        if s and str(s.get("name"))==EXPECTED_STORE:
+            return s
+        await page.wait_for_timeout(700)
+
+    # Search page should reflect the persisted selected store.
+    await page.goto("https://spesaonline.conad.it/search?query=latte",wait_until="domcontentloaded")
+    await page.wait_for_timeout(1500)
+    body=await page.content()
+    s=parse_store(body)
     if not s or str(s.get("name"))!=EXPECTED_STORE:
         got=None if not s else s.get("name")
         raise RuntimeError(f"Store non verificato. Atteso {EXPECTED_STORE}, ottenuto {got}.")
