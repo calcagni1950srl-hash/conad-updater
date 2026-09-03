@@ -72,7 +72,26 @@ async def click_text_any(page, patterns, timeout=2500):
     return False
 
 async def accept_cookie_if_present(page):
-    await click_text_any(page, [r"accetta tutto",r"accetta",r"consenti tutto"], timeout=1500)
+    # Conad/OneTrust currently shows "ACCETTA TUTTI I COOKIE".
+    selectors = [
+        "#onetrust-accept-btn-handler",
+        'button:has-text("ACCETTA TUTTI I COOKIE")',
+        'button:has-text("Accetta tutti i cookie")',
+    ]
+    for sel in selectors:
+        try:
+            loc=page.locator(sel)
+            if await loc.count() and await loc.first.is_visible():
+                await loc.first.click(timeout=4000)
+                await page.wait_for_timeout(700)
+                return True
+        except Exception:
+            pass
+    return await click_text_any(
+        page,
+        [r"accetta tutti i cookie", r"accetta tutti", r"consenti tutti"],
+        timeout=2500
+    )
 
 async def fill_address(page):
     # Several fallbacks because Conad changes placeholder/labels over time.
@@ -109,40 +128,77 @@ async def fill_address(page):
     await target.press("Enter")
 
 async def select_store(page):
-    # Enter onboarding if page landed in generic catalog.
-    await click_text_any(page,[r"inizia.*spesa",r"seleziona.*servizio",r"modifica"],timeout=2500)
-    await page.wait_for_timeout(800)
+    # Cookie overlay must be gone before onboarding buttons are clickable.
+    await accept_cookie_if_present(page)
 
-    # Address first when requested.
+    # The entry page may already have an address selected after Google autocomplete.
     body=(await page.locator("body").inner_text()).lower()
-    if "indirizzo" in body or "cap" in body or "dove vuoi" in body:
-        try:
-            await fill_address(page)
-            await page.wait_for_timeout(1600)
-        except Exception:
-            # Continue: some sessions ask service before address.
-            pass
-
-    # Choose pickup / order-and-collect.
-    await click_text_any(page,[r"ritiro",r"ordina e ritira",r"ritira la tua spesa"],timeout=3500)
-    await page.wait_for_timeout(1800)
-
-    # If address is now requested, fill it.
-    body=(await page.locator("body").inner_text()).lower()
-    if "capodrise" not in body and ("indirizzo" in body or "cap" in body):
+    if "capodrise" not in body:
         await fill_address(page)
         await page.wait_for_timeout(1800)
 
-    # Select exact store by address text.
-    store_loc=page.get_by_text(re.compile(r"VIA RETELLA.*GIARD",re.I), exact=False)
-    if await store_loc.count():
-        await store_loc.first.click(timeout=4000)
-    else:
-        # Search broader visible text and click a nearby button.
-        card=page.locator("body").filter(has_text=re.compile(r"VIA RETELLA.*GIARD",re.I))
-        if not await card.count():
-            raise RuntimeError("Punto vendita Via Retella non trovato nella selezione negozio.")
-        await click_text_any(page,[r"seleziona",r"scegli",r"ritiro"],timeout=2500)
+    # Re-accept in case OneTrust rendered late.
+    await accept_cookie_if_present(page)
+
+    # Use Conad's own explicit ORDER_AND_COLLECT action rather than guessing by text.
+    pickup=page.locator('button[onclick*="GoogleUtils.loadStores"][onclick*="ORDER_AND_COLLECT"]')
+    if not await pickup.count():
+        # Sometimes service cards are one step deeper in the onboarding modal.
+        await click_text_any(page,[r"inizia.*spesa",r"verifica"],timeout=3000)
+        await page.wait_for_timeout(1200)
+        await accept_cookie_if_present(page)
+        pickup=page.locator('button[onclick*="GoogleUtils.loadStores"][onclick*="ORDER_AND_COLLECT"]')
+    if not await pickup.count():
+        raise RuntimeError("Pulsante ORDER_AND_COLLECT non trovato.")
+
+    await pickup.first.click(timeout=5000)
+
+    # Store list is populated asynchronously by Conad/GoogleUtils.
+    ul=page.locator("#ordina-ritira-scelta-pdv .lista-negozi-section ul.uk-list")
+    try:
+        await page.wait_for_function(
+            """() => {
+              const ul=document.querySelector('#ordina-ritira-scelta-pdv .lista-negozi-section ul.uk-list');
+              return ul && ul.children.length > 0;
+            }""",
+            timeout=15000
+        )
+    except Exception:
+        # Do not immediately fail: inspect all page text once, useful if markup changed.
+        pass
+
+    # Match exact target by address or known store code if exposed.
+    candidates=[
+        page.get_by_text(re.compile(r"VIA RETELLA.*GIARD",re.I), exact=False),
+        page.get_by_text(re.compile(r"010548",re.I), exact=False),
+        page.locator('#ordina-ritira-scelta-pdv li').filter(has_text=re.compile(r"RETELLA",re.I)),
+    ]
+    target=None
+    for loc in candidates:
+        try:
+            if await loc.count():
+                target=loc.first
+                break
+        except Exception:
+            pass
+
+    if target is None:
+        count=await ul.locator("li").count() if await ul.count() else 0
+        raise RuntimeError(f"Punto vendita Via Retella non trovato; negozi caricati nella lista: {count}.")
+
+    # Prefer clicking the store card/list item, then its select button if present.
+    try:
+        li=target.locator("xpath=ancestor::li[1]")
+        if await li.count():
+            buttons=li.locator("button, a")
+            if await buttons.count():
+                await buttons.last.click(timeout=5000)
+            else:
+                await li.click(timeout=5000)
+        else:
+            await target.click(timeout=5000)
+    except Exception:
+        await target.click(timeout=5000)
 
     await page.wait_for_timeout(2500)
 
