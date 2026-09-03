@@ -94,149 +94,63 @@ async def accept_cookie_if_present(page):
     )
 
 async def fill_address(page):
-    # Use the exact Conad onboarding field, never the product search bar.
-    field=page.locator("#googleInputOnboardingStep0Line1")
-    if not await field.count():
-        raise RuntimeError("Campo indirizzo onboarding Conad non trovato.")
+    # La pagina reale /entry usa questo campo visibile
+    entry = page.locator("#googleInputEntrypageLine1")
+    onboarding = page.locator("#googleInputOnboardingStep0Line1")
 
-    # If the onboarding component is present but hidden, open it through the visible entry CTA.
-    if not await field.first.is_visible():
-        await click_text_any(
-            page,
-            [r"inizia la spesa", r"verifica i servizi", r"modifica.*negozio"],
-            timeout=3500
-        )
-        await page.wait_for_timeout(900)
+    field = None
+    mode = None
 
-    if not await field.first.is_visible():
-        # Conad keeps the onboarding component in DOM; /entry normally makes it active.
-        await page.goto("https://spesaonline.conad.it/entry",wait_until="domcontentloaded")
-        await page.wait_for_timeout(1200)
-        await accept_cookie_if_present(page)
+    if await entry.count() and await entry.first.is_visible():
+        field = entry.first
+        mode = "entry"
+    elif await onboarding.count() and await onboarding.first.is_visible():
+        field = onboarding.first
+        mode = "onboarding"
+    else:
+        raise RuntimeError("Nessun campo indirizzo Conad visibile.")
 
-    if not await field.first.is_visible():
-        raise RuntimeError("Campo indirizzo onboarding presente ma non visibile.")
-
-    # Search using the actual target store street so the pickup list is geographically anchored.
-    await field.first.fill("Via Retella, Capodrise CE")
+    await field.fill("Via Retella, Capodrise CE")
     await page.wait_for_timeout(2200)
 
-    # Google/Conad autocomplete suggestions are rendered inside pac containers.
-    suggestions=[
-        page.locator(".pac-container-custom .pac-item").filter(has_text=re.compile(r"Retella|Capodrise",re.I)),
-        page.locator(".pac-container .pac-item").filter(has_text=re.compile(r"Retella|Capodrise",re.I)),
-        page.locator(".pac-item").filter(has_text=re.compile(r"Capodrise",re.I)),
+    suggestions = [
+        page.locator(".pac-container-custom .pac-item").filter(
+            has_text=re.compile(r"Retella|Capodrise", re.I)
+        ),
+        page.locator(".pac-container .pac-item").filter(
+            has_text=re.compile(r"Retella|Capodrise", re.I)
+        ),
+        page.locator(".pac-item").filter(
+            has_text=re.compile(r"Capodrise", re.I)
+        ),
     ]
-    chosen=False
+
+    chosen = False
     for loc in suggestions:
         try:
             if await loc.count() and await loc.first.is_visible():
-                await loc.first.click(timeout=4000)
-                chosen=True
+                await loc.first.click(timeout=5000)
+                chosen = True
                 break
         except Exception:
             pass
 
     if not chosen:
-        raise RuntimeError("Autocomplete indirizzo Conad/Google non ha restituito Capodrise.")
+        await field.press("ArrowDown")
+        await field.press("Enter")
+        await page.wait_for_timeout(900)
 
-    await page.wait_for_timeout(700)
+    if mode == "entry":
+        form = field.locator("xpath=ancestor::form[1]")
+        verify = form.locator("button.submitButton")
+    else:
+        verify = page.locator("#verificaButton")
 
-    # If Conad exposes a separate civic-number field after autocomplete, use SNC-compatible fallback 1.
-    civ=page.locator("#googleInputOnboardingStep0Line2")
-    try:
-        if await civ.count() and await civ.first.is_visible():
-            await civ.first.fill("1")
-    except Exception:
-        pass
+    if not await verify.count() or not await verify.first.is_visible():
+        raise RuntimeError("Pulsante Verifica indirizzo Conad non visibile.")
 
-    verify=page.locator("#verificaButton")
-    if not await verify.count():
-        raise RuntimeError("Pulsante Verifica indirizzo non trovato.")
     await verify.first.click(timeout=5000)
-    await page.wait_for_timeout(2200)
-
-async def select_store(page):
-    await accept_cookie_if_present(page)
-
-    # Always establish a valid address through the real onboarding.
-    await fill_address(page)
-    await accept_cookie_if_present(page)
-
-    # Select Conad's explicit pickup service.
-    pickup=page.locator('button[onclick*="GoogleUtils.loadStores"][onclick*="ORDER_AND_COLLECT"]')
-    visible_pickup=None
-    for i in range(await pickup.count()):
-        if await pickup.nth(i).is_visible():
-            visible_pickup=pickup.nth(i)
-            break
-    if visible_pickup is None:
-        # Text fallback limited to the Ordina e ritira card.
-        card=page.locator("#ordina-e-ritira")
-        if await card.count():
-            btn=card.locator("button").filter(has_text=re.compile(r"Seleziona",re.I))
-            if await btn.count() and await btn.first.is_visible():
-                visible_pickup=btn.first
-    if visible_pickup is None:
-        raise RuntimeError("Pulsante visibile ORDER_AND_COLLECT non trovato dopo verifica indirizzo.")
-
-    await visible_pickup.click(timeout=5000)
-
-    # Wait for real store results.
-    try:
-        await page.wait_for_function(
-            """() => {
-              const root=document.querySelector('#ordina-ritira-scelta-pdv');
-              if (!root) return false;
-              const txt=(root.innerText||'').toLowerCase();
-              return txt.includes('retella') || txt.includes('010548') ||
-                     root.querySelectorAll('li, .store, .card').length > 0;
-            }""",
-            timeout=18000
-        )
-    except Exception:
-        pass
-
-    # Find target only inside pickup-store modal/section.
-    root=page.locator("#ordina-ritira-scelta-pdv")
-    candidates=[
-        root.get_by_text(re.compile(r"VIA RETELLA.*GIARD",re.I), exact=False),
-        root.get_by_text(re.compile(r"RETELLA",re.I), exact=False),
-        root.get_by_text(re.compile(r"010548",re.I), exact=False),
-    ]
-    target=None
-    for loc in candidates:
-        try:
-            if await loc.count() and await loc.first.is_visible():
-                target=loc.first
-                break
-        except Exception:
-            pass
-    if target is None:
-        txt=""
-        try: txt=(await root.inner_text())[:2000]
-        except Exception: pass
-        raise RuntimeError("Store 010548/Via Retella non presente nella lista ritiro. Lista: "+txt)
-
-    # Click store card or its explicit select/confirm control.
-    clicked=False
-    for ancestor in ("xpath=ancestor::li[1]","xpath=ancestor::*[contains(@class,'card')][1]"):
-        try:
-            box=target.locator(ancestor)
-            if await box.count():
-                controls=box.locator("button, a").filter(has_text=re.compile(r"seleziona|scegli|conferma",re.I))
-                if await controls.count() and await controls.first.is_visible():
-                    await controls.first.click(timeout=5000); clicked=True; break
-        except Exception:
-            pass
-    if not clicked:
-        await target.click(timeout=5000)
-
-    await page.wait_for_timeout(1200)
-    # Some Conad flows require a separate confirmation button.
-    await click_text_any(page,[r"conferma il negozio",r"conferma"],timeout=2500)
     await page.wait_for_timeout(2500)
-
 async def verify_store(page):
     # Give Conad time to persist the anonymous cart/store session.
     for _ in range(8):
