@@ -10,3 +10,12 @@ print("OK parser endpoint")
 assert parse_total('<b class="results">1 risultato</b>') == 1
 assert parse_total('<b class="results">2 risultati</b>') == 2
 print("OK totale singolare/plurale")
+
+# Caso reale concettuale: il totale dichiarato può includere una card duplicata
+# tra due pagine. La completezza va verificata sulle occorrenze, il DB sui codici unici.
+page_a={"A":1,"B":1}
+page_b={"B":1,"C":1}
+assert len(page_a)+len(page_b)==4
+merged=dict(page_a); merged.update(page_b)
+assert len(merged)==3
+print("OK completezza card + deduplica codici")
