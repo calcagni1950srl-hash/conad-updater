@@ -6,3 +6,7 @@ assert parse_total(sample)==136
 p=parse_products(sample)
 assert p["262867"]["basePrice"]==0.89
 print("OK parser endpoint")
+
+assert parse_total('<b class="results">1 risultato</b>') == 1
+assert parse_total('<b class="results">2 risultati</b>') == 2
+print("OK totale singolare/plurale")
