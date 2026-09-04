@@ -1,1 +1,33 @@
+name: Verifica endpoint Conad
 
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installa dipendenze
+        run: pip install -r requirements.txt
+
+      - name: Installa Chromium
+        run: python -m playwright install --with-deps chromium
+
+      - name: Verifica endpoint reale Conad
+        run: python probe_conad_endpoint.py
+
+      - name: Salva risultato verifica
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: conad-endpoint-probe
+          path: probe_output/
+          if-no-files-found: ignore
