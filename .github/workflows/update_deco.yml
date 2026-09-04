@@ -1,4 +1,4 @@
-name: Aggiorna prezzi Decò
+name: Aggiorna prezzi Decò V2
 on:
   workflow_dispatch:
   schedule:
