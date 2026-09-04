@@ -277,16 +277,46 @@ async def select_store(page):
     await accept_cookie_if_present(page)
     await target.first.click(timeout=5000, force=True)
 
-    # Store card onclick calls OnboardingManager.confirmStore(this).
-    await page.wait_for_timeout(1800)
-
-    # If a separate confirmation control appears, use it.
-    await click_text_any(
-        page,
-        [r"conferma il negozio", r"conferma"],
-        timeout=2000
+    # Clicking the card only selects it. Conad then requires the explicit
+    # bottom action "Conferma il negozio" before persisting pointOfService.
+    await page.wait_for_timeout(900)
+    confirm = page.locator(
+        "#modal-onboarding-wrapper .btn-conferma-pdv button"
     )
-    await page.wait_for_timeout(2200)
+    if not await confirm.count():
+        confirm = page.locator(".btn-conferma-pdv button")
+
+    visible_confirm = None
+    for i in range(await confirm.count()):
+        try:
+            if await confirm.nth(i).is_visible():
+                visible_confirm = confirm.nth(i)
+                break
+        except Exception:
+            pass
+
+    if visible_confirm is None:
+        raise RuntimeError(
+            "Store 010548 selezionato, ma pulsante visibile 'Conferma il negozio' non trovato."
+        )
+
+    await accept_cookie_if_present(page)
+    await visible_confirm.click(timeout=5000, force=True)
+
+    # Wait until Conad actually persists the selected point of service.
+    try:
+        await page.wait_for_function(
+            """() => {
+                try {
+                    return window.pointOfService &&
+                           String(window.pointOfService.name) === '010548';
+                } catch(e) { return false; }
+            }""",
+            timeout=12000
+        )
+    except Exception:
+        pass
+    await page.wait_for_timeout(1200)
 
 async def verify_store(page):
     # Give Conad time to persist the anonymous cart/store session.
