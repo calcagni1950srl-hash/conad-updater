@@ -373,6 +373,67 @@ async def harvest_query(page, query):
     await page.goto(url,wait_until="domcontentloaded",timeout=60000)
     await accept_cookie_if_present(page)
     await page.wait_for_timeout(1000)
+
+    # Conad conserva nello stato JS la pagina della ricerca precedente.
+    # Diagnostica V18: terminata "latte" a pagina 4, aprendo "pasta" il nuovo
+    # URL mostrava ancora pagina 4. Prima di leggere ogni nuova query forziamo
+    # quindi la pagina 1 e verifichiamo che sia realmente attiva.
+    active = await page.evaluate("""
+        () => {
+            const a=document.querySelector(
+                '.component-Pagination li.uk-active a[data-page]'
+            );
+            return a ? a.getAttribute('data-page') : '1';
+        }
+    """)
+
+    if str(active) != "1":
+        first = page.locator('a[title="Pagina 1"][data-page="1"]')
+        if not await first.count():
+            raise RuntimeError(
+                f"Nuova query {query}: pagina attiva {active}, ma controllo Pagina 1 non trovato."
+            )
+
+        reset_ok=False
+        for _ in range(3):
+            await accept_cookie_if_present(page)
+            try:
+                await first.first.click(timeout=5000, force=True)
+            except Exception:
+                try:
+                    await first.first.evaluate("(el) => el.click()")
+                except Exception:
+                    pass
+            try:
+                await page.wait_for_function(
+                    """() => {
+                        const a=document.querySelector(
+                            '.component-Pagination li.uk-active a[data-page="1"]'
+                        );
+                        return !!a;
+                    }""",
+                    timeout=7000
+                )
+                reset_ok=True
+                break
+            except Exception:
+                await page.wait_for_timeout(700)
+
+        if not reset_ok:
+            now=await page.evaluate("""
+                () => {
+                    const a=document.querySelector(
+                        '.component-Pagination li.uk-active a[data-page]'
+                    );
+                    return a ? a.getAttribute('data-page') : null;
+                }
+            """)
+            raise RuntimeError(
+                f"Impossibile riportare la query {query} a pagina 1; pagina attiva {now}."
+            )
+
+        await page.wait_for_timeout(1200)
+
     body=await page.content()
 
     total=parse_total(body)
