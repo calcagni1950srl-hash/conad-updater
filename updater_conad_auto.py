@@ -386,71 +386,115 @@ async def harvest_query(page, query):
         return total,allp
 
     # Paginazione ufficiale del sito.
-    # OneTrust può riapparire anche dopo il caricamento iniziale: lo gestiamo
-    # prima di OGNI cambio pagina e usiamo un click forzato solo sul link
-    # ufficiale della paginazione.
+    # Diagnostica V17: il browser era fermo realmente a pagina 3 quando il
+    # codice pensava di aver aperto pagina 4. Da ora non consideriamo mai
+    # riuscito un click finché la paginazione non marca la pagina richiesta
+    # come `uk-active`.
     for pageno in range(2,last+1):
-        await accept_cookie_if_present(page)
-
-        link=page.locator(f'a[data-page="{pageno}"]')
-        if not await link.count():
-            raise RuntimeError(f"Link pagina {pageno} non trovato per query {query}.")
-
         before=set(allp)
+        opened=False
 
-        try:
-            await link.first.click(timeout=5000, force=True)
-        except Exception:
-            # Fallback: esegue il click DOM sullo stesso link ufficiale.
-            ok = await page.evaluate(
-                """(n) => {
-                    const a=document.querySelector(`a[data-page="${n}"]`);
-                    if (!a) return false;
-                    a.click();
-                    return true;
-                }""",
-                pageno
+        for attempt in range(1,4):
+            await accept_cookie_if_present(page)
+
+            # Da pagina N-1 usiamo il vero controllo "Pagina Successiva":
+            # è univoco, mentre data-page=N può comparire sia sul numero sia
+            # sulla freccia e in passato ha prodotto click ambigui.
+            next_link=page.locator(
+                'a[aria-label="Pagina Successiva"]'
             )
-            if not ok:
-                raise RuntimeError(
-                    f"Impossibile attivare la pagina {pageno} per query {query}."
+
+            if not await next_link.count():
+                # Fallback al numero pagina esplicito.
+                next_link=page.locator(
+                    f'a[title="Pagina {pageno}"][data-page="{pageno}"]'
                 )
 
-        # Attende che compaiano prodotti nuovi rispetto alla pagina precedente.
-        try:
-            await page.wait_for_function(
-                """(oldCodes) => {
-                    const els=[...document.querySelectorAll('[data-product]')];
-                    for (const el of els) {
-                        try {
-                            const raw=el.getAttribute('data-product');
-                            const p=JSON.parse(
-                                raw.replace(/&quot;/g,'"')
-                                   .replace(/&amp;/g,'&')
-                            );
-                            if (p && p.code && !oldCodes.includes(String(p.code)))
-                                return true;
-                        } catch(e) {}
-                    }
-                    return false;
-                }""",
-                list(before),
-                timeout=8000
-            )
-        except Exception:
-            await page.wait_for_timeout(1500)
+            if not await next_link.count():
+                raise RuntimeError(
+                    f"Controllo paginazione verso pagina {pageno} non trovato "
+                    f"per query {query}."
+                )
 
+            try:
+                await next_link.first.scroll_into_view_if_needed()
+            except Exception:
+                pass
+
+            try:
+                await next_link.first.click(timeout=5000, force=True)
+            except Exception:
+                try:
+                    await next_link.first.evaluate("(el) => el.click()")
+                except Exception:
+                    pass
+
+            # Verifica REALE del cambio pagina.
+            try:
+                await page.wait_for_function(
+                    """(n) => {
+                        const a=document.querySelector(
+                            `.component-Pagination li.uk-active a[data-page="${n}"]`
+                        );
+                        return !!a;
+                    }""",
+                    pageno,
+                    timeout=7000
+                )
+                opened=True
+                break
+            except Exception:
+                await page.wait_for_timeout(700)
+
+        if not opened:
+            active=await page.evaluate("""
+                () => {
+                    const a=document.querySelector(
+                        '.component-Pagination li.uk-active a[data-page]'
+                    );
+                    return a ? a.getAttribute('data-page') : null;
+                }
+            """)
+            raise RuntimeError(
+                f"Pagina {pageno} non aperta realmente per query {query}; "
+                f"pagina attiva rimasta {active}."
+            )
+
+        # Ora che la UI certifica la pagina giusta, aspettiamo il contenuto.
+        await page.wait_for_timeout(1000)
         await accept_cookie_if_present(page)
+
         body=await page.content()
         pp=parse_products(body)
 
         if not pp:
-            raise RuntimeError(f"Nessun prodotto alla pagina {pageno} per query {query}.")
-
-        allp.update(pp)
-        if set(allp)==before:
             raise RuntimeError(
-                f"Pagina {pageno} non ha prodotto nuovi articoli per query {query}."
+                f"Nessun prodotto alla pagina {pageno} per query {query}."
+            )
+
+        previous_count=len(allp)
+        allp.update(pp)
+
+        if len(allp)==previous_count:
+            # Un ultimo retry di lettura: su pagina 4 Conad può aggiornare la
+            # paginazione prima delle card prodotto.
+            await page.wait_for_timeout(1800)
+            body=await page.content()
+            pp=parse_products(body)
+            allp.update(pp)
+
+        if len(allp)==previous_count:
+            active=await page.evaluate("""
+                () => {
+                    const a=document.querySelector(
+                        '.component-Pagination li.uk-active a[data-page]'
+                    );
+                    return a ? a.getAttribute('data-page') : null;
+                }
+            """)
+            raise RuntimeError(
+                f"Pagina {pageno} è attiva ({active}) ma non contiene nuovi "
+                f"articoli per query {query}."
             )
 
     if total is not None and len(allp)!=total:
