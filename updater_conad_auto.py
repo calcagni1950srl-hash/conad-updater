@@ -72,26 +72,119 @@ async def click_text_any(page, patterns, timeout=2500):
     return False
 
 async def accept_cookie_if_present(page):
-    # Conad/OneTrust currently shows "ACCETTA TUTTI I COOKIE".
-    selectors = [
-        "#onetrust-accept-btn-handler",
-        'button:has-text("ACCETTA TUTTI I COOKIE")',
-        'button:has-text("Accetta tutti i cookie")',
-    ]
-    for sel in selectors:
+    """
+    Chiude il banner OneTrust in modo deterministico e verifica che l'overlay
+    non intercetti più i click. Nessun bypass: viene premuto il normale
+    pulsante "Accetta tutti i cookie" della pagina.
+    """
+    sdk = page.locator("#onetrust-consent-sdk")
+    accept = page.locator("#onetrust-accept-btn-handler")
+
+    # OneTrust può comparire con un piccolo ritardo.
+    try:
+        await page.wait_for_timeout(500)
+    except Exception:
+        pass
+
+    # Se il banner non è presente/visibile non c'è nulla da fare.
+    try:
+        visible = await sdk.count() and await sdk.first.is_visible()
+    except Exception:
+        visible = False
+
+    if not visible:
+        return True
+
+    clicked = False
+
+    # 1) Click Playwright forzato sul pulsante ufficiale.
+    try:
+        if await accept.count():
+            await accept.first.click(timeout=5000, force=True)
+            clicked = True
+    except Exception:
+        pass
+
+    # 2) Fallback DOM click sullo stesso pulsante ufficiale.
+    if not clicked:
         try:
-            loc=page.locator(sel)
-            if await loc.count() and await loc.first.is_visible():
-                await loc.first.click(timeout=4000)
-                await page.wait_for_timeout(700)
-                return True
+            clicked = bool(await page.evaluate("""
+                () => {
+                    const b = document.querySelector('#onetrust-accept-btn-handler');
+                    if (!b) return false;
+                    b.click();
+                    return true;
+                }
+            """))
         except Exception:
             pass
-    return await click_text_any(
-        page,
-        [r"accetta tutti i cookie", r"accetta tutti", r"consenti tutti"],
-        timeout=2500
-    )
+
+    # 3) Fallback testuale, sempre sul consenso standard.
+    if not clicked:
+        clicked = await click_text_any(
+            page,
+            [r"accetta tutti i cookie", r"accetta tutti", r"consenti tutti"],
+            timeout=3000
+        )
+
+    # Attende che OneTrust sparisca davvero.
+    try:
+        await page.wait_for_function("""
+            () => {
+                const sdk = document.querySelector('#onetrust-consent-sdk');
+                if (!sdk) return true;
+                const st = getComputedStyle(sdk);
+                const rect = sdk.getBoundingClientRect();
+                return st.display === 'none' ||
+                       st.visibility === 'hidden' ||
+                       st.pointerEvents === 'none' ||
+                       rect.width === 0 ||
+                       rect.height === 0;
+            }
+        """, timeout=8000)
+        return True
+    except Exception:
+        pass
+
+    # Alcune configurazioni OneTrust lasciano il contenitore nel DOM ma
+    # nascondono banner e dark-filter. Controlliamo quindi i due overlay reali.
+    try:
+        blocked = await page.evaluate("""
+            () => {
+                const ids = ['onetrust-banner-sdk','onetrust-pc-sdk'];
+                for (const id of ids) {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        const st = getComputedStyle(el);
+                        const r = el.getBoundingClientRect();
+                        if (st.display !== 'none' &&
+                            st.visibility !== 'hidden' &&
+                            st.pointerEvents !== 'none' &&
+                            r.width > 0 && r.height > 0) {
+                            return true;
+                        }
+                    }
+                }
+                const dark = document.querySelector('.onetrust-pc-dark-filter');
+                if (dark) {
+                    const st = getComputedStyle(dark);
+                    const r = dark.getBoundingClientRect();
+                    if (st.display !== 'none' &&
+                        st.visibility !== 'hidden' &&
+                        st.pointerEvents !== 'none' &&
+                        r.width > 0 && r.height > 0) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        """)
+        if not blocked:
+            return True
+    except Exception:
+        pass
+
+    raise RuntimeError("Banner cookie OneTrust ancora attivo dopo il consenso.")
 
 async def fill_address(page):
     # Campo visibile della pagina /entry; onboarding solo come fallback se visibile.
@@ -158,6 +251,8 @@ async def fill_address(page):
     if not await verify.count() or not await verify.first.is_visible():
         raise RuntimeError("Pulsante Verifica indirizzo Conad non visibile.")
 
+    # OneTrust può riapparire dopo il caricamento/autocomplete: chiudilo prima del click.
+    await accept_cookie_if_present(page)
     await verify.first.click(timeout=5000)
     await page.wait_for_timeout(2500)
 
