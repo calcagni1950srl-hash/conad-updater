@@ -103,12 +103,12 @@ async def harvest_query(page, request, query):
 
     allp=dict(first)
     pages=max(1,math.ceil(total/40))
+    card_occurrences=len(first)
+    seen_pages={code: [1] for code in first}
 
     # Dal test reale del 04/09/2026 l'endpoint loader accetta direttamente
     # query + page e restituisce HTTP 200 con le card prodotto. Nessun click.
     for pageno in range(2,pages+1):
-        # Il test 136/136 è passato con 12–16 secondi: usiamo il limite
-        # inferiore già validato per accorciare la durata.
         await asyncio.sleep(12)
         url=LOADER.format(query=q,page=pageno)
         referer=SEARCH.format(query=q)+f"&page={pageno}"
@@ -116,16 +116,31 @@ async def harvest_query(page, request, query):
         pp=parse_products(body)
         if not pp:
             raise RuntimeError(f"Endpoint Conad: pagina {pageno}/{pages} vuota per {query}.")
-        before=len(allp)
-        allp.update(pp)
-        if len(allp)==before:
-            raise RuntimeError(f"Endpoint Conad: pagina {pageno}/{pages} duplicata per {query}.")
 
-    # Fail-closed: non salva un catalogo incompleto.
-    if len(allp)!=total:
+        # Completezza = numero di card ricevute, non numero di codici unici.
+        # Test reale `carne`: 512 card dichiarate/ricevute ma codice 10684987
+        # compare a cavallo tra pagina 8 e 9, quindi 511 prodotti unici.
+        card_occurrences += len(pp)
+        for code in pp:
+            seen_pages.setdefault(code, []).append(pageno)
+        allp.update(pp)
+
+    duplicates={code:pgs for code,pgs in seen_pages.items() if len(pgs)>1}
+
+    # Fail-closed rigoroso: tutte le card dichiarate devono essere arrivate.
+    if card_occurrences != total:
         raise RuntimeError(
-            f"Completezza fallita per {query}: Conad dichiara {total}, raccolti {len(allp)}."
+            f"Completezza fallita per {query}: Conad dichiara {total} card, "
+            f"ricevute {card_occurrences}; prodotti unici {len(allp)}."
         )
+
+    if duplicates:
+        print(
+            f"{query}: {card_occurrences}/{total} card complete, "
+            f"{len(allp)} prodotti unici, {len(duplicates)} duplicati Conad",
+            flush=True
+        )
+
     return total,allp
 
 def save_db(results,path):
@@ -160,7 +175,7 @@ def save_db(results,path):
           (checked_at,store_code,query,declared_total,saved_count,status,message)
           VALUES(?,?,?,?,?,?,?)""",
           (now,GENERIC_STORE_CODE,query,total,len(pp),"OK",
-           "Catalogo Conad generico via endpoint ufficiale del sito; affidabilità B"))
+           "Catalogo Conad generico via endpoint del sito; completezza verificata sulle card; deduplica per codice; affidabilità B"))
     con.execute("DELETE FROM products_current WHERE store_code=?",(GENERIC_STORE_CODE,))
     for code,p in merged.items():
         up,upu=unit_price(p)
