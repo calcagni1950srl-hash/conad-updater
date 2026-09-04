@@ -55,7 +55,7 @@ async def accept_cookie_if_present(page):
     except Exception:
         pass
 
-async def fetch_text(request, url, referer, retries=3):
+async def fetch_text(request, url, referer, retries=4):
     headers={
         "accept":"application/json, text/plain, */*",
         "accept-language":"it-IT",
@@ -69,9 +69,19 @@ async def fetch_text(request, url, referer, retries=3):
             if r.ok:
                 return body
             last=f"HTTP {r.status}"
+            if r.status == 429:
+                ra=r.headers.get("retry-after")
+                try:
+                    wait=max(15,int(ra)) if ra else 15*(2**(attempt-1))
+                except Exception:
+                    wait=15*(2**(attempt-1))
+                wait=min(wait,120)
+                print(f"HTTP 429: attendo {wait}s prima del tentativo {attempt+1}/{retries}")
+                await asyncio.sleep(wait)
+                continue
         except Exception as e:
             last=str(e)
-        await asyncio.sleep(attempt)
+        await asyncio.sleep(min(10,attempt*2))
     raise RuntimeError(f"Richiesta fallita dopo {retries} tentativi: {url} — {last}")
 
 async def harvest_query(page, request, query):
@@ -97,6 +107,9 @@ async def harvest_query(page, request, query):
     # Dal test reale del 04/09/2026 l'endpoint loader accetta direttamente
     # query + page e restituisce HTTP 200 con le card prodotto. Nessun click.
     for pageno in range(2,pages+1):
+        # Validato su GitHub Actions: 12–16 secondi evitano il rate limit
+        # durante una ricerca completa. Manteniamo un intervallo conservativo.
+        await asyncio.sleep(14)
         url=LOADER.format(query=q,page=pageno)
         referer=SEARCH.format(query=q)+f"&page={pageno}"
         body=await fetch_text(request,url,referer)
@@ -172,7 +185,10 @@ async def run(args):
         try:
             queries=args.query or DEFAULT_QUERIES
             results={}
-            for q in queries:
+            for idx,q in enumerate(queries):
+                if idx:
+                    # Pausa anche fra due ricerche per non accumulare richieste.
+                    await asyncio.sleep(18)
                 total,pp=await harvest_query(page,ctx.request,q)
                 results[q]=(total,pp)
                 print(f"{q}: {len(pp)} / {total}")
