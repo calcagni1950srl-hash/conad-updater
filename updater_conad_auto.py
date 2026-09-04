@@ -223,119 +223,45 @@ async def select_store(page):
     await accept_cookie_if_present(page)
     await fill_address(page)
     await accept_cookie_if_present(page)
-
-    # Select pickup service using Conad's explicit ORDER_AND_COLLECT action.
-    pickup=page.locator(
-        'button[onclick*="GoogleUtils.loadStores"][onclick*="ORDER_AND_COLLECT"]'
-    )
+    pickup=page.locator('button[onclick*="GoogleUtils.loadStores"][onclick*="ORDER_AND_COLLECT"]')
     visible_pickup=None
     for i in range(await pickup.count()):
         try:
-            if await pickup.nth(i).is_visible():
-                visible_pickup=pickup.nth(i)
-                break
-        except Exception:
-            pass
-
-    if visible_pickup is None:
-        card=page.locator("#ordina-e-ritira")
-        if await card.count():
-            btn=card.locator("button").filter(has_text=re.compile(r"Seleziona",re.I))
-            if await btn.count() and await btn.first.is_visible():
-                visible_pickup=btn.first
-
-    if visible_pickup is None:
-        raise RuntimeError("Pulsante visibile ORDER_AND_COLLECT non trovato.")
-
+            if await pickup.nth(i).is_visible(): visible_pickup=pickup.nth(i); break
+        except Exception: pass
+    if visible_pickup is None: raise RuntimeError("Pulsante visibile ORDER_AND_COLLECT non trovato.")
     await visible_pickup.click(timeout=5000, force=True)
-
-    # Diagnostic V11 proves Conad renders the store card with data-pos-id="010548".
-    # Use that stable store identifier directly instead of matching visible text.
-    target=page.locator(
-        '#ordina-ritira-scelta-pdv .component-card-negozio[data-pos-id="010548"]'
-    )
-
+    target=page.locator('.component-card-negozio[data-pos-id="010548"]')
+    await target.first.wait_for(state="visible", timeout=18000)
     try:
-        await target.first.wait_for(state="visible", timeout=18000)
-    except Exception:
-        # Fallback independent of the modal wrapper in case Conad changes nesting.
-        target=page.locator('.component-card-negozio[data-pos-id="010548"]')
-        try:
-            await target.first.wait_for(state="visible", timeout=5000)
-        except Exception:
-            cards=page.locator(".component-card-negozio[data-pos-id]")
-            ids=[]
-            for i in range(min(await cards.count(),20)):
-                try:
-                    ids.append(await cards.nth(i).get_attribute("data-pos-id"))
-                except Exception:
-                    pass
-            raise RuntimeError(
-                f"Store 010548 non trovato tra le card Conad. Store caricati: {ids}"
-            )
-
+        await page.wait_for_function("""() => { const el=document.querySelector('.component-card-negozio[data-pos-id="010548"]'); return el && !el.querySelector('.loading'); }""", timeout=15000)
+    except Exception: pass
     await accept_cookie_if_present(page)
+    await target.first.scroll_into_view_if_needed()
     await target.first.click(timeout=5000, force=True)
-
-    # Clicking the card only selects it. Conad then requires the explicit
-    # bottom action "Conferma il negozio" before persisting pointOfService.
-    await page.wait_for_timeout(900)
-    confirm = page.locator(
-        "#modal-onboarding-wrapper .btn-conferma-pdv button"
-    )
-    if not await confirm.count():
-        confirm = page.locator(".btn-conferma-pdv button")
-
-    visible_confirm = None
+    await page.wait_for_timeout(1200)
+    confirm=page.locator('#modal-onboarding-wrapper .btn-conferma-pdv button')
+    if not await confirm.count(): confirm=page.locator('.btn-conferma-pdv button')
+    visible_confirm=None
     for i in range(await confirm.count()):
         try:
-            if await confirm.nth(i).is_visible():
-                visible_confirm = confirm.nth(i)
-                break
-        except Exception:
-            pass
-
-    if visible_confirm is None:
-        raise RuntimeError(
-            "Store 010548 selezionato, ma pulsante visibile 'Conferma il negozio' non trovato."
-        )
-
+            if await confirm.nth(i).is_visible(): visible_confirm=confirm.nth(i); break
+        except Exception: pass
+    if visible_confirm is None: raise RuntimeError("Store 010548 selezionato, ma pulsante Conferma il negozio non visibile.")
     await accept_cookie_if_present(page)
-    await visible_confirm.click(timeout=5000, force=True)
-
-    # Wait until Conad actually persists the selected point of service.
-    try:
-        await page.wait_for_function(
-            """() => {
-                try {
-                    return window.pointOfService &&
-                           String(window.pointOfService.name) === '010548';
-                } catch(e) { return false; }
-            }""",
-            timeout=12000
-        )
-    except Exception:
-        pass
-    await page.wait_for_timeout(1200)
+    await visible_confirm.evaluate("(el) => el.click()")
+    await page.wait_for_timeout(5000)
 
 async def verify_store(page):
-    # Give Conad time to persist the anonymous cart/store session.
-    for _ in range(8):
-        body=await page.content()
-        s=parse_store(body)
-        if s and str(s.get("name"))==EXPECTED_STORE:
-            return s
-        await page.wait_for_timeout(700)
-
-    # Search page should reflect the persisted selected store.
-    await page.goto("https://spesaonline.conad.it/search?query=latte",wait_until="domcontentloaded")
-    await page.wait_for_timeout(1500)
-    body=await page.content()
-    s=parse_store(body)
-    if not s or str(s.get("name"))!=EXPECTED_STORE:
-        got=None if not s else s.get("name")
-        raise RuntimeError(f"Store non verificato. Atteso {EXPECTED_STORE}, ottenuto {got}.")
-    return s
+    body=await page.content(); st=parse_store(body)
+    if st and str(st.get("name"))==EXPECTED_STORE: return st
+    await page.goto("https://spesaonline.conad.it/search?query=latte", wait_until="domcontentloaded")
+    await page.wait_for_timeout(1800)
+    body=await page.content(); st=parse_store(body)
+    if not st or str(st.get("name"))!=EXPECTED_STORE:
+        got=None if not st else st.get("name")
+        raise RuntimeError(f"Store non verificato. Atteso {EXPECTED_STORE}, ottenuto {got}; risultati latte={parse_total(body)}.")
+    return st
 
 async def harvest_query(page, query):
     url=f"https://spesaonline.conad.it/search?query={quote_plus(query)}"
