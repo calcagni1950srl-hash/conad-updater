@@ -11,9 +11,11 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 120
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -24,8 +26,27 @@ jobs:
       - name: Installa Chromium
         run: python -m playwright install --with-deps chromium
 
+      - name: Test parser
+        run: python test_offline.py
+
       - name: Aggiorna prezzi Conad
         run: python updater_conad_auto.py --db prezzi_conad.db
+
+      - name: Verifica database
+        run: |
+          python - <<'PY'
+          import sqlite3, os
+          p="prezzi_conad.db"
+          if not os.path.exists(p):
+              raise SystemExit("Database non creato")
+          con=sqlite3.connect(p)
+          n=con.execute("select count(*) from products_current where store_code='CONAD-GENERICO'").fetchone()[0]
+          ok=con.execute("select count(*) from update_log where store_code='CONAD-GENERICO' and status='OK'").fetchone()[0]
+          print("Prodotti unici:", n)
+          print("Query completate:", ok)
+          if n <= 0 or ok <= 0:
+              raise SystemExit("Database vuoto o incompleto")
+          PY
 
       - name: Salva database
         run: |
