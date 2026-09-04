@@ -76,6 +76,17 @@ async def category_links(page):
         seen.add(clean); cats.append({"name":x["text"].strip() or clean.rsplit("/",1)[-1],"url":clean})
     return cats
 
+async def visible_load_more(page):
+    loc=page.get_by_text(re.compile(r'CARICA\s+ALTRI\s+PRODOTTI',re.I))
+    for i in range(await loc.count()):
+        el=loc.nth(i)
+        try:
+            if await el.is_visible():
+                return el
+        except:
+            pass
+    return None
+
 async def load_all(page):
     last=-1
     for n in range(1,80):
@@ -86,11 +97,17 @@ async def load_all(page):
         if cur==last:
             raise RuntimeError(f"Nessuna crescita dopo CARICA ALTRI: {page.url}")
         last=cur
-        btn=page.get_by_text(re.compile(r'CARICA\s+ALTRI\s+PRODOTTI',re.I))
-        if not await btn.count():
+        btn=await visible_load_more(page)
+        if btn is None:
             return urls
-        await btn.first.scroll_into_view_if_needed()
-        await btn.first.click(timeout=5000)
+        # Il DOM Decò contiene anche copie nascoste del pulsante.
+        # V1 usava .first e poteva scegliere quella invisibile.
+        await btn.evaluate("(el)=>el.scrollIntoView({block:'center'})")
+        try:
+            await btn.click(timeout=8000)
+        except Exception:
+            # Fallback sullo stesso elemento già verificato come visibile.
+            await btn.evaluate("(el)=>el.click()")
         grew=False
         for _ in range(30):
             await page.wait_for_timeout(400)
@@ -101,7 +118,7 @@ async def load_all(page):
                 grew=True; break
         if not grew:
             # Un ultimo controllo: se il pulsante è sparito, il batch può essere finale.
-            if not await page.get_by_text(re.compile(r'CARICA\s+ALTRI\s+PRODOTTI',re.I)).count():
+            if await visible_load_more(page) is None:
                 return now
             raise RuntimeError(f"CARICA ALTRI non ha aggiunto prodotti: {page.url}")
         await page.wait_for_timeout(600)
@@ -145,6 +162,7 @@ async def parse_visible_cards(page, category):
 async def main():
     now=datetime.now(timezone.utc).isoformat()
     con=init_db()
+    current_category="inizializzazione"
     try:
         async with async_playwright() as pw:
             browser=await pw.chromium.launch(headless=True)
@@ -158,6 +176,7 @@ async def main():
             all_rows={}
             completed=0
             for i,c in enumerate(cats,1):
+                current_category=f"{c['name']} | {c['url']}"
                 print(f"[{i}/{len(cats)}] {c['name']} -> {c['url']}",flush=True)
                 r=await page.goto(c["url"],wait_until="domcontentloaded",timeout=60000)
                 if not r or r.status!=200: raise RuntimeError(f"HTTP categoria {r.status if r else 'none'}")
@@ -194,7 +213,11 @@ async def main():
             await browser.close()
     except Exception as e:
         con.rollback()
-        Path("deco_failure.txt").write_text(str(e),encoding="utf-8")
+        Path("deco_failure.txt").write_text(
+            f"Categoria corrente: {current_category}\n"
+            f"Errore: {type(e).__name__}: {e}\n",
+            encoding="utf-8"
+        )
         raise
     finally:
         con.close()
