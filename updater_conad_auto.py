@@ -221,84 +221,72 @@ async def fill_address(page):
 
 async def select_store(page):
     await accept_cookie_if_present(page)
-
-    # Always establish a valid address through the real onboarding.
     await fill_address(page)
     await accept_cookie_if_present(page)
 
-    # Select Conad's explicit pickup service.
-    pickup=page.locator('button[onclick*="GoogleUtils.loadStores"][onclick*="ORDER_AND_COLLECT"]')
+    # Select pickup service using Conad's explicit ORDER_AND_COLLECT action.
+    pickup=page.locator(
+        'button[onclick*="GoogleUtils.loadStores"][onclick*="ORDER_AND_COLLECT"]'
+    )
     visible_pickup=None
     for i in range(await pickup.count()):
-        if await pickup.nth(i).is_visible():
-            visible_pickup=pickup.nth(i)
-            break
+        try:
+            if await pickup.nth(i).is_visible():
+                visible_pickup=pickup.nth(i)
+                break
+        except Exception:
+            pass
+
     if visible_pickup is None:
-        # Text fallback limited to the Ordina e ritira card.
         card=page.locator("#ordina-e-ritira")
         if await card.count():
             btn=card.locator("button").filter(has_text=re.compile(r"Seleziona",re.I))
             if await btn.count() and await btn.first.is_visible():
                 visible_pickup=btn.first
+
     if visible_pickup is None:
-        raise RuntimeError("Pulsante visibile ORDER_AND_COLLECT non trovato dopo verifica indirizzo.")
+        raise RuntimeError("Pulsante visibile ORDER_AND_COLLECT non trovato.")
 
-    await visible_pickup.click(timeout=5000)
+    await visible_pickup.click(timeout=5000, force=True)
 
-    # Wait for real store results.
+    # Diagnostic V11 proves Conad renders the store card with data-pos-id="010548".
+    # Use that stable store identifier directly instead of matching visible text.
+    target=page.locator(
+        '#ordina-ritira-scelta-pdv .component-card-negozio[data-pos-id="010548"]'
+    )
+
     try:
-        await page.wait_for_function(
-            """() => {
-              const root=document.querySelector('#ordina-ritira-scelta-pdv');
-              if (!root) return false;
-              const txt=(root.innerText||'').toLowerCase();
-              return txt.includes('retella') || txt.includes('010548') ||
-                     root.querySelectorAll('li, .store, .card').length > 0;
-            }""",
-            timeout=18000
-        )
+        await target.first.wait_for(state="visible", timeout=18000)
     except Exception:
-        pass
-
-    # Find target only inside pickup-store modal/section.
-    root=page.locator("#ordina-ritira-scelta-pdv")
-    candidates=[
-        root.get_by_text(re.compile(r"VIA RETELLA.*GIARD",re.I), exact=False),
-        root.get_by_text(re.compile(r"RETELLA",re.I), exact=False),
-        root.get_by_text(re.compile(r"010548",re.I), exact=False),
-    ]
-    target=None
-    for loc in candidates:
+        # Fallback independent of the modal wrapper in case Conad changes nesting.
+        target=page.locator('.component-card-negozio[data-pos-id="010548"]')
         try:
-            if await loc.count() and await loc.first.is_visible():
-                target=loc.first
-                break
+            await target.first.wait_for(state="visible", timeout=5000)
         except Exception:
-            pass
-    if target is None:
-        txt=""
-        try: txt=(await root.inner_text())[:2000]
-        except Exception: pass
-        raise RuntimeError("Store 010548/Via Retella non presente nella lista ritiro. Lista: "+txt)
+            cards=page.locator(".component-card-negozio[data-pos-id]")
+            ids=[]
+            for i in range(min(await cards.count(),20)):
+                try:
+                    ids.append(await cards.nth(i).get_attribute("data-pos-id"))
+                except Exception:
+                    pass
+            raise RuntimeError(
+                f"Store 010548 non trovato tra le card Conad. Store caricati: {ids}"
+            )
 
-    # Click store card or its explicit select/confirm control.
-    clicked=False
-    for ancestor in ("xpath=ancestor::li[1]","xpath=ancestor::*[contains(@class,'card')][1]"):
-        try:
-            box=target.locator(ancestor)
-            if await box.count():
-                controls=box.locator("button, a").filter(has_text=re.compile(r"seleziona|scegli|conferma",re.I))
-                if await controls.count() and await controls.first.is_visible():
-                    await controls.first.click(timeout=5000); clicked=True; break
-        except Exception:
-            pass
-    if not clicked:
-        await target.click(timeout=5000)
+    await accept_cookie_if_present(page)
+    await target.first.click(timeout=5000, force=True)
 
-    await page.wait_for_timeout(1200)
-    # Some Conad flows require a separate confirmation button.
-    await click_text_any(page,[r"conferma il negozio",r"conferma"],timeout=2500)
-    await page.wait_for_timeout(2500)
+    # Store card onclick calls OnboardingManager.confirmStore(this).
+    await page.wait_for_timeout(1800)
+
+    # If a separate confirmation control appears, use it.
+    await click_text_any(
+        page,
+        [r"conferma il negozio", r"conferma"],
+        timeout=2000
+    )
+    await page.wait_for_timeout(2200)
 
 async def verify_store(page):
     # Give Conad time to persist the anonymous cart/store session.
