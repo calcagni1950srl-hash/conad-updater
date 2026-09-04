@@ -1,4 +1,4 @@
-name: Aggiorna prezzi Conad Capodrise
+name: Aggiorna prezzi Conad generico
 
 on:
   workflow_dispatch:
@@ -25,9 +25,6 @@ jobs:
 
       - name: Installa Chromium
         run: python -m playwright install --with-deps chromium
-
-      - name: Test parser
-        run: python test_offline.py
 
       - name: Aggiorna prezzi Conad
         run: python updater_conad_auto.py --db prezzi_conad.db
