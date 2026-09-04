@@ -3,7 +3,8 @@ from pathlib import Path
 from urllib.parse import quote_plus
 from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
 
-EXPECTED_STORE="010548"
+EXPECTED_STORE="010548"  # legacy: usato solo dai test/store-specific helpers
+GENERIC_STORE_CODE="CONAD-GENERICO"
 STORE_TEXT="VIA RETELLA EX GIARD.DEL SOLE"
 ADDRESS_QUERY="81020 CAPODRISE"
 
@@ -219,66 +220,172 @@ async def fill_address(page):
         await verify.first.click(timeout=5000, force=True)
         await page.wait_for_timeout(2500)
 
+
+async def write_store_stage(page, name, diagnostics="diagnostics"):
+    try:
+        d=Path(diagnostics)
+        d.mkdir(parents=True,exist_ok=True)
+        state=await page.evaluate("""
+            () => {
+                const card=document.querySelector('.component-card-negozio[data-pos-id="010548"]');
+                const confirm=[...document.querySelectorAll('.btn-conferma-pdv button')]
+                    .find(x => {
+                        const s=getComputedStyle(x), r=x.getBoundingClientRect();
+                        return s.display!=='none' && s.visibility!=='hidden' && r.width>0 && r.height>0;
+                    });
+                return {
+                    href: location.href,
+                    pointOfService: window.pointOfService || null,
+                    typeOfService: window.typeOfService || null,
+                    selectedAddress: window.selectedAddress || null,
+                    cardClass: card ? card.className : null,
+                    cardOnclick: card ? card.getAttribute('onclick') : null,
+                    confirmVisible: !!confirm,
+                    localStorageKeys: Object.keys(localStorage),
+                    sessionStorageKeys: Object.keys(sessionStorage)
+                };
+            }
+        """)
+        cookies=await page.context.cookies()
+        state["cookieNames"]=sorted({c.get("name","") for c in cookies})
+        (d/f"{name}.json").write_text(
+            json.dumps(state,ensure_ascii=False,indent=2),encoding="utf-8"
+        )
+        await page.screenshot(path=str(d/f"{name}.png"),full_page=True)
+    except Exception:
+        pass
+
 async def select_store(page):
     await accept_cookie_if_present(page)
     await fill_address(page)
     await accept_cookie_if_present(page)
-    pickup=page.locator('button[onclick*="GoogleUtils.loadStores"][onclick*="ORDER_AND_COLLECT"]')
+
+    pickup=page.locator(
+        'button[onclick*="GoogleUtils.loadStores"][onclick*="ORDER_AND_COLLECT"]'
+    )
     visible_pickup=None
     for i in range(await pickup.count()):
         try:
-            if await pickup.nth(i).is_visible(): visible_pickup=pickup.nth(i); break
-        except Exception: pass
-    if visible_pickup is None: raise RuntimeError("Pulsante visibile ORDER_AND_COLLECT non trovato.")
-    await visible_pickup.click(timeout=5000, force=True)
+            if await pickup.nth(i).is_visible():
+                visible_pickup=pickup.nth(i)
+                break
+        except Exception:
+            pass
+    if visible_pickup is None:
+        raise RuntimeError("Pulsante visibile ORDER_AND_COLLECT non trovato.")
+
+    await visible_pickup.click(timeout=5000,force=True)
+
     target=page.locator('.component-card-negozio[data-pos-id="010548"]')
-    await target.first.wait_for(state="visible", timeout=18000)
-    try:
-        await page.wait_for_function("""() => { const el=document.querySelector('.component-card-negozio[data-pos-id="010548"]'); return el && !el.querySelector('.loading'); }""", timeout=15000)
-    except Exception: pass
-    await accept_cookie_if_present(page)
-    await target.first.scroll_into_view_if_needed()
-    await target.first.click(timeout=5000, force=True)
+    await target.first.wait_for(state="visible",timeout=18000)
+    await write_store_stage(page,"stage_1_store_list")
+
+    # Execute the exact two functions declared by Conad in the card onclick.
+    # This avoids any ambiguity caused by overlays/scrolling while still using
+    # the site's own normal selection logic.
+    result=await page.evaluate("""
+        () => {
+            const el=document.querySelector('.component-card-negozio[data-pos-id="010548"]');
+            if (!el) return {ok:false,reason:'card missing'};
+            if (!window.OnboardingManager || !window.GoogleUtils)
+                return {ok:false,reason:'Conad JS managers missing'};
+            try {
+                OnboardingManager.confirmStore(el);
+                GoogleUtils.clickStoreToList(el,0,'ORDER_AND_COLLECT');
+                return {ok:true};
+            } catch(e) {
+                return {ok:false,reason:String(e)};
+            }
+        }
+    """)
+    if not result.get("ok"):
+        raise RuntimeError(f"Selezione store 010548 fallita: {result.get('reason')}")
+
     await page.wait_for_timeout(1200)
-    confirm=page.locator('#modal-onboarding-wrapper .btn-conferma-pdv button')
-    if not await confirm.count(): confirm=page.locator('.btn-conferma-pdv button')
+    await write_store_stage(page,"stage_2_store_selected")
+
+    confirm=page.locator(".btn-conferma-pdv button")
     visible_confirm=None
     for i in range(await confirm.count()):
         try:
-            if await confirm.nth(i).is_visible(): visible_confirm=confirm.nth(i); break
-        except Exception: pass
-    if visible_confirm is None: raise RuntimeError("Store 010548 selezionato, ma pulsante Conferma il negozio non visibile.")
+            if await confirm.nth(i).is_visible():
+                visible_confirm=confirm.nth(i)
+                break
+        except Exception:
+            pass
+    if visible_confirm is None:
+        raise RuntimeError("Pulsante visibile 'Conferma il negozio' non trovato.")
+
     await accept_cookie_if_present(page)
-    await visible_confirm.evaluate("(el) => el.click()")
-    await page.wait_for_timeout(5000)
+
+    # Normal click on the actual visible confirmation control.
+    await visible_confirm.click(timeout=5000,force=True)
+    await page.wait_for_timeout(2500)
+    await write_store_stage(page,"stage_3_after_confirm")
+
+    # Give Conad's asynchronous persistence request enough time to complete.
+    for _ in range(12):
+        body=await page.content()
+        st=parse_store(body)
+        if st and str(st.get("name"))==EXPECTED_STORE:
+            return
+        try:
+            live=await page.evaluate("""
+                () => window.pointOfService ? String(window.pointOfService.name || '') : ''
+            """)
+            if live==EXPECTED_STORE:
+                return
+        except Exception:
+            pass
+        await page.wait_for_timeout(750)
+
+    await write_store_stage(page,"stage_4_before_verify")
 
 async def verify_store(page):
-    body=await page.content(); st=parse_store(body)
-    if st and str(st.get("name"))==EXPECTED_STORE: return st
-    await page.goto("https://spesaonline.conad.it/search?query=latte", wait_until="domcontentloaded")
+    body=await page.content()
+    st=parse_store(body)
+    if st and str(st.get("name"))==EXPECTED_STORE:
+        return st
+
+    await write_store_stage(page,"stage_5_verify_before_reload")
+
+    await page.goto(
+        "https://spesaonline.conad.it/search?query=latte",
+        wait_until="domcontentloaded"
+    )
     await page.wait_for_timeout(1800)
-    body=await page.content(); st=parse_store(body)
+    body=await page.content()
+    st=parse_store(body)
+
     if not st or str(st.get("name"))!=EXPECTED_STORE:
         got=None if not st else st.get("name")
-        raise RuntimeError(f"Store non verificato. Atteso {EXPECTED_STORE}, ottenuto {got}; risultati latte={parse_total(body)}.")
+        total=parse_total(body)
+        await write_store_stage(page,"stage_6_verify_failed")
+        raise RuntimeError(
+            f"Store non verificato. Atteso {EXPECTED_STORE}, ottenuto {got}; "
+            f"risultati latte={total}. Diagnostica V15 salvata per ogni fase."
+        )
     return st
 
 async def harvest_query(page, query):
+    """Raccoglie il catalogo Conad generico senza selezione punto vendita."""
     url=f"https://spesaonline.conad.it/search?query={quote_plus(query)}"
-    await page.goto(url,wait_until="domcontentloaded")
+    await page.goto(url,wait_until="domcontentloaded",timeout=60000)
+    await accept_cookie_if_present(page)
     await page.wait_for_timeout(1000)
     body=await page.content()
-    s=parse_store(body)
-    if not s or str(s.get("name"))!=EXPECTED_STORE:
-        raise RuntimeError(f"Sessione persa durante query {query}: store non è {EXPECTED_STORE}.")
+
     total=parse_total(body)
     last=parse_last_page(body)
     allp=parse_products(body)
 
+    if not allp:
+        raise RuntimeError(f"Nessun prodotto trovato per query {query} nel catalogo Conad generico.")
+
     if total is not None and len(allp)>=total:
         return total,allp
 
-    # Use the site's own pagination clicks, not guessed private parameters.
+    # Paginazione ufficiale del sito. Nessun endpoint privato inventato.
     for pageno in range(2,last+1):
         link=page.locator(f'a[data-page="{pageno}"]')
         if not await link.count():
@@ -295,10 +402,12 @@ async def harvest_query(page, query):
             raise RuntimeError(f"Pagina {pageno} non ha prodotto nuovi articoli per query {query}.")
 
     if total is not None and len(allp)!=total:
-        raise RuntimeError(f"Completezza fallita per {query}: dichiarati {total}, raccolti {len(allp)}.")
+        raise RuntimeError(
+            f"Completezza fallita per {query}: dichiarati {total}, raccolti {len(allp)}."
+        )
     return total,allp
 
-def save_db(store, products_by_query, path):
+def save_db(products_by_query, path):
     now=time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime())
     con=sqlite3.connect(path)
     con.executescript("""
@@ -350,19 +459,29 @@ def save_db(store, products_by_query, path):
         for code,p in pp.items():
             merged[code]=p
             sources.setdefault(code,set()).add(query)
-        con.execute("INSERT INTO update_log(checked_at,store_code,query,declared_total,saved_count,status,message) VALUES(?,?,?,?,?,?,?)",
-                    (now,EXPECTED_STORE,query,total,len(pp),"OK","browser auto-session; completezza query verificata"))
+        con.execute(
+            "INSERT INTO update_log(checked_at,store_code,query,declared_total,saved_count,status,message) VALUES(?,?,?,?,?,?,?)",
+            (now,GENERIC_STORE_CODE,query,total,len(pp),"OK",
+             "Catalogo Conad generico; prezzo indicativo, promozioni/disponibilità possono variare per punto vendita")
+        )
 
-    addr=(store.get("address") or {}).get("formattedAddress")
+    # Sostituisce lo snapshot corrente generico senza toccare eventuali store specifici.
+    con.execute("DELETE FROM products_current WHERE store_code=?",(GENERIC_STORE_CODE,))
+
     for code,p in merged.items():
         up,upu=unit_price(p)
-        row=("Conad",EXPECTED_STORE,store.get("storeType"),addr,code,p["nome"],p.get("marchio"),
-             p.get("categoriaPrimoLivello"),p.get("categoriaSecondoLivello"),p.get("categoriaTerzoLivello"),
-             p.get("netQuantity"),p.get("netQuantityUm"),float(p["basePrice"]),up,upu,
-             int(bool(p.get("bassiFissi"))),p.get("defaultImgSrc"),",".join(sorted(sources[code])),now)
+        row=(
+            "Conad",GENERIC_STORE_CODE,"Catalogo Conad generico",None,code,p["nome"],p.get("marchio"),
+            p.get("categoriaPrimoLivello"),p.get("categoriaSecondoLivello"),p.get("categoriaTerzoLivello"),
+            p.get("netQuantity"),p.get("netQuantityUm"),float(p["basePrice"]),up,upu,
+            int(bool(p.get("bassiFissi"))),p.get("defaultImgSrc"),
+            ",".join(sorted(sources[code])),now
+        )
         con.execute("INSERT OR REPLACE INTO products_current VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",row)
-        con.execute("INSERT INTO price_history(store_code,product_code,price_eur,unit_price,checked_at) VALUES(?,?,?,?,?)",
-                    (EXPECTED_STORE,code,float(p["basePrice"]),up,now))
+        con.execute(
+            "INSERT INTO price_history(store_code,product_code,price_eur,unit_price,checked_at) VALUES(?,?,?,?,?)",
+            (GENERIC_STORE_CODE,code,float(p["basePrice"]),up,now)
+        )
     con.commit()
     con.close()
     return len(merged)
@@ -375,19 +494,24 @@ async def run(args):
         ctx=await browser.new_context(locale="it-IT")
         page=await ctx.new_page()
         try:
-            await page.goto("https://spesaonline.conad.it/entry",wait_until="domcontentloaded",timeout=60000)
-            await accept_cookie_if_present(page)
-            await select_store(page)
-            store=await verify_store(page)
-
+            # Nessun onboarding, indirizzo o punto vendita.
+            # Usiamo direttamente il catalogo pubblico/generico Conad.
             queries=args.query or DEFAULT_QUERIES
             results={}
             for q in queries:
                 total,pp=await harvest_query(page,q)
                 results[q]=(total,pp)
                 print(f"{q}: {len(pp)} / {total if total is not None else '?'}")
-            saved=save_db(store,results,args.db)
-            print(json.dumps({"store":EXPECTED_STORE,"queries":len(results),"unique_products":saved,"status":"OK"},ensure_ascii=False))
+
+            saved=save_db(results,args.db)
+            print(json.dumps({
+                "store":GENERIC_STORE_CODE,
+                "mode":"generic",
+                "queries":len(results),
+                "unique_products":saved,
+                "reliability":"B",
+                "status":"OK"
+            },ensure_ascii=False))
         except Exception as e:
             try:
                 await page.screenshot(path=str(diag/"failure.png"),full_page=True)
@@ -398,6 +522,7 @@ async def run(args):
             raise
         finally:
             await browser.close()
+
 
 if __name__=="__main__":
     ap=argparse.ArgumentParser()
