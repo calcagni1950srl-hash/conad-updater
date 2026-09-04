@@ -385,21 +385,73 @@ async def harvest_query(page, query):
     if total is not None and len(allp)>=total:
         return total,allp
 
-    # Paginazione ufficiale del sito. Nessun endpoint privato inventato.
+    # Paginazione ufficiale del sito.
+    # OneTrust può riapparire anche dopo il caricamento iniziale: lo gestiamo
+    # prima di OGNI cambio pagina e usiamo un click forzato solo sul link
+    # ufficiale della paginazione.
     for pageno in range(2,last+1):
+        await accept_cookie_if_present(page)
+
         link=page.locator(f'a[data-page="{pageno}"]')
         if not await link.count():
             raise RuntimeError(f"Link pagina {pageno} non trovato per query {query}.")
+
         before=set(allp)
-        await link.first.click()
-        await page.wait_for_timeout(1100)
+
+        try:
+            await link.first.click(timeout=5000, force=True)
+        except Exception:
+            # Fallback: esegue il click DOM sullo stesso link ufficiale.
+            ok = await page.evaluate(
+                """(n) => {
+                    const a=document.querySelector(`a[data-page="${n}"]`);
+                    if (!a) return false;
+                    a.click();
+                    return true;
+                }""",
+                pageno
+            )
+            if not ok:
+                raise RuntimeError(
+                    f"Impossibile attivare la pagina {pageno} per query {query}."
+                )
+
+        # Attende che compaiano prodotti nuovi rispetto alla pagina precedente.
+        try:
+            await page.wait_for_function(
+                """(oldCodes) => {
+                    const els=[...document.querySelectorAll('[data-product]')];
+                    for (const el of els) {
+                        try {
+                            const raw=el.getAttribute('data-product');
+                            const p=JSON.parse(
+                                raw.replace(/&quot;/g,'"')
+                                   .replace(/&amp;/g,'&')
+                            );
+                            if (p && p.code && !oldCodes.includes(String(p.code)))
+                                return true;
+                        } catch(e) {}
+                    }
+                    return false;
+                }""",
+                list(before),
+                timeout=8000
+            )
+        except Exception:
+            await page.wait_for_timeout(1500)
+
+        await accept_cookie_if_present(page)
         body=await page.content()
         pp=parse_products(body)
+
         if not pp:
             raise RuntimeError(f"Nessun prodotto alla pagina {pageno} per query {query}.")
+
         allp.update(pp)
         if set(allp)==before:
-            raise RuntimeError(f"Pagina {pageno} non ha prodotto nuovi articoli per query {query}.")
+            raise RuntimeError(
+                f"Pagina {pageno} non ha prodotto nuovi articoli per query {query}."
+            )
 
     if total is not None and len(allp)!=total:
         raise RuntimeError(
