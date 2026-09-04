@@ -9,7 +9,7 @@ LOADER=BASE+"/search/_jcr_content/root/search.loader.html?query={query}&page={pa
 GENERIC_STORE_CODE="CONAD-GENERICO"
 
 PRODUCT_RE=re.compile(r'data-product="([^"]+)"')
-TOTAL_RE=re.compile(r'<b class="results">\s*([\d.]+)\s+risultati')
+TOTAL_RE=re.compile(r'<b class="results">\s*([\d.]+)\s+risultat(?:o|i)')
 
 DEFAULT_QUERIES=[
  "pasta","riso","pane","farina","latte","uova","formaggio","mozzarella","provola",
@@ -76,7 +76,7 @@ async def fetch_text(request, url, referer, retries=4):
                 except Exception:
                     wait=15*(2**(attempt-1))
                 wait=min(wait,120)
-                print(f"HTTP 429: attendo {wait}s prima del tentativo {attempt+1}/{retries}")
+                print(f"HTTP 429: attendo {wait}s prima del tentativo {attempt+1}/{retries}", flush=True)
                 await asyncio.sleep(wait)
                 continue
         except Exception as e:
@@ -107,9 +107,9 @@ async def harvest_query(page, request, query):
     # Dal test reale del 04/09/2026 l'endpoint loader accetta direttamente
     # query + page e restituisce HTTP 200 con le card prodotto. Nessun click.
     for pageno in range(2,pages+1):
-        # Validato su GitHub Actions: 12–16 secondi evitano il rate limit
-        # durante una ricerca completa. Manteniamo un intervallo conservativo.
-        await asyncio.sleep(14)
+        # Il test 136/136 è passato con 12–16 secondi: usiamo il limite
+        # inferiore già validato per accorciare la durata.
+        await asyncio.sleep(12)
         url=LOADER.format(query=q,page=pageno)
         referer=SEARCH.format(query=q)+f"&page={pageno}"
         body=await fetch_text(request,url,referer)
@@ -187,11 +187,11 @@ async def run(args):
             results={}
             for idx,q in enumerate(queries):
                 if idx:
-                    # Pausa anche fra due ricerche per non accumulare richieste.
-                    await asyncio.sleep(18)
+                    # Pausa breve fra query; eventuali 429 sono gestiti dal backoff.
+                    await asyncio.sleep(3)
                 total,pp=await harvest_query(page,ctx.request,q)
                 results[q]=(total,pp)
-                print(f"{q}: {len(pp)} / {total}")
+                print(f"{q}: {len(pp)} / {total}", flush=True)
             saved=save_db(results,args.db)
             print(json.dumps({
               "store":GENERIC_STORE_CODE,"mode":"generic-direct-endpoint",
