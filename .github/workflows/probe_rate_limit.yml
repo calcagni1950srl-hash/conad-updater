@@ -1,0 +1,23 @@
+name: Verifica rate limit Conad
+on:
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python -m playwright install --with-deps chromium
+      - name: Test completo latte con attese e 429
+        run: python probe_rate_limit.py
+      - name: Salva risultato
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: conad-rate-limit-probe
+          path: rate_probe_output/
+          if-no-files-found: ignore
