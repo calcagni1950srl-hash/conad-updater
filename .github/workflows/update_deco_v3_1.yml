@@ -1,0 +1,49 @@
+name: Aggiorna prezzi Decò V3.1 - Rifinitura
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installa dipendenze
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Aggiorna Decò V3
+        run: python -u updater_deco_v3_1.py
+
+      - name: Audit database
+        run: |
+          python - <<'PY'
+          import sqlite3
+          c=sqlite3.connect("prezzi_deco.db")
+          print(c.execute("select count(*),count(distinct product_key),min(price_eur),max(price_eur) from products").fetchone())
+          assert c.execute("select count(*) from products where price_eur is null or price_eur<=0").fetchone()[0] == 0
+          PY
+
+      - name: Commit database
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add prezzi_deco.db
+          git diff --cached --quiet || git commit -m "Aggiorna prezzi Decò V3"
+          git push
+
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deco-v3-report
+          path: deco_v3_output/
+          if-no-files-found: ignore
