@@ -1,0 +1,32 @@
+name: Famila Updater HTTP V1 - Validazione
+on:
+  workflow_dispatch:
+    inputs:
+      store_alias:
+        description: "CosìComodo storeAliasId (prima prova: teverola, già validato dal V8)"
+        required: true
+        default: "teverola"
+      seed_category:
+        description: "Categoria bootstrap"
+        required: true
+        default: "10006"
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Esegui updater
+        run: python famila_updater_http_v1.py --store "${{ inputs.store_alias }}" --seed-category "${{ inputs.seed_category }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: famila-updater-http-v1
+          path: |
+            prezzi_famila.db
+            famila_audit.json
+          if-no-files-found: warn
