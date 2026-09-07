@@ -1,0 +1,35 @@
+name: FAMILA CATALOGO COMPLETO
+on:
+  workflow_dispatch:
+    inputs:
+      store_alias:
+        description: "Store alias CosìComodo"
+        required: true
+        default: "teverola"
+
+jobs:
+  catalogo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installa dipendenze
+        run: pip install -r requirements.txt
+
+      - name: Esegui FAMILA CATALOGO COMPLETO
+        run: python FAMILA_CATALOGO_COMPLETO.py --store "${{ inputs.store_alias }}"
+
+      - name: Carica risultato
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: FAMILA-CATALOGO-COMPLETO-RISULTATO
+          path: |
+            prezzi_famila.db
+            famila_audit.json
+          if-no-files-found: warn
