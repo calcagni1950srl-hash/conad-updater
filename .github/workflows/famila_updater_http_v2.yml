@@ -1,0 +1,28 @@
+name: Famila Updater HTTP V2 - NextData categorie
+on:
+  workflow_dispatch:
+    inputs:
+      store_alias:
+        description: "Store alias CosìComodo già validato"
+        required: true
+        default: "teverola"
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Esegui Famila updater V2
+        run: python famila_updater_http_v2.py --store "${{ inputs.store_alias }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: famila-updater-http-v2
+          path: |
+            prezzi_famila.db
+            famila_audit.json
+          if-no-files-found: warn
