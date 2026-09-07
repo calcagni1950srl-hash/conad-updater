@@ -1,0 +1,20 @@
+name: Diagnosi Famila V8 - API OCC paginazione
+on:
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python probe_famila_api_pagination_v8.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: famila-api-pagination-probe-v8
+          path: artifact/
+          if-no-files-found: error
