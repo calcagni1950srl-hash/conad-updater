@@ -1,0 +1,58 @@
+name: Diagnosi Famila V4 - HTTP diretto
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Famila HTTP Probe V4
+        run: |
+          python probe_famila_http_v4.py
+
+      - name: Show diagnostic result
+        if: always()
+        run: |
+          echo "===== RISULTATO ====="
+          if [ -f famila_http_probe_v4_output/RISULTATO.md ]; then
+            cat famila_http_probe_v4_output/RISULTATO.md
+          fi
+          echo "===== JSON SUMMARY ====="
+          if [ -f famila_http_probe_v4_output/famila_http_probe_v4.json ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('famila_http_probe_v4_output/famila_http_probe_v4.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          print(json.dumps(d.get('summary', {}), ensure_ascii=False, indent=2))
+          PY
+          fi
+
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: famila-http-probe-v4
+          path: famila_http_probe_v4_output/
+          if-no-files-found: warn
+          retention-days: 14
