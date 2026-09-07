@@ -1,0 +1,28 @@
+name: Diagnosi Famila V7 - Frontend endpoint
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run frontend probe
+        run: python probe_famila_frontend_v7.py
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: famila-frontend-probe-v7
+          path: famila_frontend_v7_artifact/
+          if-no-files-found: error
+          retention-days: 7
