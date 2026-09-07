@@ -1,0 +1,31 @@
+name: Diagnosi Famila V6 - Paginazione HTTP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Installa dipendenze
+        run: pip install -r requirements.txt
+
+      - name: Esegui Famila Pagination Probe V6
+        run: python probe_famila_pagination_v6.py
+
+      - name: Carica artifact diagnostico
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: famila-pagination-probe-v6
+          path: artifact/
+          if-no-files-found: warn
