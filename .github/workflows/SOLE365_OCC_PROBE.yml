@@ -1,0 +1,30 @@
+name: SOLE365 OCC PROBE
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installa dipendenze
+        run: pip install -r requirements.txt
+
+      - name: Test API OCC Sole365 Marcianise
+        run: python SOLE365_OCC_PROBE.py
+
+      - name: Pubblica risultato
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: SOLE365-OCC-PROBE-RISULTATO
+          path: sole365_probe_audit.json
+          if-no-files-found: error
