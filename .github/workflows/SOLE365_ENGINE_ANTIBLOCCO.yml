@@ -1,0 +1,37 @@
+name: SOLE365 ENGINE ANTIBLOCCO
+
+on:
+  workflow_dispatch:
+    inputs:
+      store_alias:
+        description: "Store alias CosìComodo già validato"
+        required: true
+        default: "marcianise-aurno"
+
+jobs:
+  catalogo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installa dipendenze
+        run: pip install -r requirements.txt
+
+      - name: Esegui motore Sole365 anti-blocco
+        run: python SOLE365_ENGINE_ANTIBLOCCO.py --store "${{ inputs.store_alias }}"
+
+      - name: Pubblica risultato
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: SOLE365-ENGINE-ANTIBLOCCO-RISULTATO
+          path: |
+            prezzi_sole365.db
+            sole365_audit.json
+          if-no-files-found: warn
