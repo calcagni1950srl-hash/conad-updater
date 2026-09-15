@@ -4,58 +4,81 @@ on:
   push:
     paths:
       - '.github/workflows/famila_auto_build.yml'
-      - 'famila_updater_http_v3.py'
+      - 'famila_fetch_category.py'
+      - 'famila_merge_categories.py'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build-famila-db:
+  fetch-categories:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 16
+      matrix:
+        include:
+          - { code: '10006', name: 'Frutta e verdura' }
+          - { code: '10013', name: 'Salumi e formaggi' }
+          - { code: '10007', name: 'Gastronomia e pasta fresca' }
+          - { code: '10009', name: 'Latte, burro, uova e yogurt' }
+          - { code: '10003', name: 'Carne' }
+          - { code: '10011', name: 'Pesce' }
+          - { code: '10004', name: 'Colazione, merenda e dolci' }
+          - { code: '10012', name: 'Prodotti alimentari' }
+          - { code: '10010', name: 'Pane e pasticceria' }
+          - { code: '10008', name: 'Gelati e surgelati' }
+          - { code: '10002', name: 'Acqua, bevande, vino e alcolici' }
+          - { code: '10015', name: 'Tutto per il bambino' }
+          - { code: '10001', name: 'Amici animali' }
+          - { code: '10005', name: 'Cura della persona' }
+          - { code: '10016', name: 'Tutto per la casa' }
+          - { code: '10014', name: 'Tempo libero' }
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Fetch category ${{ matrix.code }}
+        run: >-
+          python famila_fetch_category.py
+          --site familiasud
+          --store teverola
+          --code '${{ matrix.code }}'
+          --name '${{ matrix.name }}'
+          --output 'category_${{ matrix.code }}.json'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: famila-cat-${{ matrix.code }}
+          path: category_${{ matrix.code }}.json
+          if-no-files-found: error
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Build Famila Teverola database
-        run: python famila_updater_http_v3.py --store teverola --db prezzi_famila.db --report famila_audit.json
-
-      - name: Validate Famila database and audit
-        run: |
-          python - <<'PY'
-          import json, sqlite3
-          from pathlib import Path
-
-          db = Path('prezzi_famila.db')
-          audit_path = Path('famila_audit.json')
-          if not db.exists() or not audit_path.exists():
-              raise SystemExit('DB o audit Famila mancanti')
-
-          audit = json.loads(audit_path.read_text(encoding='utf-8'))
-          if audit.get('verdict') != 'FAMILA_HTTP_UPDATER_V3_VALIDATED':
-              raise SystemExit(f"Audit Famila non validato: {audit.get('verdict')}")
-
-          con = sqlite3.connect(db)
-          total = con.execute('SELECT COUNT(*) FROM products').fetchone()[0]
-          positive = con.execute('SELECT COUNT(*) FROM products WHERE price_eur > 0').fetchone()[0]
-          con.close()
-
-          if total <= 0 or total != positive:
-              raise SystemExit(f'DB Famila non valido: total={total}, positive={positive}')
-          if total < 500:
-              raise SystemExit(f'DB Famila troppo piccolo per il confronto: {total} prodotti')
-
-          print(f'FAMILA_DB_VALIDATED products={total} positive={positive}')
-          PY
-
-      - name: Publish validated Famila DB in repository
+  merge-and-publish:
+    needs: fetch-categories
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: famila-cat-*
+          path: famila_categories
+          merge-multiple: true
+      - name: Merge and audit Famila database
+        run: >-
+          python famila_merge_categories.py
+          --input famila_categories
+          --site familiasud
+          --store teverola
+          --db prezzi_famila.db
+          --report famila_audit.json
+      - name: Publish validated Famila DB
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -66,12 +89,10 @@ jobs:
             git commit -m 'Update validated Famila Teverola prices'
             git push
           fi
-
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: famila-validated-db
           path: |
             prezzi_famila.db
             famila_audit.json
-          if-no-files-found: warn
+          if-no-files-found: error
