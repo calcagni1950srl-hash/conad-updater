@@ -2,32 +2,42 @@ import time
 import requests
 import famila_updater_full_v1 as base
 
-# V2: stessa estrazione/audit V1, ma con ritmo prudente e rinnovo sessione
-# quando il WAF CosìComodo risponde 481 dopo molte pagine consecutive.
+# V2 definitiva per GitHub Actions:
+# - NON apre più la pagina HTML Famila, che può essere bloccata dal WAF;
+# - usa direttamente l'API ufficiale OCC, già verificata su Teverola;
+# - una sola sessione, richieste sequenziali e lente;
+# - sui blocchi temporanei aspetta e riprova la stessa pagina.
 
-MIN_DELAY_SECONDS = 0.65
-WAF_COOLDOWN_SECONDS = 12.0
-
-
-def refresh_store_session(session: requests.Session):
-    url = f"{base.BASE_WEB}/{base.SITE}/{base.STORE_ALIAS}/reparti/prodotti-alimentari/c/10012"
-    response = session.get(
-        url,
-        headers={
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Referer": base.BASE_WEB + "/",
-        },
-        timeout=60,
-    )
-    response.raise_for_status()
-    required = {"familasud_anonymous_preferred_base_store", "pointOfService"}
-    if not required.issubset(set(session.cookies.keys())):
-        raise RuntimeError(
-            f"Rinnovo sessione Famila incompleto: cookie mancanti {required - set(session.cookies.keys())}"
-        )
+MIN_DELAY_SECONDS = 1.05
+WAF_CODES = {429, 474, 481, 482, 500, 502, 503, 504}
 
 
-def fetch_page_resilient(session, category_code, page, retries=7):
+def api_only_session_for_store():
+    session = requests.Session()
+    session.headers.update({
+        "User-Agent": base.UA,
+        "Accept-Language": "it-IT,it;q=0.9,en;q=0.7",
+        "Connection": "close",
+    })
+    point = {
+        "name": "MEGAMARK_FAMILA_163711",
+        "displayName": "Famila - Teverola",
+        "selexCode": "163711",
+        "site": base.SITE,
+        "store": base.STORE_ALIAS,
+    }
+    return session, point
+
+
+def cool_down(attempt, status):
+    if status in {474, 481, 482}:
+        return min(120.0, 25.0 * (attempt + 1))
+    if status == 429:
+        return min(90.0, 15.0 * (attempt + 1))
+    return min(45.0, 5.0 * (attempt + 1))
+
+
+def fetch_page_resilient(session, category_code, page, retries=8):
     endpoint = (
         f"{base.API_BASE}/{base.SITE}/stores/{base.STORE_ALIAS}/users/"
         f"{base.USER_ID}/products/search-by-category"
@@ -40,55 +50,59 @@ def fetch_page_resilient(session, category_code, page, retries=7):
     }
     headers = {
         "Accept": "application/json, text/plain, */*",
-        "Content-Type": "application/json",
         "Origin": base.BASE_WEB,
-        "Referer": f"{base.BASE_WEB}/{base.SITE}/{base.STORE_ALIAS}/reparti/",
+        "Referer": (
+            f"{base.BASE_WEB}/{base.SITE}/{base.STORE_ALIAS}/"
+            f"reparti/prodotti-alimentari/c/10012"
+        ),
         "Sec-Fetch-Site": "same-site",
         "Sec-Fetch-Mode": "cors",
         "Sec-Fetch-Dest": "empty",
+        "Connection": "close",
     }
 
     last_status = None
     last_body = ""
     for attempt in range(retries):
-        # Ritmo deliberatamente conservativo: il catalogo deve essere stabile,
-        # non veloce a costo di pagine perse.
         time.sleep(MIN_DELAY_SECONDS)
         try:
-            r = session.get(endpoint, params=params, headers=headers, timeout=60)
-            last_status = r.status_code
-            last_body = r.text[:800]
+            response = session.get(
+                endpoint,
+                params=params,
+                headers=headers,
+                timeout=60,
+            )
+            last_status = response.status_code
+            last_body = response.text[:800]
 
-            if r.status_code == 200:
-                data = r.json()
+            if response.status_code == 200:
+                data = response.json()
                 if not isinstance(data, dict):
                     raise RuntimeError("Risposta Famila JSON non valida")
+
                 pagination = data.get("pagination") or {}
                 returned_page = pagination.get("currentPage")
-                if returned_page is not None and int(returned_page) != int(page):
+                if returned_page is None or int(returned_page) != int(page):
                     raise RuntimeError(
-                        f"Pagina Famila inattesa: chiesta={page}, ricevuta={returned_page}"
+                        f"Pagina Famila inattesa: chiesta={page}, "
+                        f"ricevuta={returned_page}"
                     )
                 return data
 
-            if r.status_code == 481:
-                # WAF Link11: aspetta e rinnova i cookie del punto vendita.
-                wait = WAF_COOLDOWN_SECONDS * (attempt + 1)
+            if response.status_code in WAF_CODES:
+                wait = cool_down(attempt, response.status_code)
                 print(
-                    f"WAF 481 categoria={category_code} pagina={page}; "
-                    f"cooldown {wait:.0f}s e rinnovo sessione"
+                    f"Famila temporaneamente limitato HTTP {response.status_code} "
+                    f"categoria={category_code} pagina={page}; attesa {wait:.0f}s"
                 )
                 time.sleep(wait)
-                refresh_store_session(session)
-                continue
-
-            if r.status_code in {429, 500, 502, 503, 504}:
-                time.sleep(3.0 * (attempt + 1))
-                refresh_store_session(session)
+                # La API è stata verificata senza cookie: ripartire puliti evita
+                # di trascinare eventuali identificatori di sessione bloccati.
+                session.cookies.clear()
                 continue
 
             raise RuntimeError(
-                f"Famila HTTP {r.status_code}: {r.text[:500]}"
+                f"Famila HTTP {response.status_code}: {response.text[:500]}"
             )
 
         except (requests.RequestException, ValueError) as exc:
@@ -96,8 +110,13 @@ def fetch_page_resilient(session, category_code, page, retries=7):
                 raise RuntimeError(
                     f"Errore Famila categoria={category_code} page={page}: {exc}"
                 ) from exc
-            time.sleep(3.0 * (attempt + 1))
-            refresh_store_session(session)
+            wait = min(45.0, 5.0 * (attempt + 1))
+            print(
+                f"Errore rete Famila categoria={category_code} pagina={page}: "
+                f"{exc}; attesa {wait:.0f}s"
+            )
+            time.sleep(wait)
+            session.cookies.clear()
 
     raise RuntimeError(
         f"Famila fetch fallito categoria={category_code} page={page}; "
@@ -105,8 +124,9 @@ def fetch_page_resilient(session, category_code, page, retries=7):
     )
 
 
-# Monkey-patch intenzionale: base.main() usa questa funzione per TUTTE le pagine,
-# lasciando immutati parsing, deduplica, SQLite e audit della V1.
+# Sostituiamo solo trasporto/sessione. Parsing, deduplica, SQLite e audit
+# restano quelli della V1.
+base.session_for_store = api_only_session_for_store
 base.fetch_page = fetch_page_resilient
 
 if __name__ == "__main__":
