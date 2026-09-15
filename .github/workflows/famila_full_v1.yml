@@ -1,9 +1,10 @@
-name: Famila Full Validated DB V1
+name: Famila Full Validated DB V2
 
 on:
   push:
     paths:
       - 'famila_updater_full_v1.py'
+      - 'famila_updater_full_v2.py'
       - '.github/workflows/famila_full_v1.yml'
   workflow_dispatch:
   schedule:
@@ -29,7 +30,7 @@ jobs:
           python-version: '3.12'
       - run: pip install -r requirements.txt
       - name: Build and audit full Famila Teverola database
-        run: python famila_updater_full_v1.py
+        run: python famila_updater_full_v2.py
       - name: Inspect DB
         run: |
           python - <<'PY'
