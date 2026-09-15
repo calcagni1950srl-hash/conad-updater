@@ -74,19 +74,20 @@ jobs:
           pattern: famila-cat-*
           path: famila_categories
           merge-multiple: true
-      - name: Merge and audit Famila database
+      - name: Merge and audit Famila databases
         run: >-
           python famila_merge_categories.py
           --input famila_categories
           --site "$FAMILA_SITE"
           --store "$FAMILA_STORE"
           --db prezzi_famila.db
+          --app-db prezzi_famila_app.db
           --report famila_audit.json
-      - name: Publish validated Famila DB
+      - name: Publish validated Famila DBs
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add prezzi_famila.db famila_audit.json
+          git add prezzi_famila.db prezzi_famila_app.db famila_audit.json
           if git diff --cached --quiet; then
             echo 'Nessuna modifica da pubblicare'
           else
@@ -98,5 +99,6 @@ jobs:
           name: famila-validated-db
           path: |
             prezzi_famila.db
+            prezzi_famila_app.db
             famila_audit.json
           if-no-files-found: error
