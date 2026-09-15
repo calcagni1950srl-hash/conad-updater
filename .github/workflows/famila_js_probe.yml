@@ -1,0 +1,20 @@
+name: Famila JS Probe
+
+on:
+  push:
+    paths:
+      - 'famila_js_probe.py'
+      - '.github/workflows/famila_js_probe.yml'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: python famila_js_probe.py
