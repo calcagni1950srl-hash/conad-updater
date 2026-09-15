@@ -1,0 +1,63 @@
+name: Famila Full Validated DB V1
+
+on:
+  push:
+    paths:
+      - 'famila_updater_full_v1.py'
+      - '.github/workflows/famila_full_v1.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '35 5 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: famila-full-validated-db
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Build and audit full Famila Teverola database
+        run: python famila_updater_full_v1.py
+      - name: Inspect DB
+        run: |
+          python - <<'PY'
+          import json, sqlite3
+          db=sqlite3.connect('prezzi_famila.db')
+          print('ROWS', db.execute('select count(*) from products').fetchone()[0])
+          print('PRICE_BAD', db.execute('select count(*) from products where price_eur<=0 or price_eur is null').fetchone()[0])
+          print('NAME_BAD', db.execute("select count(*) from products where trim(coalesce(product_name,''))='' ").fetchone()[0])
+          print('DUP', db.execute('select count(*) from (select product_key,count(*) c from products group by product_key having c>1)').fetchone()[0])
+          db.close()
+          print(open('famila_audit_report.json',encoding='utf-8').read())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: famila-full-validated-db
+          path: |
+            prezzi_famila.db
+            famila_audit_report.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Commit validated Famila DB
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add prezzi_famila.db famila_audit_report.json
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica da committare"
+          else
+            git commit -m "Aggiorna DB Famila Teverola validato"
+            git push
+          fi
