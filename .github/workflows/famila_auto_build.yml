@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/famila_auto_build.yml'
+      - 'famila_updater_http_v3.py'
   workflow_dispatch:
 
 permissions:
@@ -29,7 +30,7 @@ jobs:
       - name: Validate Famila database and audit
         run: |
           python - <<'PY'
-          import json, sqlite3, sys
+          import json, sqlite3
           from pathlib import Path
 
           db = Path('prezzi_famila.db')
@@ -38,7 +39,7 @@ jobs:
               raise SystemExit('DB o audit Famila mancanti')
 
           audit = json.loads(audit_path.read_text(encoding='utf-8'))
-          if audit.get('verdict') != 'FAMILA_HTTP_UPDATER_V2_VALIDATED':
+          if audit.get('verdict') != 'FAMILA_HTTP_UPDATER_V3_VALIDATED':
               raise SystemExit(f"Audit Famila non validato: {audit.get('verdict')}")
 
           con = sqlite3.connect(db)
