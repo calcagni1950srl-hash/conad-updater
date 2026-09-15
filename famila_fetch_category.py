@@ -12,18 +12,30 @@ BOOTSTRAP_PATH = "/familasud/teverola/reparti/prodotti-alimentari/c/10012"
 PAGE_SIZE = 20
 
 
-def bootstrap_session(session, expected_site, expected_store):
+def bootstrap_session(session, expected_site, expected_store, retries=7):
     page_url = WEB + BOOTSTRAP_PATH
-    r = session.get(
-        page_url,
-        headers={
-            "User-Agent": UA,
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Language": "it-IT,it;q=0.9,en;q=0.7",
-        },
-        timeout=60,
-    )
-    r.raise_for_status()
+    last = None
+    for attempt in range(retries):
+        r = session.get(
+            page_url,
+            headers={
+                "User-Agent": UA,
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept-Language": "it-IT,it;q=0.9,en;q=0.7",
+            },
+            timeout=60,
+        )
+        last = r
+        if r.status_code == 200:
+            break
+        if r.status_code in (429, 481, 482, 500, 502, 503, 504):
+            time.sleep(min(75, 8 * (attempt + 1)))
+            continue
+        r.raise_for_status()
+    else:
+        raise RuntimeError(
+            f"Famila bootstrap fallito: HTTP {last.status_code if last is not None else 'ERR'}"
+        )
 
     soup = BeautifulSoup(r.text, "html.parser")
     node = soup.find("script", id="__NEXT_DATA__")
@@ -66,8 +78,8 @@ def request_json(session, url, params, referer, retries=7):
             if not isinstance(data, dict):
                 raise RuntimeError(f"Risposta JSON Famila inattesa: {type(data).__name__}")
             return data, r.url
-        if r.status_code in (429, 481, 500, 502, 503, 504):
-            time.sleep(min(45, 4 * (attempt + 1)))
+        if r.status_code in (429, 481, 482, 500, 502, 503, 504):
+            time.sleep(min(60, 6 * (attempt + 1)))
             continue
         raise RuntimeError(f"HTTP {r.status_code}: {r.url}")
     raise RuntimeError(f"HTTP {last.status_code if last else 'ERR'} after retries")
@@ -175,7 +187,7 @@ def main():
         if page == 0:
             data, source_url = first, first_url
         else:
-            time.sleep(0.12)
+            time.sleep(0.18)
             data, source_url = request_json(
                 session,
                 url,
