@@ -1,11 +1,13 @@
 {
-  "version": "Famila matrix updater V4",
-  "verdict": "FAMILA_MATRIX_V4_VALIDATED",
+  "version": "Famila matrix updater V5",
+  "verdict": "FAMILA_MATRIX_V5_VALIDATED",
   "site": "familasud",
   "store": "teverola",
   "categories_expected": 16,
   "categories_downloaded": 16,
   "unique_products_positive_price": 10085,
+  "android_food_products_positive_price": 7162,
+  "android_food_categories": 11,
   "categories": {
     "10001": {
       "name": "Amici animali",
@@ -104,5 +106,5 @@
       "positive_price_products": 1008
     }
   },
-  "merged_at": "2026-09-15T09:35:12.504071+00:00"
+  "merged_at": "2026-09-15T09:53:17.745857+00:00"
 }
