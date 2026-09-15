@@ -6,19 +6,53 @@ from bs4 import BeautifulSoup
 
 URL = "https://www.cosicomodo.it/familasud/teverola/reparti/frutta-e-verdura/frutta-fresca/fragole-e-frutti-di-bosco/c/62"
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/152 Safari/537.36"
+CAT_RE = re.compile(r"^/familasud/teverola/reparti/.+/c/\d+/?$")
 
 
-def clean(s):
-    return " ".join((s or "").split())
+def walk(value):
+    yield value
+    if isinstance(value, dict):
+        for v in value.values():
+            yield from walk(v)
+    elif isinstance(value, list):
+        for v in value:
+            yield from walk(v)
 
 
-def snippet(text, needle, radius=500):
-    pos = text.lower().find(needle.lower())
-    if pos < 0:
+def fnum(v):
+    try:
+        return float(v)
+    except Exception:
         return None
-    lo = max(0, pos - radius)
-    hi = min(len(text), pos + len(needle) + radius)
-    return clean(text[lo:hi])
+
+
+def product_from_dict(d):
+    if not isinstance(d, dict):
+        return None
+    code = str(d.get("code") or "").strip()
+    name = str(d.get("name") or d.get("description") or "").strip()
+    price = d.get("price") or d.get("bestPrice") or {}
+    if not isinstance(price, dict):
+        return None
+    value = fnum(price.get("value"))
+    url = str(d.get("url") or "").strip()
+    if not code or not name or not value or value <= 0:
+        return None
+    if "/p/" not in url and not re.fullmatch(r"\d{8,14}", code):
+        return None
+    return {
+        "code": code,
+        "name": name,
+        "price": value,
+        "price_formatted": price.get("formattedValue"),
+        "unit_price": fnum(price.get("priceReferenceUnit")),
+        "unit": price.get("referenceUnitMeasure"),
+        "url": url,
+        "leafCategoryName": d.get("leafCategoryName"),
+        "brand": d.get("marca") or d.get("brand"),
+        "saleable": d.get("saleable"),
+        "stock": d.get("stock"),
+    }
 
 
 def main():
@@ -30,58 +64,42 @@ def main():
     print("STATUS", r.status_code, "LEN", len(r.text), "URL", r.url)
     r.raise_for_status()
 
-    html = r.text
-    soup = BeautifulSoup(html, "html.parser")
-    scripts = []
-    for i, s in enumerate(soup.find_all("script")):
-        body = s.string if s.string is not None else s.get_text("", strip=False)
-        body = body or ""
-        scripts.append({
-            "index": i,
-            "id": s.get("id"),
-            "type": s.get("type"),
-            "src": s.get("src"),
-            "length": len(body),
-            "head": clean(body[:300]),
-            "has_fragole": "fragole" in body.lower(),
-            "has_price": "price" in body.lower(),
-            "has_products": "products" in body.lower(),
-        })
+    soup = BeautifulSoup(r.text, "html.parser")
+    node = soup.find("script", id="__NEXT_DATA__")
+    if not node or not node.string:
+        raise SystemExit("PROBE_FAIL: __NEXT_DATA__ non trovato")
+    data = json.loads(node.string)
 
-    needles = [
-        "Fragole Italia",
-        "Fragole \"sorriso\"",
-        "MIRTILLI PREMIUM",
-        "MEGAMARK_FAMILA",
-        '"price"',
-        'products',
-        '/p/',
-        'productCode',
-    ]
-    snippets = {n: snippet(html, n) for n in needles}
+    products = {}
+    category_urls = set()
+    for x in walk(data):
+        if isinstance(x, dict):
+            p = product_from_dict(x)
+            if p:
+                products[p["code"]] = p
+        elif isinstance(x, str):
+            s = x.split("?", 1)[0].rstrip("/")
+            if CAT_RE.match(s):
+                category_urls.add(s)
 
-    patterns = {
-        "p_paths": re.findall(r"[^\"'<>\\s]{0,140}/p/[^\"'<>\\s]{1,120}", html)[:50],
-        "product_codes": re.findall(r"MEGAMARK_FAMILA_[A-Za-z0-9_-]+", html)[:50],
-        "ean_like": re.findall(r"(?<!\d)\d{13}(?!\d)", html)[:50],
-    }
-
+    pp = ((data.get("props") or {}).get("pageProps") or {})
     result = {
-        "url": r.url,
         "status": r.status_code,
-        "html_length": len(html),
-        "scripts_count": len(scripts),
-        "scripts": scripts,
-        "snippets": snippets,
-        "patterns": patterns,
+        "html_length": len(r.text),
+        "pageProps_keys": sorted(pp.keys()),
+        "product_count": len(products),
+        "products_sample": list(products.values())[:20],
+        "category_url_count": len(category_urls),
+        "category_urls_sample": sorted(category_urls)[:100],
     }
     Path("famila_html_probe.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
-    interesting = [s for s in scripts if s["has_fragole"] or s["has_price"] or s["has_products"]]
-    if not interesting and not any(snippets.values()):
-        raise SystemExit("PROBE_FAIL: nessun payload prodotto individuato nell'HTML")
-    print("FAMILA_HTML_PAYLOAD_FOUND", len(interesting))
+    if len(products) < 8:
+        raise SystemExit(f"PROBE_FAIL: estratti solo {len(products)} prodotti")
+    if not category_urls:
+        raise SystemExit("PROBE_FAIL: nessuna URL categoria trovata")
+    print("FAMILA_STRUCTURED_PROBE_OK", len(products), len(category_urls))
 
 
 if __name__ == "__main__":
