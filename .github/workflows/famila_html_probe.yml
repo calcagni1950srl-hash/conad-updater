@@ -1,0 +1,27 @@
+name: Famila HTML Probe
+
+on:
+  push:
+    paths:
+      - 'famila_html_probe.py'
+      - '.github/workflows/famila_html_probe.yml'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Probe Famila Teverola HTML
+        run: python famila_html_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: famila-html-probe
+          path: famila_html_probe.json
+          if-no-files-found: warn
