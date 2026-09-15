@@ -1,61 +1,88 @@
 import argparse, json, time
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import quote
 
 import requests
-from bs4 import BeautifulSoup
 
 API = "https://api.cosicomodo.it/occ/v2"
 WEB = "https://www.cosicomodo.it"
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/152 Safari/537.36"
-BOOTSTRAP_PATH = "/familasud/teverola/reparti/prodotti-alimentari/c/10012"
 PAGE_SIZE = 20
 
+# Punto vendita validato dal payload ufficiale __NEXT_DATA__ di Famila Teverola.
+VALID_SITE = "familasud"
+VALID_STORE = "teverola"
+VALID_STORE_ID = "MEGAMARK_FAMILA_163711"
+VALID_CAP = "81030 - Teverola"
+VALID_DISPLAY = "Famila - Teverola"
+VALID_POINT_OF_SERVICE = {
+    "name": VALID_STORE_ID,
+    "socio": "MEGAMARK",
+    "tipoDiServizio": "CC",
+    "displayName": "Teverola",
+    "address": {
+        "aliasIndirizzo": "9374520672279",
+        "cfItaliano": False,
+        "defaultAddress": False,
+        "district": "CE",
+        "expiredValidation": False,
+        "flagPreferito": False,
+        "formattedAddress": "Località Zona Asi Aversa Nord sn, Teverola, 81030",
+        "id": "9374520672279",
+        "isCompany": False,
+        "isRichiestaFattura": False,
+        "line1": "Località Zona Asi Aversa Nord sn",
+        "phone": "0815000111",
+        "postalCode": "81030",
+        "presenzaAscensore": False,
+        "richiediFattura": False,
+        "shippingAddress": False,
+        "town": "Teverola",
+        "visibleInAddressBook": True,
+    },
+    "ragioneSocialeLegal": "Mida 3 S.R.L.",
+    "insegna": VALID_SITE,
+    "url": VALID_STORE,
+    "description": "FAMILA - TEVEROLA",
+}
 
-def bootstrap_session(session, expected_site, expected_store, retries=7):
-    page_url = WEB + BOOTSTRAP_PATH
-    last = None
-    for attempt in range(retries):
-        r = session.get(
-            page_url,
-            headers={
-                "User-Agent": UA,
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                "Accept-Language": "it-IT,it;q=0.9,en;q=0.7",
-            },
-            timeout=60,
-        )
-        last = r
-        if r.status_code == 200:
-            break
-        if r.status_code in (429, 481, 482, 500, 502, 503, 504):
-            time.sleep(min(75, 8 * (attempt + 1)))
-            continue
-        r.raise_for_status()
-    else:
-        raise RuntimeError(
-            f"Famila bootstrap fallito: HTTP {last.status_code if last is not None else 'ERR'}"
-        )
 
-    soup = BeautifulSoup(r.text, "html.parser")
-    node = soup.find("script", id="__NEXT_DATA__")
-    if not node or not node.string:
-        raise RuntimeError("Famila bootstrap: __NEXT_DATA__ mancante")
+def seed_store_context(session, site, store):
+    """Replica solo il contesto pubblico del punto vendita, senza aprire la pagina HTML.
 
-    pp = ((json.loads(node.string).get("props") or {}).get("pageProps") or {})
-    site = str(pp.get("originSiteWithSubBrand") or pp.get("originSite") or "").strip()
-    store = str(pp.get("storeAliasId") or "").strip()
-    point = pp.get("pointOfService") or {}
-    display = str(point.get("displayName") or point.get("description") or "").strip()
+    Il bootstrap HTML in parallelo viene bloccato dal sito con HTTP 482. L'API OCC,
+    invece, accetta correttamente il contesto del punto vendita tramite i cookie che
+    il frontend stesso usa dopo aver caricato la pagina.
+    """
+    if site != VALID_SITE or store != VALID_STORE:
+        raise RuntimeError(f"Punto vendita Famila non validato: {site}/{store}")
 
-    if site != expected_site:
-        raise RuntimeError(f"Famila bootstrap site inatteso: {site!r} != {expected_site!r}")
-    if store != expected_store:
-        raise RuntimeError(f"Famila bootstrap store inatteso: {store!r} != {expected_store!r}")
-    if not display or "famila" not in display.lower():
-        raise RuntimeError(f"Famila bootstrap punto vendita non validato: {display!r}")
-
-    return page_url, display
+    cookie_domain = ".cosicomodo.it"
+    session.cookies.set(
+        f"{site}_anonymous_preferred_base_store",
+        VALID_STORE_ID,
+        domain=cookie_domain,
+        path="/",
+    )
+    session.cookies.set(
+        f"{site}_provisionalcap",
+        quote(VALID_CAP, safe=""),
+        domain=cookie_domain,
+        path="/",
+    )
+    point_json = json.dumps(
+        VALID_POINT_OF_SERVICE,
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
+    session.cookies.set(
+        "pointOfService",
+        quote(point_json, safe=""),
+        domain=cookie_domain,
+        path="/",
+    )
+    return f"{WEB}/{site}/{store}/reparti/prodotti-alimentari/c/10012", VALID_DISPLAY
 
 
 def request_json(session, url, params, referer, retries=7):
@@ -147,7 +174,7 @@ def normalize_product(p, category_code, category_name, source_url, site, store, 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--site", default="familasud")
+    ap.add_argument("--site", default=VALID_SITE)
     ap.add_argument("--store", required=True)
     ap.add_argument("--code", required=True)
     ap.add_argument("--name", required=True)
@@ -157,7 +184,7 @@ def main():
     stamp = datetime.now(timezone.utc).isoformat()
     session = requests.Session()
     session.headers.update({"User-Agent": UA, "Accept-Language": "it-IT,it;q=0.9,en;q=0.7"})
-    referer, store_display = bootstrap_session(session, args.site, args.store)
+    referer, store_display = seed_store_context(session, args.site, args.store)
 
     url = f"{API}/{args.site}/stores/{args.store}/users/anonymous/products/search-by-category"
 
