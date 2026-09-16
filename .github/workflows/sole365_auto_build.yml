@@ -1,0 +1,106 @@
+name: Sole365 Auto Build Validated DB
+
+on:
+  push:
+    paths:
+      - '.github/workflows/sole365_auto_build.yml'
+      - 'sole365_fetch_category.py'
+      - 'sole365_merge_categories.py'
+  workflow_dispatch:
+  schedule:
+    - cron: '45 5 * * *'
+
+permissions:
+  contents: write
+
+env:
+  SOLE365_SITE: sole365
+  SOLE365_STORE: marcianise-aurno
+
+jobs:
+  fetch-categories:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - { code: '10006', name: 'Frutta e verdura' }
+          - { code: '10013', name: 'Salumi e formaggi' }
+          - { code: '10007', name: 'Gastronomia e pasta fresca' }
+          - { code: '10009', name: 'Latte, burro, uova e yogurt' }
+          - { code: '10003', name: 'Carne' }
+          - { code: '10011', name: 'Pesce' }
+          - { code: '10004', name: 'Colazione, merenda e dolci' }
+          - { code: '10012', name: 'Prodotti alimentari' }
+          - { code: '10010', name: 'Pane e pasticceria' }
+          - { code: '10008', name: 'Gelati e surgelati' }
+          - { code: '10002', name: 'Acqua, bevande, vino e alcolici' }
+          - { code: '10015', name: 'Tutto per il bambino' }
+          - { code: '10001', name: 'Amici animali' }
+          - { code: '10005', name: 'Cura della persona' }
+          - { code: '10016', name: 'Tutto per la casa' }
+          - { code: '10014', name: 'Tempo libero' }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Fetch Sole365 category ${{ matrix.code }}
+        run: >-
+          python sole365_fetch_category.py
+          --site "$SOLE365_SITE"
+          --store "$SOLE365_STORE"
+          --code '${{ matrix.code }}'
+          --name '${{ matrix.name }}'
+          --output 'category_${{ matrix.code }}.json'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sole365-cat-${{ matrix.code }}
+          path: category_${{ matrix.code }}.json
+          if-no-files-found: error
+
+  merge-and-publish:
+    needs: fetch-categories
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: sole365-cat-*
+          path: sole365_categories
+          merge-multiple: true
+      - name: Merge and audit Sole365 databases
+        run: >-
+          python sole365_merge_categories.py
+          --input sole365_categories
+          --site "$SOLE365_SITE"
+          --store "$SOLE365_STORE"
+          --db prezzi_sole365.db
+          --app-db prezzi_sole365_app.db
+          --report sole365_audit.json
+      - name: Publish validated Sole365 DBs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add prezzi_sole365.db prezzi_sole365_app.db sole365_audit.json
+          if git diff --cached --quiet; then
+            echo 'Nessuna modifica da pubblicare'
+          else
+            git commit -m 'Update validated Sole365 Marcianise prices'
+            git push
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sole365-validated-db
+          path: |
+            prezzi_sole365.db
+            prezzi_sole365_app.db
+            sole365_audit.json
+          if-no-files-found: error
