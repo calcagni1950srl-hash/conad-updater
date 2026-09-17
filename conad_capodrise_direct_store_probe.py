@@ -74,3 +74,5 @@ for name,payload in variants:
 
 Path('conad_capodrise_direct_store_probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps(out,ensure_ascii=False,indent=2))
+
+# trigger workflow after workflow file exists
