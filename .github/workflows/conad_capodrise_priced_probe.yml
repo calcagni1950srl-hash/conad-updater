@@ -85,40 +85,36 @@ jobs:
           start = s.index('async def select_pickup(page, out):')
           end = s.index('\n\nasync def select_store(page, out):', start)
           replacement = '''async def select_pickup(page, out):
-              info = await page.evaluate("""() => {
-                const visible = el => {
-                  const s=getComputedStyle(el), r=el.getBoundingClientRect();
-                  return s.visibility!=='hidden' && s.display!=='none' && r.width>0 && r.height>0;
-                };
-                return [...document.querySelectorAll('button')]
-                  .filter(el => visible(el) && (el.innerText||el.textContent||'').trim()==='Seleziona')
-                  .map((el, idx) => {
-                    let n=el;
-                    const chain=[];
-                    for(let k=0;k<7 && n;k++,n=n.parentElement){
-                      const t=(n.innerText||n.textContent||'').trim().replace(/\\s+/g,' ');
-                      if(t) chain.push(t.slice(0,700));
-                    }
-                    return {idx, chain};
-                  });
-              }""")
-              out["steps"].append({"step":"pickup_candidates","ok":bool(info),"candidates":info})
-              for item in info:
-                  joined = " ".join(item.get("chain", [])).lower()
-                  if "ordina e ritira" in joined or "ritiro" in joined:
-                      buttons = page.locator('button:has-text("Seleziona")')
-                      visible = []
-                      for i in range(await buttons.count()):
-                          b = buttons.nth(i)
-                          if await b.is_visible():
-                              visible.append(b)
-                      idx = item.get("idx", -1)
-                      if 0 <= idx < len(visible):
-                          await visible[idx].click(timeout=6000)
-                          out["steps"].append({"step":"select_pickup","ok":True,"visible_index":idx})
-                          await page.wait_for_timeout(2600)
-                          return True
-              out["steps"].append({"step":"select_pickup","ok":False})
+              buttons = page.locator('button:has-text("Seleziona")')
+              visible = []
+              labels = []
+              for i in range(await buttons.count()):
+                  b = buttons.nth(i)
+                  if not await b.is_visible():
+                      continue
+                  visible.append(b)
+                  label = ""
+                  node = b
+                  for _ in range(4):
+                      try:
+                          node = node.locator("..")
+                          text = (await node.inner_text()).strip().replace("\\n", " ")
+                          if text and len(text) < 500:
+                              label = text
+                              if "Ordina e ritira" in text or "Spesa a casa" in text:
+                                  break
+                      except Exception:
+                          break
+                  labels.append(label)
+              out["steps"].append({"step":"pickup_candidates","ok":bool(visible),"labels":labels})
+              for idx, label in enumerate(labels):
+                  low = label.lower()
+                  if "ordina e ritira" in low or ("ritira" in low and "spesa a casa" not in low):
+                      await visible[idx].click(timeout=6000)
+                      out["steps"].append({"step":"select_pickup","ok":True,"visible_index":idx,"label":label[:300]})
+                      await page.wait_for_timeout(3000)
+                      return True
+              out["steps"].append({"step":"select_pickup","ok":False,"labels":labels})
               return False
           '''
           s = s[:start] + replacement + s[end:]
