@@ -30,7 +30,7 @@ def product_sample(body):
     positive=0
     for p in arr[:80]:
         try: price=float(p.get('basePrice') or 0)
-        except: price=0
+        except Exception: price=0
         if price>0: positive+=1
         if len(sample)<12:
             sample.append({
@@ -39,26 +39,76 @@ def product_sample(body):
             })
     return {'count':len(arr),'positive_first80':positive,'sample':sample}
 
-async def main():
-    out={'store':STORE_ID,'steps':[],'queries':{},'errors':[]}
-    async with async_playwright() as pw:
-        browser=await pw.chromium.launch(headless=True)
-        ctx=await browser.new_context(locale='it-IT')
-        page=await ctx.new_page()
-        try:
-            await page.goto(BASE+'/',wait_until='domcontentloaded',timeout=90000)
-            try:
-                b=page.locator('#onetrust-accept-btn-handler')
-                if await b.count() and await b.first.is_visible():
-                    await b.first.click(force=True,timeout=3000)
-            except: pass
-            await page.wait_for_timeout(1500)
 
+async def accept_cookies(page, out):
+    selectors=[
+        '#onetrust-accept-btn-handler',
+        'button:has-text("ACCETTA TUTTI I COOKIE")',
+        'button:has-text("Accetta tutti i cookie")',
+        'button:has-text("Accetta tutti")',
+        '[role="button"]:has-text("ACCETTA TUTTI I COOKIE")',
+    ]
+    for sel in selectors:
+        try:
+            loc=page.locator(sel)
+            if await loc.count() and await loc.first.is_visible():
+                await loc.first.click(force=True, timeout=5000)
+                out['steps'].append({'step':'cookies','ok':True,'selector':sel})
+                await page.wait_for_timeout(1500)
+                return True
+        except Exception as e:
+            out['steps'].append({'step':'cookies_try','selector':sel,'error':str(e)[:300]})
+    out['steps'].append({'step':'cookies','ok':False})
+    return False
+
+
+async def get_protection_token(page, out):
+    try:
+        await page.wait_for_function("typeof window.gpGetProtectionToken === 'function'", timeout=30000)
+    except Exception as e:
+        out['steps'].append({'step':'protection_function_wait','ok':False,'error':str(e)[:500]})
+        return None
+
+    state=await page.evaluate("""() => ({
+      gp: typeof window.gpGetProtectionToken,
+      grecaptcha: typeof window.grecaptcha,
+      enterprise: !!(window.grecaptcha && window.grecaptcha.enterprise)
+    })""")
+    out['steps'].append({'step':'protection_state','value':state})
+
+    # Give reCAPTCHA Enterprise time to initialise after cookie consent.
+    await page.wait_for_timeout(3500)
+    last=None
+    for attempt in range(1,5):
+        try:
             token=await page.evaluate("""async () => {
               if (typeof window.gpGetProtectionToken !== 'function') return null;
               return await window.gpGetProtectionToken('entryaccess');
             }""")
-            out['steps'].append({'step':'token','ok':bool(token),'length':len(token or '')})
+            if token:
+                out['steps'].append({'step':'token','ok':True,'attempt':attempt,'length':len(token)})
+                return token
+            last='empty token'
+        except Exception as e:
+            last=str(e)
+            out['steps'].append({'step':'token_try','attempt':attempt,'ok':False,'error':last[:800]})
+        await page.wait_for_timeout(3000 * attempt)
+    out['steps'].append({'step':'token','ok':False,'error':(last or '')[:1000]})
+    return None
+
+
+async def main():
+    out={'store':STORE_ID,'steps':[],'queries':{},'errors':[]}
+    async with async_playwright() as pw:
+        browser=await pw.chromium.launch(headless=True)
+        ctx=await browser.new_context(locale='it-IT', viewport={'width':1280,'height':720})
+        page=await ctx.new_page()
+        try:
+            await page.goto(BASE+'/',wait_until='domcontentloaded',timeout=90000)
+            await page.wait_for_timeout(1500)
+            await accept_cookies(page,out)
+
+            token=await get_protection_token(page,out)
             if not token:
                 raise RuntimeError('Protection token non ottenuto')
 
@@ -73,16 +123,18 @@ async def main():
                 'nStoresFound':6,
                 'protectionToken':token,
             }
-            r=await ctx.request.post(BASE+'/api/ecommerce/it-it.set-ecaccess.json',
+            r=await ctx.request.post(
+                BASE+'/api/ecommerce/it-it.set-ecaccess.json',
                 data=payload,
-                headers={'referer':BASE+'/','origin':BASE,'accept':'application/json, text/plain, */*'})
+                headers={'referer':BASE+'/','origin':BASE,'accept':'application/json, text/plain, */*'}
+            )
             txt=await r.text()
             out['steps'].append({'step':'set-ecaccess','status':r.status,'ok':r.ok,'body':txt[:3000]})
             if not r.ok:
                 raise RuntimeError(f'set-ecaccess HTTP {r.status}')
 
             await page.goto(BASE+'/',wait_until='domcontentloaded',timeout=90000)
-            await page.wait_for_timeout(1000)
+            await page.wait_for_timeout(1200)
             globals_info=await page.evaluate("""() => ({
                 store: window.pointOfService ? window.pointOfService.name : null,
                 storeType: window.pointOfService ? window.pointOfService.storeType : null,
@@ -93,7 +145,7 @@ async def main():
             for q in ['latte','pasta','uova']:
                 url=BASE+'/search?query='+quote_plus(q)
                 await page.goto(url,wait_until='domcontentloaded',timeout=90000)
-                await page.wait_for_timeout(700)
+                await page.wait_for_timeout(900)
                 body=await page.content()
                 info=product_sample(body)
                 m=TOTAL_RE.search(body)
@@ -107,10 +159,14 @@ async def main():
         except Exception as e:
             out['errors'].append(repr(e))
             out['verdict']='ERROR'
+        finally:
             try: await page.screenshot(path='conad_capodrise_priced_probe.png',full_page=False)
-            except: pass
-        await browser.close()
-    Path('conad_capodrise_priced_probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
+            except Exception: pass
+            await browser.close()
+
+    Path('conad_capodrise_priced_probe.json').write_text(
+        json.dumps(out,ensure_ascii=False,indent=2), encoding='utf-8'
+    )
     print(json.dumps(out,ensure_ascii=False,indent=2))
     return out['verdict']=='CAPODRISE_PRICED_VALIDATED'
 
