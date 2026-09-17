@@ -109,7 +109,6 @@ async def main():
             await dismiss_cookie(page)
             await page.wait_for_timeout(1200)
 
-            # Scroll through the list so the real loader is rendered.
             for y in range(0, 30000, 900):
                 await page.evaluate("y => window.scrollTo(0, y)", y)
                 await page.wait_for_timeout(80)
@@ -120,7 +119,6 @@ async def main():
             OUT["initial_price_tokens"] = len(PRICE_RE.findall(initial_text))
             OUT["initial_text_len"] = len(initial_text)
 
-            # Capture exact DOM candidates before clicking.
             OUT["load_more_labels_before"] = await page.evaluate("""
                 () => Array.from(document.querySelectorAll('*'))
                     .filter(el => /carica\s+altri/i.test((el.innerText||'').trim()) || /(load.more|load-more|loadmore)/i.test((el.className||'')+' '+Array.from(el.attributes||[]).map(a=>a.name+'='+a.value).join(' ')))
@@ -128,7 +126,6 @@ async def main():
                     .slice(0,120)
             """)
 
-            # Click the visible public loader repeatedly and record each network delta.
             for round_no in range(1, 40):
                 before_text = await page.locator("body").inner_text()
                 before_prices = len(PRICE_RE.findall(before_text))
@@ -191,6 +188,7 @@ async def main():
         "requests": OUT.get("request_count", 0),
         "responses": OUT.get("response_count", 0),
         "errors": OUT.get("errors", [])[-3:],
+        "probe_version": 2
     }, ensure_ascii=False))
 
 
