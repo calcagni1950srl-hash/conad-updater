@@ -12,6 +12,7 @@ BASE = "https://spesaonline.conad.it"
 STORE_ID = "010548"
 STORE_LABEL = "Conad Superstore Capodrise"
 ADDRESS_QUERY = "Via Retella, 81020 Capodrise CE"
+STORE_TEXT = "VIA RETELLA EX GIARD.DEL SOLE"
 PRODUCT_RE = re.compile(r'data-product="([^"]+)"')
 EURO_RE = re.compile(r"(?<!\d)(\d{1,3}(?:[.,]\d{2}))\s*€")
 
@@ -29,18 +30,6 @@ def first_value(data, paths):
     return None
 
 
-def parse_price(data):
-    value = first_value(data, [
-        ("basePrice",), ("price", "value"), ("priceData", "value"),
-        ("price",), ("sellingPrice",),
-    ])
-    try:
-        price = float(str(value).replace(",", "."))
-        return price if price > 0 else 0.0
-    except Exception:
-        return 0.0
-
-
 def product_summary(body):
     products, seen = [], set()
     for raw in PRODUCT_RE.findall(body):
@@ -50,16 +39,18 @@ def product_summary(body):
             continue
         name = first_value(data, [("name",), ("nome",), ("productName",)]) or ""
         code = first_value(data, [("code",), ("productCode",), ("sku",)]) or ""
-        price = parse_price(data)
+        value = first_value(data, [("basePrice",), ("price", "value"), ("priceData", "value"), ("price",), ("sellingPrice",)])
+        try:
+            price = float(str(value).replace(",", "."))
+            if price <= 0:
+                price = 0.0
+        except Exception:
+            price = 0.0
         key = (str(code), str(name), price)
         if key in seen:
             continue
         seen.add(key)
-        products.append({
-            "code": str(code), "name": str(name), "price": price,
-            "qty": first_value(data, [("netQuantity",), ("quantity",)]),
-            "unit": first_value(data, [("netQuantityUm",), ("unit",)]),
-        })
+        products.append({"code": str(code), "name": str(name), "price": price})
     positive = [p for p in products if p["price"] > 0]
     euros = []
     for raw in EURO_RE.findall(body):
@@ -69,20 +60,15 @@ def product_summary(body):
                 euros.append(value)
         except Exception:
             pass
-    return {
-        "products_found": len(products),
-        "positive_prices": len(positive),
-        "examples": positive[:10],
-        "visible_euro_values_sample": euros[:10],
-    }
+    return {"products_found": len(products), "positive_prices": len(positive), "examples": positive[:10], "visible_euro_values_sample": euros[:10]}
 
 
 def request_fields(req):
     raw = req.post_data or ""
     try:
-        parsed_json = json.loads(raw)
-        if isinstance(parsed_json, dict):
-            return {str(k): v for k, v in parsed_json.items()}
+        x = json.loads(raw)
+        if isinstance(x, dict):
+            return x
     except Exception:
         pass
     parsed = parse_qs(raw, keep_blank_values=True)
@@ -104,216 +90,118 @@ def sanitise_selection_request(req):
     }
 
 
-async def snapshot(page):
+async def snap(page):
     return await page.evaluate(r"""() => {
-      const visible = el => {
-        const s = getComputedStyle(el), r = el.getBoundingClientRect();
-        return s.visibility !== 'hidden' && s.display !== 'none' && r.width > 0 && r.height > 0;
-      };
-      const txt = el => (el.innerText || el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 400);
+      const visible = el => { const s=getComputedStyle(el), r=el.getBoundingClientRect(); return s.visibility!=='hidden' && s.display!=='none' && r.width>0 && r.height>0; };
+      const txt = el => (el.innerText||el.textContent||'').trim().replace(/\s+/g,' ').slice(0,500);
       return {
         url: location.href,
-        title: document.title,
-        inputs: [...document.querySelectorAll('input')].filter(visible).slice(0, 40).map(el => ({
-          placeholder: el.getAttribute('placeholder'), aria: el.getAttribute('aria-label'),
-          name: el.getAttribute('name'), type: el.getAttribute('type'), value: el.value
-        })),
-        buttons: [...document.querySelectorAll('button,[role="button"],a')].filter(visible)
-          .map(txt).filter(Boolean).slice(0, 160),
-        body_text: (document.body.innerText || '').trim().replace(/\s+/g, ' ').slice(0, 12000)
+        buttons: [...document.querySelectorAll('button,[role="button"],a')].filter(visible).map(txt).filter(Boolean).slice(0,180),
+        body_text: (document.body.innerText||'').trim().replace(/\s+/g,' ').slice(0,14000)
       };
     }""")
 
 
-async def save_snapshot(page, out, name):
+async def save(page, out, name):
     try:
-        out["snapshots"][name] = await snapshot(page)
+        out["snapshots"][name] = await snap(page)
     except Exception as exc:
-        out["steps"].append({"step": "snapshot:" + name, "ok": False, "error": str(exc)[:400]})
+        out["steps"].append({"step": "snapshot:" + name, "ok": False, "error": str(exc)[:300]})
 
 
-async def click_visible(page, selectors, out, step, timeout=6000, settle=1400):
-    for sel in selectors:
+async def click_visible(page, selector, out, step, settle=1200):
+    loc = page.locator(selector)
+    for i in range(await loc.count() - 1, -1, -1):
+        item = loc.nth(i)
         try:
-            loc = page.locator(sel)
-            for i in range(await loc.count() - 1, -1, -1):
-                item = loc.nth(i)
-                if not await item.is_visible():
-                    continue
-                try:
-                    await item.click(timeout=timeout)
-                    out["steps"].append({"step": step, "ok": True, "selector": sel, "match_index": i})
-                    await page.wait_for_timeout(settle)
-                    return True
-                except Exception:
-                    continue
-        except Exception:
-            continue
-    out["steps"].append({"step": step, "ok": False})
-    return False
-
-
-async def first_visible(page, selectors):
-    for sel in selectors:
-        try:
-            loc = page.locator(sel)
-            for i in range(await loc.count()):
-                item = loc.nth(i)
-                if await item.is_visible():
-                    return item, sel
+            if await item.is_visible():
+                await item.click(timeout=6000)
+                out["steps"].append({"step": step, "ok": True, "selector": selector, "index": i})
+                await page.wait_for_timeout(settle)
+                return True
         except Exception:
             pass
-    return None, None
+    out["steps"].append({"step": step, "ok": False, "selector": selector})
+    return False
 
 
 async def service_panel_visible(page):
     try:
-        body = (await page.locator("body").inner_text()).lower()
-        if "come vuoi fare la spesa" not in body or "ordina e ritira" not in body:
-            return False
-        buttons = page.locator('button:has-text("Seleziona")')
-        for i in range(await buttons.count()):
-            if await buttons.nth(i).is_visible():
-                return True
+        t = (await page.locator("body").inner_text()).lower()
+        return "come vuoi fare la spesa" in t and "ordina e ritira" in t
     except Exception:
-        pass
-    return False
+        return False
 
 
-async def choose_address(page, out):
-    return await click_visible(page, [
-        '.pac-item:has-text("Capodrise")',
-        '[role="option"]:has-text("Capodrise")',
-        'li:has-text("Capodrise")',
-    ], out, "select_address_suggestion", settle=1000)
-
-
-async def select_pickup(page, out):
-    try:
-        buttons = page.locator('button:has-text("Seleziona")')
-        candidates = []
-        for i in range(await buttons.count()):
-            btn = buttons.nth(i)
-            if not await btn.is_visible():
-                continue
-            node = btn
-            best = ""
-            for _ in range(8):
-                try:
-                    node = node.locator("..")
-                    text = (await node.inner_text()).strip().replace("\n", " ")
-                    if text and len(text) < 1800:
-                        best = text
-                        low = text.lower()
-                        if "ordina e ritira" in low:
-                            break
-                except Exception:
-                    break
-            candidates.append((btn, best))
-        out["steps"].append({
-            "step": "pickup_candidates", "ok": bool(candidates),
-            "labels": [t[:500] for _, t in candidates]
-        })
-        for btn, text in candidates:
-            if "ordina e ritira" in text.lower():
-                await btn.click(timeout=6000)
-                out["steps"].append({"step": "select_pickup", "ok": True, "context": text[:500]})
-                await page.wait_for_timeout(2500)
-                return True
-    except Exception as exc:
-        out["steps"].append({"step": "select_pickup_scan", "ok": False, "error": str(exc)[:300]})
-    out["steps"].append({"step": "select_pickup", "ok": False})
-    return False
-
-
-async def click_capodrise_store(page, out):
-    # Use only a normal visible control inside a visible container naming Capodrise/Via Retella.
-    for term in ["Via Retella", "Capodrise", STORE_ID]:
+async def click_capodrise_card(page, out):
+    # The pickup list uses clickable store cards rather than separate Select buttons.
+    for phrase in [STORE_TEXT, "Conad Superstore VIA RETELLA", "CAPODRISE, 81020"]:
         try:
-            hits = page.get_by_text(term, exact=False)
-            for i in range(min(await hits.count(), 60)):
+            hits = page.get_by_text(phrase, exact=False)
+            for i in range(await hits.count()):
                 hit = hits.nth(i)
                 if not await hit.is_visible():
                     continue
+                # First try the visible text itself; event bubbling covers clickable parent cards.
+                try:
+                    await hit.click(timeout=6000)
+                    out["steps"].append({"step": "select_store_card", "ok": True, "phrase": phrase, "mode": "text_click", "index": i})
+                    await page.wait_for_timeout(3500)
+                    return True
+                except Exception:
+                    pass
+                # If needed, climb to a normal interactive ancestor and click it.
                 node = hit
-                for depth in range(9):
+                for depth in range(1, 8):
                     try:
-                        text = (await node.inner_text()).strip().replace("\n", " ")
+                        node = node.locator("..")
+                        tag = await node.evaluate("el => el.tagName.toLowerCase()")
+                        role = await node.get_attribute("role")
+                        tabindex = await node.get_attribute("tabindex")
+                        onclick = await node.get_attribute("onclick")
+                        if tag in ("button", "a") or role in ("button", "link") or tabindex is not None or onclick is not None:
+                            await node.click(timeout=6000)
+                            out["steps"].append({"step": "select_store_card", "ok": True, "phrase": phrase, "mode": "ancestor_click", "depth": depth, "tag": tag, "role": role})
+                            await page.wait_for_timeout(3500)
+                            return True
                     except Exception:
-                        text = ""
-                    low = text.lower()
-                    if ("capodrise" in low or "via retella" in low or STORE_ID in text) and len(text) < 2500:
-                        for bsel in [
-                            'button:has-text("Conferma il negozio")',
-                            'button:has-text("Seleziona")',
-                            'button:has-text("Scegli")',
-                            'button:has-text("Conferma")',
-                            'a:has-text("Seleziona")',
-                            'a:has-text("Scegli")',
-                        ]:
-                            controls = node.locator(bsel)
-                            for j in range(await controls.count()):
-                                control = controls.nth(j)
-                                if await control.is_visible():
-                                    await control.click(timeout=6000)
-                                    out["steps"].append({
-                                        "step": "select_store", "ok": True, "term": term,
-                                        "button": bsel, "depth": depth, "context": text[:700]
-                                    })
-                                    await page.wait_for_timeout(3500)
-                                    return True
-                    node = node.locator("..")
+                        continue
         except Exception:
             continue
-    out["steps"].append({"step": "select_store", "ok": False})
+    out["steps"].append({"step": "select_store_card", "ok": False})
     return False
 
 
-async def select_capodrise_via_ui(page, out):
-    inp, selector = await first_visible(page, [
-        'input[name="googleInputEntrypageLine1"]',
-        'input[placeholder*="Via Mario Rossi" i]',
-    ])
-    if not inp:
-        out["steps"].append({"step": "address_input", "ok": False})
+async def ui_select(page, out):
+    inp = page.locator('input[name="googleInputEntrypageLine1"]').first
+    if not await inp.count() or not await inp.is_visible():
         return False
-
     await inp.fill(ADDRESS_QUERY)
-    out["steps"].append({"step": "fill_address", "ok": True, "selector": selector, "value": ADDRESS_QUERY})
+    out["steps"].append({"step": "fill_address", "ok": True})
     await page.wait_for_timeout(2200)
-    if not await choose_address(page, out):
+    if not await click_visible(page, '.pac-item:has-text("Capodrise")', out, "select_address", 1000):
         return False
 
-    civic, civic_sel = await first_visible(page, [
-        'input[name="googleInputEntrypageLine2"]', 'input[placeholder="es. 10"]'
-    ])
-    if civic:
+    civic = page.locator('input[name="googleInputEntrypageLine2"]').first
+    if await civic.count() and await civic.is_visible():
         await civic.fill("1")
-        out["steps"].append({"step": "fill_civic", "ok": True, "selector": civic_sel})
+        out["steps"].append({"step": "fill_civic", "ok": True})
 
-    # Conad can open the service panel immediately after autocomplete, before a Verifica click.
+    if not await service_panel_visible(page):
+        await click_visible(page, 'button:has-text("Verifica")', out, "verify_address", 2500)
     panel = await service_panel_visible(page)
-    if not panel:
-        await click_visible(page, [
-            'button:has-text("Verifica")', 'button:has-text("Continua")', 'button:has-text("Avanti")'
-        ], out, "verify_address", timeout=7000, settle=3000)
-        panel = await service_panel_visible(page)
-    out["steps"].append({"step": "service_panel_after_address", "ok": panel})
-    await save_snapshot(page, out, "after_address_verify")
+    out["steps"].append({"step": "service_panel", "ok": panel})
     if not panel:
         return False
 
-    if not await select_pickup(page, out):
-        await save_snapshot(page, out, "after_pickup_failed")
+    # There is one visible Select button for Ordina e ritira at this step.
+    if not await click_visible(page, 'button:has-text("Seleziona")', out, "select_pickup", 2500):
         return False
-    await save_snapshot(page, out, "after_pickup")
+    await save(page, out, "pickup_store_list")
 
-    if not await click_capodrise_store(page, out):
-        await save_snapshot(page, out, "store_list_no_match")
-        return False
-    await save_snapshot(page, out, "after_store_click")
-    await page.wait_for_timeout(2500)
-    return True
+    selected = await click_capodrise_card(page, out)
+    await save(page, out, "after_store_card_click")
+    return selected
 
 
 async def search_check(page, query):
@@ -324,7 +212,6 @@ async def search_check(page, query):
             await page.wait_for_timeout(1800)
             info = product_summary(await page.content())
             info["url"] = page.url
-            info["title"] = await page.title()
             rank = (info["positive_prices"], info["products_found"], len(info["visible_euro_values_sample"]))
             if best is None or rank > best[0]:
                 best = (rank, info)
@@ -332,48 +219,35 @@ async def search_check(page, query):
                 break
         except Exception as exc:
             if best is None:
-                best = ((0, 0, 0), {"url": url, "products_found": 0, "positive_prices": 0, "examples": [], "error": str(exc)[:400]})
+                best = ((0,0,0), {"url": url, "products_found": 0, "positive_prices": 0, "examples": [], "error": str(exc)[:300]})
     return best[1] if best else {"products_found": 0, "positive_prices": 0, "examples": []}
 
 
 async def main():
-    out = {
-        "store_id": STORE_ID, "store_label": STORE_LABEL, "address_query": ADDRESS_QUERY,
-        "method": "normal_public_ui_only", "steps": [], "snapshots": {},
-        "selection_requests": [], "selection_responses": [], "queries": {}, "errors": [],
-        "verdict": "NOT_RUN",
-    }
+    out = {"store_id": STORE_ID, "store_label": STORE_LABEL, "method": "normal_public_ui_only", "steps": [], "snapshots": {}, "selection_requests": [], "selection_responses": [], "queries": {}, "errors": [], "verdict": "NOT_RUN"}
     async with async_playwright() as pw:
         browser = await pw.chromium.launch(headless=True)
         context = await browser.new_context(locale="it-IT", viewport={"width": 1440, "height": 1000})
         page = await context.new_page()
 
         def on_request(req):
-            try:
-                item = sanitise_selection_request(req)
-                if item:
-                    out["selection_requests"].append(item)
-            except Exception as exc:
-                out["errors"].append("request_listener: " + str(exc)[:300])
+            item = sanitise_selection_request(req)
+            if item:
+                out["selection_requests"].append(item)
 
         async def on_response(resp):
-            try:
-                if "set-ecaccess" in resp.url:
-                    out["selection_responses"].append({"url": resp.url, "status": resp.status})
-            except Exception as exc:
-                out["errors"].append("response_listener: " + str(exc)[:300])
+            if "set-ecaccess" in resp.url:
+                out["selection_responses"].append({"url": resp.url, "status": resp.status})
 
         page.on("request", on_request)
         page.on("response", on_response)
         try:
             await page.goto(BASE + "/", wait_until="domcontentloaded", timeout=90000)
-            await page.wait_for_timeout(1800)
-            await click_visible(page, ["#onetrust-accept-btn-handler", 'button:has-text("Accetta tutti")'], out, "cookies", settle=700)
-            await save_snapshot(page, out, "initial")
-
-            clicked = await select_capodrise_via_ui(page, out)
+            await page.wait_for_timeout(1600)
+            await click_visible(page, "#onetrust-accept-btn-handler", out, "cookies", 700)
+            clicked = await ui_select(page, out)
             out["steps"].append({"step": "store_ui_clicked", "ok": clicked})
-            await page.wait_for_timeout(1800)
+            await page.wait_for_timeout(2000)
 
             request = next((x for x in reversed(out["selection_requests"]) if x.get("pointOfServiceId") == STORE_ID), None)
             response = out["selection_responses"][-1] if out["selection_responses"] else None
@@ -382,18 +256,12 @@ async def main():
             out["selection_has_protection_token"] = bool(request and request.get("has_protection_token"))
             out["selection_status"] = response.get("status") if response else None
 
-            selection_ok = bool(
-                request and response and request.get("pointOfServiceId") == STORE_ID
-                and request.get("has_protection_token") and 200 <= response["status"] < 300
-            )
+            selection_ok = bool(request and response and request.get("pointOfServiceId") == STORE_ID and request.get("has_protection_token") and 200 <= response["status"] < 300)
             if selection_ok:
                 for query in ["latte", "pasta", "uova"]:
                     out["queries"][query] = await search_check(page, query)
             else:
-                out["steps"].append({
-                    "step": "catalog_checks", "ok": False,
-                    "note": "skipped: Conad did not confirm store 010548 through its own set-ecaccess request"
-                })
+                out["steps"].append({"step": "catalog_checks", "ok": False, "note": "store 010548 not yet confirmed by Conad set-ecaccess"})
 
             all_priced = selection_ok and all(out["queries"].get(q, {}).get("positive_prices", 0) > 0 for q in ["latte", "pasta", "uova"])
             out["verdict"] = "CAPODRISE_PRICED_VALIDATED" if all_priced else "CAPODRISE_NOT_VALIDATED"
@@ -401,11 +269,11 @@ async def main():
             out["errors"].append(repr(exc))
             out["verdict"] = "ERROR"
         finally:
-            await save_snapshot(page, out, "final")
+            await save(page, out, "final")
             try:
                 await page.screenshot(path="conad_capodrise_priced_probe.png", full_page=True)
-            except Exception as exc:
-                out["errors"].append("screenshot: " + str(exc)[:300])
+            except Exception:
+                pass
             await browser.close()
 
     Path("conad_capodrise_priced_probe.json").write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -413,5 +281,4 @@ async def main():
     return out["verdict"] == "CAPODRISE_PRICED_VALIDATED"
 
 
-ok = asyncio.run(main())
-sys.exit(0 if ok else 1)
+sys.exit(0 if asyncio.run(main()) else 1)
