@@ -66,9 +66,9 @@ def product_summary(body):
 def request_fields(req):
     raw = req.post_data or ""
     try:
-        x = json.loads(raw)
-        if isinstance(x, dict):
-            return x
+        data = json.loads(raw)
+        if isinstance(data, dict):
+            return data
     except Exception:
         pass
     parsed = parse_qs(raw, keep_blank_values=True)
@@ -110,31 +110,33 @@ async def save(page, out, name):
 
 
 async def click_visible(page, selector, out, step, settle=1200):
-    loc = page.locator(selector)
-    for i in range(await loc.count() - 1, -1, -1):
-        item = loc.nth(i)
-        try:
-            if await item.is_visible():
-                await item.click(timeout=6000)
-                out["steps"].append({"step": step, "ok": True, "selector": selector, "index": i})
-                await page.wait_for_timeout(settle)
-                return True
-        except Exception:
-            pass
+    try:
+        loc = page.locator(selector)
+        for i in range(await loc.count() - 1, -1, -1):
+            item = loc.nth(i)
+            try:
+                if await item.is_visible():
+                    await item.click(timeout=6000)
+                    out["steps"].append({"step": step, "ok": True, "selector": selector, "index": i})
+                    await page.wait_for_timeout(settle)
+                    return True
+            except Exception:
+                pass
+    except Exception:
+        pass
     out["steps"].append({"step": step, "ok": False, "selector": selector})
     return False
 
 
 async def service_panel_visible(page):
     try:
-        t = (await page.locator("body").inner_text()).lower()
-        return "come vuoi fare la spesa" in t and "ordina e ritira" in t
+        text = (await page.locator("body").inner_text()).lower()
+        return "come vuoi fare la spesa" in text and "ordina e ritira" in text
     except Exception:
         return False
 
 
 async def click_capodrise_card(page, out):
-    # The pickup list uses clickable store cards rather than separate Select buttons.
     for phrase in [STORE_TEXT, "Conad Superstore VIA RETELLA", "CAPODRISE, 81020"]:
         try:
             hits = page.get_by_text(phrase, exact=False)
@@ -142,32 +144,15 @@ async def click_capodrise_card(page, out):
                 hit = hits.nth(i)
                 if not await hit.is_visible():
                     continue
-                # First try the visible text itself; event bubbling covers clickable parent cards.
                 try:
                     await hit.click(timeout=6000)
-                    out["steps"].append({"step": "select_store_card", "ok": True, "phrase": phrase, "mode": "text_click", "index": i})
-                    await page.wait_for_timeout(3500)
+                    out["steps"].append({"step": "select_store_card", "ok": True, "phrase": phrase, "index": i})
+                    await page.wait_for_timeout(2200)
                     return True
                 except Exception:
                     pass
-                # If needed, climb to a normal interactive ancestor and click it.
-                node = hit
-                for depth in range(1, 8):
-                    try:
-                        node = node.locator("..")
-                        tag = await node.evaluate("el => el.tagName.toLowerCase()")
-                        role = await node.get_attribute("role")
-                        tabindex = await node.get_attribute("tabindex")
-                        onclick = await node.get_attribute("onclick")
-                        if tag in ("button", "a") or role in ("button", "link") or tabindex is not None or onclick is not None:
-                            await node.click(timeout=6000)
-                            out["steps"].append({"step": "select_store_card", "ok": True, "phrase": phrase, "mode": "ancestor_click", "depth": depth, "tag": tag, "role": role})
-                            await page.wait_for_timeout(3500)
-                            return True
-                    except Exception:
-                        continue
         except Exception:
-            continue
+            pass
     out["steps"].append({"step": "select_store_card", "ok": False})
     return False
 
@@ -194,14 +179,17 @@ async def ui_select(page, out):
     if not panel:
         return False
 
-    # There is one visible Select button for Ordina e ritira at this step.
     if not await click_visible(page, 'button:has-text("Seleziona")', out, "select_pickup", 2500):
         return False
     await save(page, out, "pickup_store_list")
 
-    selected = await click_capodrise_card(page, out)
+    if not await click_capodrise_card(page, out):
+        return False
     await save(page, out, "after_store_card_click")
-    return selected
+
+    confirmed = await click_visible(page, 'button:has-text("Conferma il negozio")', out, "confirm_store", 4500)
+    await save(page, out, "after_store_confirm")
+    return confirmed
 
 
 async def search_check(page, query):
@@ -231,13 +219,19 @@ async def main():
         page = await context.new_page()
 
         def on_request(req):
-            item = sanitise_selection_request(req)
-            if item:
-                out["selection_requests"].append(item)
+            try:
+                item = sanitise_selection_request(req)
+                if item:
+                    out["selection_requests"].append(item)
+            except Exception as exc:
+                out["errors"].append("request_listener: " + str(exc)[:300])
 
         async def on_response(resp):
-            if "set-ecaccess" in resp.url:
-                out["selection_responses"].append({"url": resp.url, "status": resp.status})
+            try:
+                if "set-ecaccess" in resp.url:
+                    out["selection_responses"].append({"url": resp.url, "status": resp.status})
+            except Exception as exc:
+                out["errors"].append("response_listener: " + str(exc)[:300])
 
         page.on("request", on_request)
         page.on("response", on_response)
@@ -247,7 +241,7 @@ async def main():
             await click_visible(page, "#onetrust-accept-btn-handler", out, "cookies", 700)
             clicked = await ui_select(page, out)
             out["steps"].append({"step": "store_ui_clicked", "ok": clicked})
-            await page.wait_for_timeout(2000)
+            await page.wait_for_timeout(1800)
 
             request = next((x for x in reversed(out["selection_requests"]) if x.get("pointOfServiceId") == STORE_ID), None)
             response = out["selection_responses"][-1] if out["selection_responses"] else None
@@ -261,7 +255,7 @@ async def main():
                 for query in ["latte", "pasta", "uova"]:
                     out["queries"][query] = await search_check(page, query)
             else:
-                out["steps"].append({"step": "catalog_checks", "ok": False, "note": "store 010548 not yet confirmed by Conad set-ecaccess"})
+                out["steps"].append({"step": "catalog_checks", "ok": False, "note": "store 010548 not confirmed by Conad set-ecaccess"})
 
             all_priced = selection_ok and all(out["queries"].get(q, {}).get("positive_prices", 0) > 0 for q in ["latte", "pasta", "uova"])
             out["verdict"] = "CAPODRISE_PRICED_VALIDATED" if all_priced else "CAPODRISE_NOT_VALIDATED"
