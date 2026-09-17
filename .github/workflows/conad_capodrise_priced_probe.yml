@@ -17,6 +17,50 @@ jobs:
           python-version: '3.12'
       - run: pip install playwright
       - run: python -m playwright install --with-deps chromium
+      - name: Patch duplicate visible controls
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('conad_capodrise_priced_probe.py')
+          s = p.read_text(encoding='utf-8')
+          old = '''async def click_first(page, selectors, out, step, timeout=5000):
+              for sel in selectors:
+                  try:
+                      loc = page.locator(sel).first
+                      if await loc.count() and await loc.is_visible():
+                          await loc.click(timeout=timeout)
+                          out["steps"].append({"step": step, "ok": True, "selector": sel})
+                          await page.wait_for_timeout(1200)
+                          return True
+                  except Exception:
+                      pass
+              out["steps"].append({"step": step, "ok": False})
+              return False
+          '''
+          new = '''async def click_first(page, selectors, out, step, timeout=5000):
+              for sel in selectors:
+                  try:
+                      loc = page.locator(sel)
+                      count = await loc.count()
+                      for i in range(count - 1, -1, -1):
+                          item = loc.nth(i)
+                          try:
+                              if await item.is_visible():
+                                  await item.click(timeout=timeout)
+                                  out["steps"].append({"step": step, "ok": True, "selector": sel, "match_index": i})
+                                  await page.wait_for_timeout(1200)
+                                  return True
+                          except Exception:
+                              continue
+                  except Exception:
+                      pass
+              out["steps"].append({"step": step, "ok": False})
+              return False
+          '''
+          if old not in s:
+              raise SystemExit('click_first helper not found')
+          p.write_text(s.replace(old, new), encoding='utf-8')
+          PY
       - name: Validate Capodrise priced catalog through public UI
         run: python conad_capodrise_priced_probe.py
       - uses: actions/upload-artifact@v4
