@@ -17,7 +17,7 @@ jobs:
           python-version: '3.12'
       - run: pip install playwright
       - run: python -m playwright install --with-deps chromium
-      - name: Patch duplicate visible controls
+      - name: Patch robust visible controls
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -59,7 +59,29 @@ jobs:
           '''
           if old not in s:
               raise SystemExit('click_first helper not found')
-          p.write_text(s.replace(old, new), encoding='utf-8')
+          s = s.replace(old, new)
+          old_verify = '''    await click_first(page, [
+                  'button:has-text("Verifica")', 'button:has-text("Continua")', 'button:has-text("Avanti")'
+              ], out, "verify_address", timeout=7000)
+          '''
+          new_verify = '''    verified = await page.evaluate("""() => {
+              const visible = el => {
+                const s = getComputedStyle(el), r = el.getBoundingClientRect();
+                return s.visibility !== 'hidden' && s.display !== 'none' && r.width > 0 && r.height > 0;
+              };
+              const els = [...document.querySelectorAll('button,[role="button"]')];
+              const target = els.find(el => visible(el) && (el.innerText || el.textContent || '').trim() === 'Verifica');
+              if (!target) return false;
+              target.click();
+              return true;
+            }""")
+              out["steps"].append({"step": "verify_address_dom", "ok": bool(verified)})
+              await page.wait_for_timeout(1800)
+          '''
+          if old_verify not in s:
+              raise SystemExit('verify block not found')
+          s = s.replace(old_verify, new_verify)
+          p.write_text(s, encoding='utf-8')
           PY
       - name: Validate Capodrise priced catalog through public UI
         run: python conad_capodrise_priced_probe.py
