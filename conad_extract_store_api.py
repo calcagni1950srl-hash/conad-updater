@@ -3,7 +3,11 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
 BASE='https://spesaonline.conad.it/'
-KEYS=['setChosenStore','set-ecaccess.json','pointOfServiceId','protectionToken','typeOfService']
+KEYS=[
+ 'setChosenStore','set-ecaccess.json','pointOfServiceId','protectionToken','typeOfService',
+ 'selectedAddress_SAP_Format','completeAddress','notCompleted','formatted_address_no_street_number',
+ 'postal_code','street_number','administrative_area_level_3'
+]
 OUT={'scripts':[],'matches':[],'errors':[]}
 
 s=requests.Session()
@@ -22,14 +26,14 @@ try:
             rr=s.get(u,timeout=30)
             txt=rr.text
             for key in KEYS:
-                start=0
+                start=0; n=0
                 while True:
                     i=txt.find(key,start)
                     if i<0: break
-                    a=max(0,i-1800); b=min(len(txt),i+2600)
+                    a=max(0,i-5000); b=min(len(txt),i+7000)
                     OUT['matches'].append({'script':u,'key':key,'offset':i,'context':txt[a:b]})
-                    start=i+len(key)
-                    if sum(1 for x in OUT['matches'] if x['script']==u and x['key']==key)>=8: break
+                    start=i+len(key); n+=1
+                    if n>=12: break
         except Exception as e:
             OUT['errors'].append({'script':u,'error':repr(e)})
 except Exception as e:
