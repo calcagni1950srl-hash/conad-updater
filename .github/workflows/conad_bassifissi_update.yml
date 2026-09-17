@@ -1,0 +1,61 @@
+name: Aggiorna Conad Bassi e Fissi
+
+on:
+  push:
+    paths:
+      - 'conad_bassifissi_updater.py'
+      - '.github/workflows/conad_bassifissi_update.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+      - name: Build validated Conad database
+        run: |
+          python conad_bassifissi_updater.py \
+            --db prezzi_conad_capodrise.db \
+            --audit conad_bassifissi_audit.json \
+            --expected 796
+      - name: Audit SQLite
+        run: |
+          python - <<'PY'
+          import json, sqlite3
+          a=json.load(open('conad_bassifissi_audit.json',encoding='utf-8'))
+          con=sqlite3.connect('prezzi_conad_capodrise.db')
+          n=con.execute('select count(*) from products_current').fetchone()[0]
+          p=con.execute('select count(*) from products_current where price_eur>0').fetchone()[0]
+          bf=con.execute('select count(*) from products_current where bassi_fissi=1').fetchone()[0]
+          stores=con.execute('select distinct store_code from products_current').fetchall()
+          con.close()
+          print({'rows':n,'positive':p,'bassi_fissi':bf,'stores':stores,'verdict':a['verdict']})
+          assert a['verdict']=='CONAD_BASSI_FISSI_CURRENT_VALIDATED'
+          assert n==a['declared_products']==a['unique_products']==796
+          assert p==bf==796
+          assert stores==[('010548',)]
+          PY
+      - name: Upload validated database
+        uses: actions/upload-artifact@v4
+        with:
+          name: conad-capodrise-bassi-fissi-db
+          path: |
+            prezzi_conad_capodrise.db
+            conad_bassifissi_audit.json
+      - name: Commit current database
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add prezzi_conad_capodrise.db conad_bassifissi_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Update validated Conad Bassi e Fissi database'
+          git push
