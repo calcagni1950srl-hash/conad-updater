@@ -25,7 +25,7 @@ jobs:
           python -m playwright install --with-deps chromium
 
       - name: Validate Capodrise through Conad public UI
-        run: python conad_capodrise_priced_probe.py
+        run: xvfb-run -a python conad_capodrise_priced_probe.py
 
       - uses: actions/upload-artifact@v4
         if: always()
