@@ -1,0 +1,27 @@
+name: Conad Capodrise Official Offers Probe
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'conad_capodrise_offers_probe.py'
+      - '.github/workflows/conad_capodrise_offers_probe.yml'
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright
+      - run: python -m playwright install --with-deps chromium
+      - run: python conad_capodrise_offers_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conad-capodrise-offers-probe
+          path: |
+            conad_capodrise_offers_probe.json
+            conad_capodrise_offers_probe.png
+          if-no-files-found: ignore
