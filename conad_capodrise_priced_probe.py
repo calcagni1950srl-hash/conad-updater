@@ -205,15 +205,12 @@ async def ui_select(page, out):
         return False
     await save(page, out, "after_store_card_click")
 
-    # Opening the card only expands its details. Conad then exposes the real
-    # visible confirmation control; this click is what should trigger its
-    # official set-ecaccess request and generate the enterprise protection token.
     confirmed = await click_visible(
         page,
         'button:has-text("Conferma il negozio")',
         out,
         "confirm_store",
-        4500,
+        5000,
     )
     await save(page, out, "after_store_confirm")
     return confirmed
@@ -242,19 +239,35 @@ async def main():
     out = {
         "store_id": STORE_ID,
         "store_label": STORE_LABEL,
-        "method": "normal_public_ui_only",
+        "method": "normal_public_ui_only_headed",
         "steps": [],
         "snapshots": {},
         "selection_requests": [],
         "selection_responses": [],
+        "console": [],
+        "page_errors": [],
         "queries": {},
         "errors": [],
         "verdict": "NOT_RUN",
     }
     async with async_playwright() as pw:
-        browser = await pw.chromium.launch(headless=True)
+        browser = await pw.chromium.launch(headless=False)
         context = await browser.new_context(locale="it-IT", viewport={"width": 1440, "height": 1000})
         page = await context.new_page()
+
+        def on_console(msg):
+            try:
+                if len(out["console"]) < 120:
+                    out["console"].append({"type": msg.type, "text": msg.text[:800]})
+            except Exception:
+                pass
+
+        def on_page_error(exc):
+            try:
+                if len(out["page_errors"]) < 40:
+                    out["page_errors"].append(str(exc)[:1200])
+            except Exception:
+                pass
 
         def on_request(req):
             try:
@@ -271,6 +284,8 @@ async def main():
             except Exception as exc:
                 out["errors"].append("response_listener: " + str(exc)[:300])
 
+        page.on("console", on_console)
+        page.on("pageerror", on_page_error)
         page.on("request", on_request)
         page.on("response", on_response)
         try:
