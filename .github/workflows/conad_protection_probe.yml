@@ -1,0 +1,25 @@
+name: Conad Protection Contract Probe
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'conad_protection_probe.py'
+      - '.github/workflows/conad_protection_probe.yml'
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - name: Inspect Conad protection client
+        run: python conad_protection_probe.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: conad-protection-contract
+          path: |
+            conad_protection_probe.json
+            conad_global_protection.js
