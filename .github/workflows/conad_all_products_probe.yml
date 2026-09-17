@@ -1,0 +1,26 @@
+name: Conad All Products Probe
+on:
+  push:
+    paths:
+      - 'conad_all_products_probe.py'
+      - '.github/workflows/conad_all_products_probe.yml'
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright
+      - run: python -m playwright install chromium
+      - name: Probe full catalog pagination
+        run: python conad_all_products_probe.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: conad-all-products-probe
+          path: |
+            conad_all_products_probe.json
+            conad_all_products_probe.png
+          retention-days: 90
