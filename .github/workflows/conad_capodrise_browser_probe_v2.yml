@@ -18,6 +18,9 @@ jobs:
           python-version: '3.12'
       - run: pip install playwright
       - run: python -m playwright install --with-deps chromium
+      - name: Select visible confirmation button in diagnostic probe
+        run: |
+          sed -i "s/page.locator('button:has-text(\"Conferma il negozio\")').first/page.locator('button:has-text(\"Conferma il negozio\")').last/" conad_capodrise_browser_probe_v2.py
       - name: Capture official Conad Capodrise store session
         run: xvfb-run -a python conad_capodrise_browser_probe_v2.py
       - uses: actions/upload-artifact@v4
