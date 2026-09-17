@@ -19,7 +19,7 @@ jobs:
       - run: pip install playwright
       - run: python -m playwright install chromium
       - name: Capture official Conad browser flow
-        run: python conad_capodrise_browser_probe.py
+        run: xvfb-run -a python conad_capodrise_browser_probe.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
