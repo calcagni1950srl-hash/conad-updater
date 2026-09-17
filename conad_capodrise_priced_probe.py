@@ -1,4 +1,4 @@
-import asyncio, json, re, html as htmlmod
+import asyncio, json, re, html as htmlmod, sys
 from pathlib import Path
 from urllib.parse import quote_plus
 from playwright.async_api import async_playwright
@@ -54,7 +54,6 @@ async def main():
             except: pass
             await page.wait_for_timeout(1500)
 
-            # Ask Conad's own frontend for its entry-access token.
             token=await page.evaluate("""async () => {
               if (typeof window.gpGetProtectionToken !== 'function') return null;
               return await window.gpGetProtectionToken('entryaccess');
@@ -82,7 +81,6 @@ async def main():
             if not r.ok:
                 raise RuntimeError(f'set-ecaccess HTTP {r.status}')
 
-            # Load home so server-rendered globals/session are refreshed.
             await page.goto(BASE+'/',wait_until='domcontentloaded',timeout=90000)
             await page.wait_for_timeout(1000)
             globals_info=await page.evaluate("""() => ({
@@ -114,5 +112,8 @@ async def main():
         await browser.close()
     Path('conad_capodrise_priced_probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps(out,ensure_ascii=False,indent=2))
+    return out['verdict']=='CAPODRISE_PRICED_VALIDATED'
 
-asyncio.run(main())
+ok=asyncio.run(main())
+if not ok:
+    sys.exit(1)
