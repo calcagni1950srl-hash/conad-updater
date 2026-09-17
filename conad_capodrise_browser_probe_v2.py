@@ -1,5 +1,6 @@
 import asyncio
 import json
+import time
 from pathlib import Path
 from playwright.async_api import async_playwright
 
@@ -50,6 +51,13 @@ async def snapshot(page, name):
           buttons: [...document.querySelectorAll('button,[role="button"],a')]
             .filter(el => {const s=getComputedStyle(el),r=el.getBoundingClientRect(); return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0;})
             .map(el => (el.innerText||el.textContent||'').trim().replace(/\s+/g,' ')).filter(Boolean).slice(0,220),
+          allConfirmButtons: [...document.querySelectorAll('button')]
+            .filter(el => ((el.innerText||el.textContent||'').toLowerCase().includes('conferma il negozio')))
+            .map((el, i) => { const s=getComputedStyle(el),r=el.getBoundingClientRect(); return {
+              i, text:(el.innerText||el.textContent||'').trim().replace(/\s+/g,' '),
+              display:s.display, visibility:s.visibility, width:r.width, height:r.height,
+              disabled:!!el.disabled, ariaHidden:el.getAttribute('aria-hidden'), cls:el.className
+            }; }),
           local: {...localStorage},
           session: {...sessionStorage},
           globals: {
@@ -78,6 +86,36 @@ async def click_visible(page, selector, step, settle=1200):
             OUT.setdefault('steps', []).append({'step': step+'_attempt', 'ok': False, 'error': str(exc)[:500]})
     OUT.setdefault('steps', []).append({'step': step, 'ok': False, 'selector': selector})
     return False
+
+
+async def find_visible_button_by_text(page, text, timeout_ms=20000):
+    needle = text.lower()
+    deadline = time.monotonic() + timeout_ms / 1000
+    last_matches = []
+    while time.monotonic() < deadline:
+        buttons = page.locator('button')
+        matches = []
+        try:
+            count = await buttons.count()
+        except Exception:
+            count = 0
+        for i in range(count):
+            el = buttons.nth(i)
+            try:
+                label = ' '.join((await el.inner_text()).split())
+                if needle not in label.lower():
+                    continue
+                visible = await el.is_visible()
+                matches.append({'index': i, 'text': label, 'visible': visible})
+                if visible:
+                    OUT['steps'].append({'step':'visible_button_found','ok':True,'text':text,'index':i})
+                    return el
+            except Exception:
+                continue
+        last_matches = matches
+        await page.wait_for_timeout(250)
+    OUT['steps'].append({'step':'visible_button_found','ok':False,'text':text,'matches':last_matches})
+    return None
 
 
 async def main():
@@ -133,13 +171,10 @@ async def main():
             await hit.click(timeout=7000)
             OUT['steps'].append({'step':'open_capodrise_card','ok':True})
 
-            confirm = page.locator('button:has-text("Conferma il negozio")').first
-            try:
-                await confirm.wait_for(state='visible', timeout=12000)
-                OUT['steps'].append({'step':'wait_confirm_store','ok':True})
-            except Exception as exc:
+            confirm = await find_visible_button_by_text(page, 'Conferma il negozio', 20000)
+            if confirm is None:
                 await snapshot(page, 'confirm_wait_failed')
-                raise RuntimeError('Confirm store button did not become visible') from exc
+                raise RuntimeError('No visible Confirm store button found')
 
             await snapshot(page, 'card_open')
             before_req = len(OUT['requests'])
