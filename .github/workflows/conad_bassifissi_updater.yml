@@ -1,0 +1,40 @@
+name: Conad Bassi e Fissi Updater
+
+on:
+  push:
+    paths:
+      - 'conad_bassifissi_updater.py'
+      - '.github/workflows/conad_bassifissi_updater.yml'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+      - name: Build Conad Bassi e Fissi database
+        run: python conad_bassifissi_updater.py --db prezzi_conad_capodrise.db --audit conad_bassifissi_audit.json
+      - name: Inspect database
+        run: |
+          python - <<'PY'
+          import sqlite3, json
+          con=sqlite3.connect('prezzi_conad_capodrise.db')
+          q=con.execute('select count(*), min(price_eur), max(price_eur), sum(case when price_eur>0 then 1 else 0 end) from products_current').fetchone()
+          print(json.dumps({'rows':q[0],'min_price':q[1],'max_price':q[2],'positive':q[3]}))
+          con.close()
+          PY
+      - name: Upload database and audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: conad-bassifissi-db
+          path: |
+            prezzi_conad_capodrise.db
+            conad_bassifissi_audit.json
+          if-no-files-found: warn
