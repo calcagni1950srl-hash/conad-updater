@@ -31,4 +31,5 @@ jobs:
           path: |
             conad_bassifissi_probe.json
             conad_bassifissi_probe.png
+            conad_bassifissi_page.html
           if-no-files-found: warn
