@@ -17,12 +17,13 @@ jobs:
           python-version: '3.12'
       - run: pip install playwright
       - run: python -m playwright install --with-deps chromium
-      - name: Patch robust visible controls
+      - name: Patch robust public UI flow
         run: |
           python - <<'PY'
           from pathlib import Path
           p = Path('conad_capodrise_priced_probe.py')
           s = p.read_text(encoding='utf-8')
+
           old = '''async def click_first(page, selectors, out, step, timeout=5000):
               for sel in selectors:
                   try:
@@ -57,9 +58,9 @@ jobs:
               out["steps"].append({"step": step, "ok": False})
               return False
           '''
-          if old not in s:
-              raise SystemExit('click_first helper not found')
-          s = s.replace(old, new)
+          if old in s:
+              s = s.replace(old, new)
+
           old_verify = '''    await click_first(page, [
                   'button:has-text("Verifica")', 'button:has-text("Continua")', 'button:has-text("Avanti")'
               ], out, "verify_address", timeout=7000)
@@ -78,9 +79,49 @@ jobs:
               out["steps"].append({"step": "verify_address_dom", "ok": bool(verified)})
               await page.wait_for_timeout(1800)
           '''
-          if old_verify not in s:
-              raise SystemExit('verify block not found')
-          s = s.replace(old_verify, new_verify)
+          if old_verify in s:
+              s = s.replace(old_verify, new_verify)
+
+          start = s.index('async def select_pickup(page, out):')
+          end = s.index('\n\nasync def select_store(page, out):', start)
+          replacement = '''async def select_pickup(page, out):
+              info = await page.evaluate("""() => {
+                const visible = el => {
+                  const s=getComputedStyle(el), r=el.getBoundingClientRect();
+                  return s.visibility!=='hidden' && s.display!=='none' && r.width>0 && r.height>0;
+                };
+                return [...document.querySelectorAll('button')]
+                  .filter(el => visible(el) && (el.innerText||el.textContent||'').trim()==='Seleziona')
+                  .map((el, idx) => {
+                    let n=el;
+                    const chain=[];
+                    for(let k=0;k<7 && n;k++,n=n.parentElement){
+                      const t=(n.innerText||n.textContent||'').trim().replace(/\\s+/g,' ');
+                      if(t) chain.push(t.slice(0,700));
+                    }
+                    return {idx, chain};
+                  });
+              }""")
+              out["steps"].append({"step":"pickup_candidates","ok":bool(info),"candidates":info})
+              for item in info:
+                  joined = " ".join(item.get("chain", [])).lower()
+                  if "ordina e ritira" in joined or "ritiro" in joined:
+                      buttons = page.locator('button:has-text("Seleziona")')
+                      visible = []
+                      for i in range(await buttons.count()):
+                          b = buttons.nth(i)
+                          if await b.is_visible():
+                              visible.append(b)
+                      idx = item.get("idx", -1)
+                      if 0 <= idx < len(visible):
+                          await visible[idx].click(timeout=6000)
+                          out["steps"].append({"step":"select_pickup","ok":True,"visible_index":idx})
+                          await page.wait_for_timeout(2600)
+                          return True
+              out["steps"].append({"step":"select_pickup","ok":False})
+              return False
+          '''
+          s = s[:start] + replacement + s[end:]
           p.write_text(s, encoding='utf-8')
           PY
       - name: Validate Capodrise priced catalog through public UI
