@@ -24,26 +24,27 @@ def parse_products(body):
             })
     return out
 
-# Initialize ordinary anonymous session.
 r=S.get(BASE+'/',timeout=30)
+
+sap_address={
+  'line1':'Via Retella, 81020, Capodrise, Italia',
+  'formattedAddress':'Via Retella, 81020 Capodrise CE, Italia',
+  'town':'Capodrise',
+  'line2':'',
+  'postalCode':'81020',
+  'district':'CE',
+  'country':{'isocode':'IT','name':'Italia'},
+  'latitude':41.0435591,
+  'longitude':14.3170526,
+  'notCompleted':False
+}
 
 base_payload={
   'pointOfServiceId':'010548',
   'becommerce':'sap',
   'typeOfService':'ORDER_AND_COLLECT',
   'deliveryAddress':'Via Retella, 81020 Capodrise CE, Italia',
-  'completeAddress':{
-    'formatted_address':'Via Retella, 81020 Capodrise CE, Italia',
-    'route':'Via Retella',
-    'street_number':'',
-    'locality':'Capodrise',
-    'postal_code':'81020',
-    'country':'Italia',
-    'administrative_area_level_3':'Capodrise',
-    'administrative_area_level_2':'Provincia di Caserta',
-    'administrative_area_level_1':'Campania',
-    'notCompleted':False
-  },
+  'completeAddress':sap_address,
   'latitudine':41.04177275840482,
   'longitudine':14.319815401607025,
   'nStoresFound':6
@@ -74,5 +75,3 @@ for name,payload in variants:
 
 Path('conad_capodrise_direct_store_probe.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps(out,ensure_ascii=False,indent=2))
-
-# trigger workflow after workflow file exists
