@@ -1,0 +1,21 @@
+name: Conad Capodrise Direct Store Probe
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'conad_capodrise_direct_store_probe.py'
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - name: Probe direct Conad Capodrise session
+        run: python conad_capodrise_direct_store_probe.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: conad-capodrise-direct-store-probe
+          path: conad_capodrise_direct_store_probe.json
