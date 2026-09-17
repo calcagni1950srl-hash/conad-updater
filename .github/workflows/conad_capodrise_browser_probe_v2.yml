@@ -17,12 +17,14 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install playwright
-      - run: python -m playwright install chromium
+      - run: python -m playwright install --with-deps chromium
       - name: Capture official Conad Capodrise store session
-        run: python conad_capodrise_browser_probe_v2.py
+        run: xvfb-run -a python conad_capodrise_browser_probe_v2.py
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: conad-capodrise-browser-probe-v2
           path: |
             conad_capodrise_browser_v2.json
             conad_capodrise_browser_v2.png
+          if-no-files-found: ignore
