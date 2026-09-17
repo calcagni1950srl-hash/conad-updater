@@ -132,14 +132,18 @@ async def main():
                 raise RuntimeError('Capodrise card not visible')
             await hit.click(timeout=7000)
             OUT['steps'].append({'step':'open_capodrise_card','ok':True})
-            await page.wait_for_timeout(1600)
-            await snapshot(page, 'card_open')
 
+            confirm = page.locator('button:has-text("Conferma il negozio")').first
+            try:
+                await confirm.wait_for(state='visible', timeout=12000)
+                OUT['steps'].append({'step':'wait_confirm_store','ok':True})
+            except Exception as exc:
+                await snapshot(page, 'confirm_wait_failed')
+                raise RuntimeError('Confirm store button did not become visible') from exc
+
+            await snapshot(page, 'card_open')
             before_req = len(OUT['requests'])
             before_resp = len(OUT['responses'])
-            confirm = page.locator('button:has-text("Conferma il negozio")').first
-            if not await confirm.count() or not await confirm.is_visible():
-                raise RuntimeError('Confirm store button not visible')
             await confirm.click(timeout=7000)
             OUT['steps'].append({'step':'confirm_store','ok':True})
             await page.wait_for_timeout(12000)
