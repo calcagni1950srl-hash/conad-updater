@@ -1,0 +1,29 @@
+name: Conad Preconfirm Store Compare
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'conad_preconfirm_store_compare.py'
+      - '.github/workflows/conad_preconfirm_store_compare.yml'
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Compare Capodrise vs Santa Maria Capua Vetere before protected confirmation
+        run: xvfb-run -a python conad_preconfirm_store_compare.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conad-preconfirm-store-compare
+          path: conad_preconfirm_store_compare.json
+          if-no-files-found: ignore
