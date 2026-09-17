@@ -1,0 +1,23 @@
+name: Conad Store API Contract
+on:
+  push:
+    paths:
+      - 'conad_extract_store_api.py'
+      - '.github/workflows/conad_extract_store_api.yml'
+  workflow_dispatch:
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests beautifulsoup4
+      - name: Extract store selection contract
+        run: python conad_extract_store_api.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: conad-store-api-contract
+          path: conad_store_api_contract.json
+          retention-days: 90
