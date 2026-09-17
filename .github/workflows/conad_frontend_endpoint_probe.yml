@@ -1,0 +1,26 @@
+name: Conad Frontend Endpoint Probe
+
+on:
+  push:
+    paths:
+      - 'conad_frontend_endpoint_probe.py'
+      - '.github/workflows/conad_frontend_endpoint_probe.yml'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit public Conad frontend endpoints
+        run: python conad_frontend_endpoint_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conad-frontend-endpoint-probe
+          path: conad_frontend_endpoint_probe.json
+          if-no-files-found: ignore
