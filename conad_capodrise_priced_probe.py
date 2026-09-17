@@ -60,15 +60,20 @@ def product_summary(body):
                 euros.append(value)
         except Exception:
             pass
-    return {"products_found": len(products), "positive_prices": len(positive), "examples": positive[:10], "visible_euro_values_sample": euros[:10]}
+    return {
+        "products_found": len(products),
+        "positive_prices": len(positive),
+        "examples": positive[:10],
+        "visible_euro_values_sample": euros[:10],
+    }
 
 
 def request_fields(req):
     raw = req.post_data or ""
     try:
-        data = json.loads(raw)
-        if isinstance(data, dict):
-            return data
+        x = json.loads(raw)
+        if isinstance(x, dict):
+            return x
     except Exception:
         pass
     parsed = parse_qs(raw, keep_blank_values=True)
@@ -110,28 +115,25 @@ async def save(page, out, name):
 
 
 async def click_visible(page, selector, out, step, settle=1200):
-    try:
-        loc = page.locator(selector)
-        for i in range(await loc.count() - 1, -1, -1):
-            item = loc.nth(i)
-            try:
-                if await item.is_visible():
-                    await item.click(timeout=6000)
-                    out["steps"].append({"step": step, "ok": True, "selector": selector, "index": i})
-                    await page.wait_for_timeout(settle)
-                    return True
-            except Exception:
-                pass
-    except Exception:
-        pass
+    loc = page.locator(selector)
+    for i in range(await loc.count() - 1, -1, -1):
+        item = loc.nth(i)
+        try:
+            if await item.is_visible():
+                await item.click(timeout=6000)
+                out["steps"].append({"step": step, "ok": True, "selector": selector, "index": i})
+                await page.wait_for_timeout(settle)
+                return True
+        except Exception:
+            pass
     out["steps"].append({"step": step, "ok": False, "selector": selector})
     return False
 
 
 async def service_panel_visible(page):
     try:
-        text = (await page.locator("body").inner_text()).lower()
-        return "come vuoi fare la spesa" in text and "ordina e ritira" in text
+        t = (await page.locator("body").inner_text()).lower()
+        return "come vuoi fare la spesa" in t and "ordina e ritira" in t
     except Exception:
         return False
 
@@ -146,13 +148,28 @@ async def click_capodrise_card(page, out):
                     continue
                 try:
                     await hit.click(timeout=6000)
-                    out["steps"].append({"step": "select_store_card", "ok": True, "phrase": phrase, "index": i})
-                    await page.wait_for_timeout(2200)
+                    out["steps"].append({"step": "select_store_card", "ok": True, "phrase": phrase, "mode": "text_click", "index": i})
+                    await page.wait_for_timeout(1600)
                     return True
                 except Exception:
                     pass
+                node = hit
+                for depth in range(1, 8):
+                    try:
+                        node = node.locator("..")
+                        tag = await node.evaluate("el => el.tagName.toLowerCase()")
+                        role = await node.get_attribute("role")
+                        tabindex = await node.get_attribute("tabindex")
+                        onclick = await node.get_attribute("onclick")
+                        if tag in ("button", "a") or role in ("button", "link") or tabindex is not None or onclick is not None:
+                            await node.click(timeout=6000)
+                            out["steps"].append({"step": "select_store_card", "ok": True, "phrase": phrase, "mode": "ancestor_click", "depth": depth, "tag": tag, "role": role})
+                            await page.wait_for_timeout(1600)
+                            return True
+                    except Exception:
+                        continue
         except Exception:
-            pass
+            continue
     out["steps"].append({"step": "select_store_card", "ok": False})
     return False
 
@@ -184,10 +201,20 @@ async def ui_select(page, out):
     await save(page, out, "pickup_store_list")
 
     if not await click_capodrise_card(page, out):
+        await save(page, out, "store_card_not_opened")
         return False
     await save(page, out, "after_store_card_click")
 
-    confirmed = await click_visible(page, 'button:has-text("Conferma il negozio")', out, "confirm_store", 4500)
+    # Opening the card only expands its details. Conad then exposes the real
+    # visible confirmation control; this click is what should trigger its
+    # official set-ecaccess request and generate the enterprise protection token.
+    confirmed = await click_visible(
+        page,
+        'button:has-text("Conferma il negozio")',
+        out,
+        "confirm_store",
+        4500,
+    )
     await save(page, out, "after_store_confirm")
     return confirmed
 
@@ -207,12 +234,23 @@ async def search_check(page, query):
                 break
         except Exception as exc:
             if best is None:
-                best = ((0,0,0), {"url": url, "products_found": 0, "positive_prices": 0, "examples": [], "error": str(exc)[:300]})
+                best = ((0, 0, 0), {"url": url, "products_found": 0, "positive_prices": 0, "examples": [], "error": str(exc)[:300]})
     return best[1] if best else {"products_found": 0, "positive_prices": 0, "examples": []}
 
 
 async def main():
-    out = {"store_id": STORE_ID, "store_label": STORE_LABEL, "method": "normal_public_ui_only", "steps": [], "snapshots": {}, "selection_requests": [], "selection_responses": [], "queries": {}, "errors": [], "verdict": "NOT_RUN"}
+    out = {
+        "store_id": STORE_ID,
+        "store_label": STORE_LABEL,
+        "method": "normal_public_ui_only",
+        "steps": [],
+        "snapshots": {},
+        "selection_requests": [],
+        "selection_responses": [],
+        "queries": {},
+        "errors": [],
+        "verdict": "NOT_RUN",
+    }
     async with async_playwright() as pw:
         browser = await pw.chromium.launch(headless=True)
         context = await browser.new_context(locale="it-IT", viewport={"width": 1440, "height": 1000})
@@ -241,7 +279,7 @@ async def main():
             await click_visible(page, "#onetrust-accept-btn-handler", out, "cookies", 700)
             clicked = await ui_select(page, out)
             out["steps"].append({"step": "store_ui_clicked", "ok": clicked})
-            await page.wait_for_timeout(1800)
+            await page.wait_for_timeout(2500)
 
             request = next((x for x in reversed(out["selection_requests"]) if x.get("pointOfServiceId") == STORE_ID), None)
             response = out["selection_responses"][-1] if out["selection_responses"] else None
@@ -250,14 +288,22 @@ async def main():
             out["selection_has_protection_token"] = bool(request and request.get("has_protection_token"))
             out["selection_status"] = response.get("status") if response else None
 
-            selection_ok = bool(request and response and request.get("pointOfServiceId") == STORE_ID and request.get("has_protection_token") and 200 <= response["status"] < 300)
+            selection_ok = bool(
+                request and response
+                and request.get("pointOfServiceId") == STORE_ID
+                and request.get("has_protection_token")
+                and 200 <= response["status"] < 300
+            )
             if selection_ok:
                 for query in ["latte", "pasta", "uova"]:
                     out["queries"][query] = await search_check(page, query)
             else:
-                out["steps"].append({"step": "catalog_checks", "ok": False, "note": "store 010548 not confirmed by Conad set-ecaccess"})
+                out["steps"].append({"step": "catalog_checks", "ok": False, "note": "store 010548 not yet confirmed by Conad set-ecaccess"})
 
-            all_priced = selection_ok and all(out["queries"].get(q, {}).get("positive_prices", 0) > 0 for q in ["latte", "pasta", "uova"])
+            all_priced = selection_ok and all(
+                out["queries"].get(q, {}).get("positive_prices", 0) > 0
+                for q in ["latte", "pasta", "uova"]
+            )
             out["verdict"] = "CAPODRISE_PRICED_VALIDATED" if all_priced else "CAPODRISE_NOT_VALIDATED"
         except Exception as exc:
             out["errors"].append(repr(exc))
@@ -266,11 +312,13 @@ async def main():
             await save(page, out, "final")
             try:
                 await page.screenshot(path="conad_capodrise_priced_probe.png", full_page=True)
-            except Exception:
-                pass
+            except Exception as exc:
+                out["errors"].append("screenshot: " + str(exc)[:300])
             await browser.close()
 
-    Path("conad_capodrise_priced_probe.json").write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+    Path("conad_capodrise_priced_probe.json").write_text(
+        json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     print(json.dumps(out, ensure_ascii=False, indent=2))
     return out["verdict"] == "CAPODRISE_PRICED_VALIDATED"
 
