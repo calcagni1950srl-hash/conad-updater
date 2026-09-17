@@ -1,0 +1,28 @@
+name: Conad Capodrise Browser Probe V2
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'conad_capodrise_browser_probe_v2.py'
+      - '.github/workflows/conad_capodrise_browser_probe_v2.yml'
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright
+      - run: python -m playwright install chromium
+      - name: Capture official Conad Capodrise store session
+        run: python conad_capodrise_browser_probe_v2.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: conad-capodrise-browser-probe-v2
+          path: |
+            conad_capodrise_browser_v2.json
+            conad_capodrise_browser_v2.png
