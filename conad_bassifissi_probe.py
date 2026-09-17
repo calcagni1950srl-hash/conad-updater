@@ -5,7 +5,7 @@ from playwright.async_api import async_playwright
 URL = "https://www.conad.it/prodotti-e-marchi/bassi-e-fissi"
 OUT = {"requests": [], "responses": [], "clicks": [], "errors": []}
 
-KEYS = ("bassi", "fissi", "product", "prodot", "offer", "offert", "filter", "load", "api", ".json", ".model")
+KEYS = ("bassi", "fissi", "product", "prodot", "offer", "offert", "filter", "load", "api", ".json", ".model", "offset", "limit", "page")
 PRICE_RE = re.compile(r"\b\d{1,3},\d{2}\s*€")
 COUNT_RE = re.compile(r"(\d+)\s+prodotti", re.I)
 
@@ -35,9 +35,9 @@ async def main():
                 try:
                     ct = (resp.headers.get("content-type") or "").lower()
                     sample = ""
-                    if any(x in ct for x in ("json", "text", "html")):
+                    if any(x in ct for x in ("json", "text", "html", "javascript")):
                         txt = await resp.text()
-                        sample = txt[:2500]
+                        sample = txt[:3000]
                     OUT["responses"].append({
                         "url": resp.url,
                         "status": resp.status,
@@ -58,7 +58,14 @@ async def main():
                     await c.first.click(timeout=5000)
             except Exception:
                 pass
-            await page.wait_for_timeout(2500)
+            await page.wait_for_timeout(2000)
+
+            # Trigger lazy components without interacting with protected services.
+            for y in range(0, 12000, 900):
+                await page.evaluate("y => window.scrollTo(0, y)", y)
+                await page.wait_for_timeout(120)
+            await page.evaluate("window.scrollTo(0, 0)")
+            await page.wait_for_timeout(1000)
 
             initial_text = await page.locator("body").inner_text()
             m = COUNT_RE.search(initial_text)
@@ -66,49 +73,62 @@ async def main():
             OUT["initial_price_tokens"] = len(PRICE_RE.findall(initial_text))
             OUT["initial_text_len"] = len(initial_text)
 
-            # The page currently exposes multiple independent "Carica altri" controls.
-            # Click every visible one, then repeat until no control remains or nothing changes.
-            no_progress = 0
-            previous_prices = OUT["initial_price_tokens"]
-            for round_no in range(1, 80):
-                loc = page.get_by_text("Carica altri", exact=True)
-                n = await loc.count()
-                visible = []
-                for i in range(n):
-                    try:
-                        if await loc.nth(i).is_visible():
-                            visible.append(i)
-                    except Exception:
-                        pass
-                if not visible:
-                    break
+            # Inspect loader-related DOM configuration and inline scripts.
+            OUT["dom_loader_candidates"] = await page.evaluate("""
+                () => {
+                  const rx = /(carica|load|bassi|fissi|product|prodot|offert|filter|api|json|offset|limit|page)/i;
+                  const out = [];
+                  for (const el of document.querySelectorAll('*')) {
+                    const attrs = Array.from(el.attributes || []).map(a => [a.name, a.value]);
+                    const attrText = attrs.map(x => x.join('=')).join(' ');
+                    const txt = (el.innerText || '').trim().replace(/\s+/g,' ');
+                    if (rx.test(attrText) || /carica\s+altri/i.test(txt)) {
+                      out.push({tag: el.tagName, id: el.id || '', cls: el.className || '', attrs, text: txt.slice(0,300)});
+                    }
+                    if (out.length >= 500) break;
+                  }
+                  return out;
+                }
+            """)
+            OUT["scripts"] = await page.evaluate("""
+                () => Array.from(document.scripts).map(s => ({src:s.src || '', text:(s.textContent||'').slice(0,6000)}))
+                    .filter(x => /(bassi|fissi|product|prodot|load|filter|offset|limit|api|json)/i.test(x.src+' '+x.text))
+                    .slice(0,120)
+            """)
+            OUT["links"] = await page.evaluate("""
+                () => Array.from(document.querySelectorAll('a[href]')).map(a => ({text:(a.innerText||'').trim(), href:a.href, cls:a.className||''}))
+                    .filter(x => /(bassi|fissi|product|prodot|load|filter|offset|limit|api|json|page)/i.test(x.href+' '+x.text+' '+x.cls))
+                    .slice(0,300)
+            """)
 
-                clicked = 0
-                # reverse order avoids index shifts after DOM mutations
-                for i in reversed(visible):
-                    try:
-                        await loc.nth(i).click(timeout=6000)
-                        clicked += 1
-                        await page.wait_for_timeout(650)
-                    except Exception as e:
-                        OUT["errors"].append(f"round {round_no} click {i}: {e!r}")
-                await page.wait_for_timeout(1200)
-                txt = await page.locator("body").inner_text()
-                prices = len(PRICE_RE.findall(txt))
-                OUT["clicks"].append({"round": round_no, "visible_before": len(visible), "clicked": clicked, "price_tokens": prices, "text_len": len(txt)})
-                if prices <= previous_prices:
-                    no_progress += 1
-                else:
-                    no_progress = 0
-                previous_prices = prices
-                if no_progress >= 3:
-                    break
+            # Search broadly for any element that actually contains the visible label.
+            labels = await page.evaluate("""
+                () => Array.from(document.querySelectorAll('*')).filter(el => /carica\s+altri/i.test((el.innerText||'').trim()))
+                    .map(el => ({tag:el.tagName,id:el.id||'',cls:el.className||'',html:el.outerHTML.slice(0,2000)})).slice(0,80)
+            """)
+            OUT["load_more_labels"] = labels
 
+            # Try semantic and broad selectors after lazy scrolling.
+            selectors = [
+                'text=Carica altri',
+                'button:has-text("Carica")',
+                'a:has-text("Carica")',
+                '[class*="load"]',
+                '[class*="more"]',
+                '[data-*]'
+            ]
+            OUT["selector_counts"] = {}
+            for s in selectors[:-1]:
+                try:
+                    OUT["selector_counts"][s] = await page.locator(s).count()
+                except Exception as e:
+                    OUT["selector_counts"][s] = f"ERR {e!r}"
+
+            Path("conad_bassifissi_page.html").write_text(await page.content(), encoding="utf-8")
             final_text = await page.locator("body").inner_text()
             OUT["final_price_tokens"] = len(PRICE_RE.findall(final_text))
             OUT["final_text_len"] = len(final_text)
-            OUT["remaining_load_more"] = await page.get_by_text("Carica altri", exact=True).count()
-            OUT["body_excerpt"] = final_text[:12000]
+            OUT["body_excerpt"] = final_text[:16000]
             OUT["request_count"] = len(OUT["requests"])
             OUT["response_count"] = len(OUT["responses"])
             await page.screenshot(path="conad_bassifissi_probe.png", full_page=False)
@@ -120,11 +140,11 @@ async def main():
     Path("conad_bassifissi_probe.json").write_text(json.dumps(OUT, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({
         "declared": OUT.get("declared_products_initial"),
-        "initial_prices": OUT.get("initial_price_tokens"),
-        "final_prices": OUT.get("final_price_tokens"),
+        "prices": OUT.get("final_price_tokens"),
         "requests": OUT.get("request_count", 0),
-        "responses": OUT.get("response_count", 0),
-        "click_rounds": len(OUT.get("clicks", [])),
+        "dom_candidates": len(OUT.get("dom_loader_candidates", [])),
+        "load_labels": len(OUT.get("load_more_labels", [])),
+        "selector_counts": OUT.get("selector_counts"),
         "errors": OUT.get("errors", [])[-3:],
     }, ensure_ascii=False))
 
