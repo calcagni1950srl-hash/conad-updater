@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'conad_capodrise_priced_probe.py'
+      - 'conad_capodrise_ui_probe.py'
       - '.github/workflows/conad_capodrise_priced_probe.yml'
 jobs:
   probe:
@@ -16,13 +17,13 @@ jobs:
           python-version: '3.12'
       - run: pip install playwright
       - run: python -m playwright install --with-deps chromium
-      - name: Validate Capodrise priced catalog
-        run: python conad_capodrise_priced_probe.py
+      - name: Validate Capodrise priced catalog through public UI
+        run: python conad_capodrise_ui_probe.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: conad-capodrise-priced-probe
           path: |
             conad_capodrise_priced_probe.json
-            conad_capodrise_priced_probe.png
+            conad_*.png
           if-no-files-found: ignore
