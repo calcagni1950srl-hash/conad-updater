@@ -1,0 +1,24 @@
+name: Conad Yumpu Image Probe
+on:
+  push:
+    paths:
+      - 'conad_yumpu_image_probe.py'
+      - '.github/workflows/conad_yumpu_image_probe.yml'
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install requests
+        run: pip install requests
+      - name: Probe flyer page images
+        run: python conad_yumpu_image_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conad-yumpu-image-probe
+          path: '*_page1.jpg'
