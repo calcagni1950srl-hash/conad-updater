@@ -1,0 +1,34 @@
+{
+  "verified_at": "2026-09-18T15:16:59Z",
+  "max_age_days": 14,
+  "values": {
+    "aglio_reference": {
+      "url": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199",
+      "price": 1.49,
+      "name": "CONAD Aglio Macinato 37 g - 80458920",
+      "quantity_value": 0.037,
+      "quantity_unit": "KG",
+      "ean": "80458920"
+    },
+    "prezzemolo": {
+      "url": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199",
+      "price": 1.09,
+      "name": "PREZZEMOLO VASCHETTA CONAD P.Q. 50G",
+      "quantity_value": 0.05,
+      "quantity_unit": "KG",
+      "ean": null
+    },
+    "cipolla": {
+      "url": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199",
+      "price": 1.49,
+      "name": "CONAD Cipolla Fiocchi 18 g - 80458951",
+      "quantity_value": 0.018,
+      "quantity_unit": "KG",
+      "ean": "80458951"
+    }
+  },
+  "evidence": {
+    "github_job_id": 105653122223,
+    "note": "Valori letti dalla pagina pubblica Glovo/Conad con Chromium; Gresy ha confermato separatamente identità EAN 80458920 dell'aglio."
+  }
+}
