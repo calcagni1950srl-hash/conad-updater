@@ -46,13 +46,11 @@ async def main():
         if blocks and blocks[0].get('loader'):
             endpoint=urljoin(PAGE,blocks[0]['loader'])
             tests=[
-                endpoint,
-                endpoint+'?page=1',
-                endpoint+'?page=2',
-                endpoint+'?offset=4',
-                endpoint+'?start=4',
-                endpoint+'?block=0',
-                endpoint+'?index=0',
+                endpoint+'?sliceIndex=0',
+                endpoint+'?sliceIndex=1',
+                endpoint+'?sliceIndex=9',
+                endpoint+'?sliceIndex=10',
+                endpoint+'?sliceIndex=24',
             ]
             res=[]
             for u in tests:
