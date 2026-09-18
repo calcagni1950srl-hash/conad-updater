@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-18T15:46:55Z",
+  "checked_at": "2026-09-18T16:06:14Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -44,35 +44,35 @@
     "inserted": [
       {
         "ingredient": "aglio",
-        "product_code": "REF:80458920",
-        "product_name": "CONAD Aglio Macinato 37 g",
-        "price_eur": 1.49,
-        "quantity_value": 0.037,
+        "product_code": "REF:AVG_AGLIO",
+        "product_name": "Aglio fresco - prezzo medio di mercato",
+        "price_eur": 8.0,
+        "quantity_value": 1.0,
         "quantity_unit": "KG",
-        "reference_scope": "FIXED_MARKET_REFERENCE_V81"
+        "reference_scope": "FIXED_MARKET_AVERAGE_V81"
       },
       {
         "ingredient": "cipolla",
-        "product_code": "REF:80458951",
-        "product_name": "CONAD Cipolla Fiocchi 18 g",
-        "price_eur": 1.49,
-        "quantity_value": 0.018,
+        "product_code": "REF:AVG_CIPOLLA",
+        "product_name": "Cipolla - prezzo medio di mercato",
+        "price_eur": 1.8,
+        "quantity_value": 1.0,
         "quantity_unit": "KG",
-        "reference_scope": "FIXED_MARKET_REFERENCE_V81"
+        "reference_scope": "FIXED_MARKET_AVERAGE_V81"
       },
       {
         "ingredient": "prezzemolo",
-        "product_code": "REF:11146468",
-        "product_name": "PREZZEMOLO VASCHETTA CONAD P.Q. 50G",
-        "price_eur": 1.09,
-        "quantity_value": 0.05,
+        "product_code": "REF:AVG_PREZZEMOLO",
+        "product_name": "Prezzemolo fresco - prezzo medio di mercato",
+        "price_eur": 12.0,
+        "quantity_value": 1.0,
         "quantity_unit": "KG",
-        "reference_scope": "FIXED_MARKET_REFERENCE_V81"
+        "reference_scope": "FIXED_MARKET_AVERAGE_V81"
       }
     ],
     "skipped": [],
     "missing_after": [],
-    "scope": "FIXED_MARKET_REFERENCE_V81"
+    "scope": "FIXED_MARKET_AVERAGE_V81"
   },
   "full_db": {
     "rows": 910,
