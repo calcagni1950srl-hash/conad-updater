@@ -561,67 +561,41 @@ def apply_local_offers(offers, flyer_info):
 
 FALLBACK_SPECS = {
     # V81: eccezione esplicita approvata dall'utente.
-    # Solo piccoli ingredienti base a impatto economico minimo usano un
-    # riferimento FISSO; non vengono mai presentati come prezzi locali 010548.
+    # SOLO tre ingredienti base che bloccano molte ricette usano un prezzo
+    # medio di mercato fisso. Non sono prezzi Conad/Capodrise e vengono
+    # mantenuti separati e tracciati come riferimento.
+    #
+    # Il riferimento e' per kg e viene trattato come peso variabile:
+    # l'app addebita solo la quantita' realmente necessaria alla ricetta.
     "aglio": {
-        "product_code": "REF:80458920",
-        "product_name": "CONAD Aglio Macinato 37 g",
-        "brand": "Conad",
-        "category1": "Condimenti e conserve",
-        "category2": "Sale, aromi e spezie",
-        "quantity_value": 0.037,
-        "quantity_unit": "KG",
-        "price_eur": 1.49,
-    },
-    "cipolla": {
-        "product_code": "REF:80458951",
-        "product_name": "CONAD Cipolla Fiocchi 18 g",
-        "brand": "Conad",
-        "category1": "Condimenti e conserve",
-        "category2": "Sale, aromi e spezie",
-        "quantity_value": 0.018,
-        "quantity_unit": "KG",
-        "price_eur": 1.49,
-    },
-    "prezzemolo": {
-        "product_code": "REF:11146468",
-        "product_name": "PREZZEMOLO VASCHETTA CONAD P.Q. 50G",
-        "brand": "Conad",
+        "product_code": "REF:AVG_AGLIO",
+        "product_name": "Aglio fresco - prezzo medio di mercato",
+        "brand": None,
         "category1": "Frutta e verdura",
-        "category2": "Erbe aromatiche",
-        "quantity_value": 0.050,
-        "quantity_unit": "KG",
-        "price_eur": 1.09,
-    },
-    "peperoncino": {
-        "product_code": "REF:80459774",
-        "product_name": "CONAD Peperoncino con Macinino Macina Regolabile 30 g",
-        "brand": "Conad",
-        "category1": "Condimenti e conserve",
-        "category2": "Sale, aromi e spezie",
-        "quantity_value": 0.030,
-        "quantity_unit": "KG",
-        "price_eur": 1.79,
-    },
-    "rosmarino": {
-        "product_code": "REF:80459255",
-        "product_name": "CONAD Rosmarino Foglie 22 g",
-        "brand": "Conad",
-        "category1": "Condimenti e conserve",
-        "category2": "Sale, aromi e spezie",
-        "quantity_value": 0.022,
-        "quantity_unit": "KG",
-        "price_eur": 1.49,
-    },
-    "sale": {
-        "product_code": "REF:8003170036826",
-        "product_name": "CONAD Sale Alimentare Fino 1000 g",
-        "brand": "Conad",
-        "category1": "Condimenti e conserve",
-        "category2": "Sale, aromi e spezie",
+        "category2": "Aromi freschi",
         "quantity_value": 1.000,
         "quantity_unit": "KG",
-        "price_eur": 0.32,
+        "price_eur": 8.00,
+    },
+    "cipolla": {
+        "product_code": "REF:AVG_CIPOLLA",
+        "product_name": "Cipolla - prezzo medio di mercato",
+        "brand": None,
+        "category1": "Frutta e verdura",
+        "category2": "Ortaggi",
+        "quantity_value": 1.000,
+        "quantity_unit": "KG",
+        "price_eur": 1.80,
+    },
+    "prezzemolo": {
+        "product_code": "REF:AVG_PREZZEMOLO",
+        "product_name": "Prezzemolo fresco - prezzo medio di mercato",
+        "brand": None,
+        "category1": "Frutta e verdura",
+        "category2": "Erbe aromatiche",
+        "quantity_value": 1.000,
+        "quantity_unit": "KG",
+        "price_eur": 12.00,
     },
 }
 
@@ -691,7 +665,7 @@ def apply_fixed_reference_prices():
             raise RuntimeError(f"Prezzo fisso non valido per {ingredient}")
 
         unit_price = round(price / qty, 4)
-        source_label = "FIXED_MARKET_REFERENCE_V81|USER_APPROVED|2026-09-18"
+        source_label = "FIXED_MARKET_AVERAGE_V81|USER_APPROVED|2026-09-18"
 
         row = (
             "Conad", STORE_CODE, STORE_NAME, STORE_ADDRESS,
@@ -699,7 +673,7 @@ def apply_fixed_reference_prices():
             spec["category1"], spec["category2"], "Prezzo riferimento fisso V81",
             qty, spec["quantity_unit"], round(price, 2),
             unit_price, "EUR/KG", 0,
-            None, source_label, now, 0,
+            None, source_label, now, 1,
         )
         con.execute(
             """
@@ -723,7 +697,7 @@ def apply_fixed_reference_prices():
             "price_eur": round(price, 2),
             "quantity_value": qty,
             "quantity_unit": spec["quantity_unit"],
-            "reference_scope": "FIXED_MARKET_REFERENCE_V81",
+            "reference_scope": "FIXED_MARKET_AVERAGE_V81",
         })
 
     missing_after = [
@@ -744,10 +718,10 @@ def apply_fixed_reference_prices():
         VALUES(?,?,?,?,?,?,?)
         """,
         (
-            now, STORE_CODE, "FIXED_MARKET_REFERENCE_V81",
+            now, STORE_CODE, "FIXED_MARKET_AVERAGE_V81",
             len(FALLBACK_SPECS), len(inserted), "OK",
-            "V81: prezzi di riferimento fissi approvati dall'utente per aglio, cipolla "
-            "e prezzemolo; usati solo se Capodrise/PAC/Bassi e Fissi non coprono il prodotto.",
+            "V81: prezzi medi di mercato fissi approvati dall'utente SOLO per aglio, cipolla "
+            "e prezzemolo; non sono prezzi Conad/Capodrise e sono usati solo se le fonti reali non coprono il prodotto.",
         ),
     )
     con.execute(
@@ -756,7 +730,7 @@ def apply_fixed_reference_prices():
     )
     con.execute(
         "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
-        ("reference_fallback_scope", "FIXED_MARKET_REFERENCE_V81"),
+        ("reference_fallback_scope", "FIXED_MARKET_AVERAGE_V81"),
     )
     con.execute(
         "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
@@ -769,7 +743,7 @@ def apply_fixed_reference_prices():
         "inserted": inserted,
         "skipped": skipped,
         "missing_after": missing_after,
-        "scope": "FIXED_MARKET_REFERENCE_V81",
+        "scope": "FIXED_MARKET_AVERAGE_V81",
     }
 
 def build_app_db():
