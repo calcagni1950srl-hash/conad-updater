@@ -172,6 +172,32 @@ async def main():
                     .map(el => ({tag:el.tagName,id:el.id||'',cls:el.className||'',text:(el.innerText||'').trim().slice(0,300),html:el.outerHTML.slice(0,2500)})).slice(0,80)
             """)
 
+            # Inspect same-origin JS to discover how the public loader endpoint is called.
+            OUT["js_hits"] = []
+            script_srcs = await page.locator("script[src]").evaluate_all("els => els.map(e => e.src)")
+            for src in script_srcs:
+                if "www.conad.it" not in src or "clientlib" not in src:
+                    continue
+                try:
+                    rr = await ctx.request.get(src, timeout=60000)
+                    txt = await rr.text()
+                    low = txt.lower()
+                    needles = ["rt072-disaggregated-block", "loaderendpoint", "loader-endpoint", "loadmore", "load-more", ".loader.html", "maxcards", "max-cards"]
+                    snippets=[]
+                    for needle in needles:
+                        pos=0
+                        while True:
+                            i=low.find(needle.lower(), pos)
+                            if i<0: break
+                            snippets.append(txt[max(0,i-1500):min(len(txt),i+3500)])
+                            pos=i+len(needle)
+                            if len(snippets)>=40: break
+                        if len(snippets)>=40: break
+                    if snippets:
+                        OUT["js_hits"].append({"url":src,"status":rr.status,"len":len(txt),"snippets":snippets[:40]})
+                except Exception as e:
+                    OUT.setdefault("js_errors",[]).append({"url":src,"error":repr(e)})
+
             Path("conad_bassifissi_page.html").write_text(await page.content(), encoding="utf-8")
             await page.screenshot(path="conad_bassifissi_probe.png", full_page=False)
         except Exception as e:
