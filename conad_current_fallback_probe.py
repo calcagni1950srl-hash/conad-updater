@@ -44,9 +44,23 @@ async def main():
     async with async_playwright() as pw:
         browser=await pw.chromium.launch(headless=True)
         page=await browser.new_page(locale="it-IT",viewport={"width":1440,"height":1400})
-        await page.goto(GLOVO,wait_until="domcontentloaded",timeout=90000)
-        await page.wait_for_timeout(4500)
-        body=await page.locator("body").inner_text()
+        body=""
+        needles=[
+            "CONAD Aglio Macinato 37 g",
+            "PREZZEMOLO VASCHETTA CONAD P.Q. 50G",
+            "CONAD Cipolla Fiocchi 18 g",
+        ]
+        for attempt in range(1,4):
+            await page.goto(GLOVO,wait_until="domcontentloaded",timeout=90000)
+            await page.wait_for_timeout(3500 + attempt * 1500)
+            try:
+                await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                await page.wait_for_timeout(1200)
+            except Exception:
+                pass
+            body=await page.locator("body").inner_text()
+            if all(n.lower() in body.lower() for n in needles):
+                break
         for key,name,qty,ean in [
             ("aglio_glovo","CONAD Aglio Macinato 37 g - 80458920",0.037,"80458920"),
             ("prezzemolo","PREZZEMOLO VASCHETTA CONAD P.Q. 50G",0.05,None),
@@ -59,15 +73,20 @@ async def main():
             }
         await browser.close()
 
-    if out["aglio"].get("ean_present") is not True:
-        raise SystemExit("GARLIC_EAN_NOT_CONFIRMED")
-    if not all(v.get("price") and v["price"]>0 for v in out.values()):
-        raise SystemExit("MISSING_PRICE")
     # Preferiamo la stessa fonte corrente Glovo per i tre ingredienti.
     # Gresy resta un controllo indipendente sull'identità/prezzo dell'aglio.
-    out["aglio_reference"] = out["aglio_glovo"]
+    out["aglio_reference"] = out.get("aglio_glovo", {})
 
-    print(json.dumps(out,ensure_ascii=False))
-    open("conad_current_fallback_probe.json","w",encoding="utf-8").write(json.dumps(out,ensure_ascii=False,indent=2))
+    print(json.dumps(out,ensure_ascii=False), flush=True)
+    open("conad_current_fallback_probe.json","w",encoding="utf-8").write(
+        json.dumps(out,ensure_ascii=False,indent=2)
+    )
+
+    if out["aglio"].get("ean_present") is not True:
+        raise SystemExit("GARLIC_EAN_NOT_CONFIRMED")
+    required=("aglio_reference","prezzemolo","cipolla")
+    missing=[k for k in required if not out.get(k,{}).get("price")]
+    if missing:
+        raise SystemExit("MISSING_PRICE:" + ",".join(missing))
 
 asyncio.run(main())
