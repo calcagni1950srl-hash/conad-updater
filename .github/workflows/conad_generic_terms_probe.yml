@@ -1,0 +1,17 @@
+name: Conad Generic Terms Probe
+on:
+  push:
+    paths:
+      - 'conad_generic_terms_probe.py'
+      - '.github/workflows/conad_generic_terms_probe.yml'
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check missing ingredients in generic Conad DB
+        run: python conad_generic_terms_probe.py
