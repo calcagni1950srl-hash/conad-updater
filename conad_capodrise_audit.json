@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-18T16:12:58Z",
+  "checked_at": "2026-09-18T16:18:41Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -83,7 +83,7 @@
         "price_eur": 0.39,
         "quantity_value": 1.0,
         "quantity_unit": "KG",
-        "verified_at": "2026-09-18T16:12:54.567792Z",
+        "verified_at": "2026-09-18T16:18:39.598140Z",
         "source_url": "https://glovoapp.com/en/it/fano/stores/conad-fan?content=dispensa-salata-sc.35058105%252Fsale-spezie-e-salse-c.35058816",
         "from_last_good": false
       },
@@ -94,7 +94,7 @@
         "price_eur": 1.79,
         "quantity_value": 0.03,
         "quantity_unit": "KG",
-        "verified_at": "2026-09-18T16:12:54.567792Z",
+        "verified_at": "2026-09-18T16:18:39.598140Z",
         "source_url": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199",
         "from_last_good": false
       },
@@ -105,7 +105,18 @@
         "price_eur": 1.49,
         "quantity_value": 0.022,
         "quantity_unit": "KG",
-        "verified_at": "2026-09-18T16:12:54.567792Z",
+        "verified_at": "2026-09-18T16:18:39.598140Z",
+        "source_url": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199",
+        "from_last_good": false
+      },
+      {
+        "ingredient": "basilico",
+        "product_code": "REF:80458944",
+        "product_name": "CONAD Basilico Foglie 17 g - 80458944",
+        "price_eur": 1.49,
+        "quantity_value": 0.017,
+        "quantity_unit": "KG",
+        "verified_at": "2026-09-18T16:18:39.598140Z",
         "source_url": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199",
         "from_last_good": false
       }
@@ -115,17 +126,17 @@
     "scope": "CURRENT_EXTERNAL_CONAD_REFERENCE"
   },
   "full_db": {
-    "rows": 913,
-    "positive": 913,
+    "rows": 914,
+    "positive": 914,
     "bassi_fissi": 789,
     "local_offers": 118,
-    "reference_fallbacks": 6,
+    "reference_fallbacks": 7,
     "store_codes": [
       "010548"
     ]
   },
   "app_db": {
-    "rows": 736,
+    "rows": 737,
     "local_offers": 118,
     "stores": [
       "010548"
