@@ -7,6 +7,7 @@ from playwright.async_api import async_playwright
 UA={"User-Agent":"Mozilla/5.0","Accept-Language":"it-IT,it;q=0.9"}
 GRESY="https://gresy.shop/products/5056-01"
 GLOVO="https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199"
+GLOVO_SALE="https://glovoapp.com/en/it/fano/stores/conad-fan?content=dispensa-salata-sc.35058105%252Fsale-spezie-e-salse-c.35058816"
 LAST_GOOD=Path("conad_current_fallback_last_good.json")
 MAX_AGE_DAYS=14
 
@@ -53,6 +54,8 @@ async def main():
             "CONAD Aglio Macinato 37 g",
             "PREZZEMOLO VASCHETTA CONAD P.Q. 50G",
             "CONAD Cipolla Fiocchi 18 g",
+            "CONAD Peperoncino con Macinino Macina Regolabile 30 g",
+            "CONAD Rosmarino Foglie 22 g",
         ]
         for attempt in range(1,4):
             await page.goto(GLOVO,wait_until="domcontentloaded",timeout=90000)
@@ -69,12 +72,34 @@ async def main():
             ("aglio_glovo","CONAD Aglio Macinato 37 g - 80458920",0.037,"80458920"),
             ("prezzemolo","PREZZEMOLO VASCHETTA CONAD P.Q. 50G",0.05,None),
             ("cipolla","CONAD Cipolla Fiocchi 18 g - 80458951",0.018,"80458951"),
+            ("peperoncino","CONAD Peperoncino con Macinino Macina Regolabile 30 g - 80459774",0.030,"80459774"),
+            ("rosmarino","CONAD Rosmarino Foglie 22 g - 80459255",0.022,"80459255"),
         ]:
             price,chunk=first_price_after(body,name,1200)
             out[key]={
                 "url":GLOVO,"status":200,"price":price,"name":name,
                 "quantity_value":qty,"quantity_unit":"KG","ean":ean,"chunk":chunk
             }
+        # Sale: pagina Conad/Glovo separata.
+        sale_page=await browser.new_page(locale="it-IT",viewport={"width":1440,"height":1400})
+        sale_body=""
+        sale_name="CONAD Sale Alimentare Fino 1000 g - 8003170036826"
+        for attempt in range(1,4):
+            await sale_page.goto(GLOVO_SALE,wait_until="domcontentloaded",timeout=90000)
+            await sale_page.wait_for_timeout(3000 + attempt * 1200)
+            try:
+                await sale_page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                await sale_page.wait_for_timeout(800)
+            except Exception:
+                pass
+            sale_body=await sale_page.locator("body").inner_text()
+            if sale_name.lower() in sale_body.lower():
+                break
+        sale_price,sale_chunk=first_price_after(sale_body,sale_name,1200)
+        out["sale"]={
+            "url":GLOVO_SALE,"status":200,"price":sale_price,"name":sale_name,
+            "quantity_value":1.0,"quantity_unit":"KG","ean":"8003170036826","chunk":sale_chunk
+        }
         await browser.close()
 
     # Preferiamo la stessa fonte corrente Glovo per i tre ingredienti.
@@ -82,7 +107,7 @@ async def main():
     out["aglio_reference"] = out.get("aglio_glovo", {})
 
     now=datetime.now(timezone.utc)
-    required=("aglio_reference","prezzemolo","cipolla")
+    required=("aglio_reference","prezzemolo","cipolla","sale","peperoncino","rosmarino")
     last_good={}
     if LAST_GOOD.exists():
         try:
