@@ -1,10 +1,14 @@
 import asyncio,json,re,requests
+from datetime import datetime, timezone
+from pathlib import Path
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 
 UA={"User-Agent":"Mozilla/5.0","Accept-Language":"it-IT,it;q=0.9"}
 GRESY="https://gresy.shop/products/5056-01"
 GLOVO="https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199"
+LAST_GOOD=Path("conad_current_fallback_last_good.json")
+MAX_AGE_DAYS=14
 
 def req_text(url):
     r=requests.get(url,headers=UA,timeout=60)
@@ -77,16 +81,76 @@ async def main():
     # Gresy resta un controllo indipendente sull'identità/prezzo dell'aglio.
     out["aglio_reference"] = out.get("aglio_glovo", {})
 
+    now=datetime.now(timezone.utc)
+    required=("aglio_reference","prezzemolo","cipolla")
+    last_good={}
+    if LAST_GOOD.exists():
+        try:
+            last_good=json.loads(LAST_GOOD.read_text(encoding="utf-8"))
+        except Exception:
+            last_good={}
+
+    cache_values=last_good.get("values") or {}
+    global_verified=last_good.get("verified_at")
+    used_last_good=[]
+
+    def age_days(ts):
+        if not ts:
+            return 10**9
+        try:
+            dt=datetime.fromisoformat(str(ts).replace("Z","+00:00"))
+            if dt.tzinfo is None:
+                dt=dt.replace(tzinfo=timezone.utc)
+            return (now-dt.astimezone(timezone.utc)).total_seconds()/86400.0
+        except Exception:
+            return 10**9
+
+    for key in required:
+        live=out.get(key) or {}
+        if live.get("price"):
+            live["verified_at"]=now.isoformat().replace("+00:00","Z")
+            live["from_last_good"]=False
+            out[key]=live
+            continue
+
+        cached=dict(cache_values.get(key) or {})
+        verified_at=cached.get("verified_at") or global_verified
+        if cached.get("price") and age_days(verified_at) <= MAX_AGE_DAYS:
+            cached["verified_at"]=verified_at
+            cached["from_last_good"]=True
+            cached["last_good_age_days"]=round(age_days(verified_at),3)
+            out[key]=cached
+            used_last_good.append(key)
+
+    if out["aglio"].get("ean_present") is not True:
+        raise SystemExit("GARLIC_EAN_NOT_CONFIRMED")
+
+    missing=[k for k in required if not out.get(k,{}).get("price")]
+    if missing:
+        print(json.dumps(out,ensure_ascii=False), flush=True)
+        raise SystemExit("MISSING_PRICE:" + ",".join(missing))
+
+    new_cache={
+        "verified_at": now.isoformat().replace("+00:00","Z"),
+        "max_age_days": MAX_AGE_DAYS,
+        "values": {},
+        "evidence": {
+            "note": "Snapshot last-good: ogni voce mantiene la propria ultima verifica live; nessun timestamp viene rinnovato quando si usa la cache."
+        }
+    }
+    for key in required:
+        row=dict(out[key])
+        row.pop("chunk",None)
+        row.pop("from_last_good",None)
+        row.pop("last_good_age_days",None)
+        new_cache["values"][key]=row
+    # Il timestamp globale è solo informativo: la scadenza usa verified_at della singola voce.
+    LAST_GOOD.write_text(json.dumps(new_cache,ensure_ascii=False,indent=2),encoding="utf-8")
+
+    out["last_good_used"]=used_last_good
     print(json.dumps(out,ensure_ascii=False), flush=True)
     open("conad_current_fallback_probe.json","w",encoding="utf-8").write(
         json.dumps(out,ensure_ascii=False,indent=2)
     )
-
-    if out["aglio"].get("ean_present") is not True:
-        raise SystemExit("GARLIC_EAN_NOT_CONFIRMED")
-    required=("aglio_reference","prezzemolo","cipolla")
-    missing=[k for k in required if not out.get(k,{}).get("price")]
-    if missing:
-        raise SystemExit("MISSING_PRICE:" + ",".join(missing))
 
 asyncio.run(main())
