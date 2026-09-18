@@ -60,6 +60,8 @@ def find_flyers(payload):
             "catalogue": node.get("catalogue"),
             "hasDisaggregated": node.get("hasDisaggregated"),
             "disTotalProducts": node.get("disTotalProducts"),
+            "rawKeys": sorted(node.keys()),
+            "rawNode": node,
         })
     return found
 
