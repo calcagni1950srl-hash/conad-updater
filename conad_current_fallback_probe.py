@@ -47,14 +47,15 @@ async def main():
         await page.goto(GLOVO,wait_until="domcontentloaded",timeout=90000)
         await page.wait_for_timeout(4500)
         body=await page.locator("body").inner_text()
-        for key,name,qty in [
-            ("prezzemolo","PREZZEMOLO VASCHETTA CONAD P.Q. 50G",0.05),
-            ("cipolla","CONAD Cipolla Fiocchi 18 g",0.018),
+        for key,name,qty,ean in [
+            ("aglio_glovo","CONAD Aglio Macinato 37 g - 80458920",0.037,"80458920"),
+            ("prezzemolo","PREZZEMOLO VASCHETTA CONAD P.Q. 50G",0.05,None),
+            ("cipolla","CONAD Cipolla Fiocchi 18 g - 80458951",0.018,"80458951"),
         ]:
             price,chunk=first_price_after(body,name,1200)
             out[key]={
                 "url":GLOVO,"status":200,"price":price,"name":name,
-                "quantity_value":qty,"quantity_unit":"KG","chunk":chunk
+                "quantity_value":qty,"quantity_unit":"KG","ean":ean,"chunk":chunk
             }
         await browser.close()
 
@@ -65,5 +66,8 @@ async def main():
         raise SystemExit("GARLIC_EAN_NOT_CONFIRMED")
     if not all(v.get("price") and v["price"]>0 for v in out.values()):
         raise SystemExit("MISSING_PRICE")
+    # Preferiamo la stessa fonte corrente Glovo per i tre ingredienti.
+    # Gresy resta un controllo indipendente sull'identità/prezzo dell'aglio.
+    out["aglio_reference"] = out["aglio_glovo"]
 
 asyncio.run(main())
