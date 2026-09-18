@@ -1,0 +1,70 @@
+name: CONAD CAPODRISE ENGINE
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'CONAD_CAPODRISE_ENGINE.py'
+      - '.github/workflows/CONAD_CAPODRISE_ENGINE.yml'
+  schedule:
+    - cron: '30 4 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright requests pymupdf
+          python -m playwright install --with-deps chromium
+
+      - name: Refresh official Conad Bassi e Fissi base
+        run: python CONAD_BASSI_FISSI_ENGINE.py
+
+      - name: Overlay active PAC Campania offers for store 010548
+        run: python CONAD_CAPODRISE_ENGINE.py
+
+      - name: Final SQLite audit
+        run: |
+          python - <<'PY'
+          import json, sqlite3
+          for name, minimum in [('prezzi_conad_capodrise.db', 740), ('prezzi_conad_capodrise_app.db', 600)]:
+              con=sqlite3.connect(name)
+              rows=con.execute('select count(*) from products_current').fetchone()[0]
+              positive=con.execute('select count(*) from products_current where price_eur>0').fetchone()[0]
+              stores=con.execute('select distinct store_code from products_current').fetchall()
+              local=con.execute("select count(*) from products_current where product_code like 'FLYER:%'").fetchone()[0]
+              print(json.dumps({'db':name,'rows':rows,'positive':positive,'stores':stores,'local_offers':local}))
+              assert rows >= minimum
+              assert rows == positive
+              assert stores == [('010548',)]
+              assert local >= 40
+              con.close()
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: conad-capodrise-validated
+          path: |
+            prezzi_conad_capodrise.db
+            prezzi_conad_capodrise_app.db
+            conad_bassifissi_audit.json
+            conad_capodrise_audit.json
+
+      - name: Commit validated Conad Capodrise databases
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add prezzi_conad_capodrise.db prezzi_conad_capodrise_app.db conad_bassifissi_audit.json conad_capodrise_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update validated Conad Capodrise databases"
+          git push
