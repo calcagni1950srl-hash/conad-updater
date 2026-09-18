@@ -1,0 +1,26 @@
+name: Conad PAC History Probe
+on:
+  push:
+    paths:
+      - 'conad_pac_history_probe.py'
+      - '.github/workflows/conad_pac_history_probe.yml'
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install requests pymupdf
+      - name: Parse recent official PAC Campania flyers
+        run: python conad_pac_history_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conad-pac-history-probe
+          path: |
+            conad_pac_history_probe.json
+            pac_history_*.json
