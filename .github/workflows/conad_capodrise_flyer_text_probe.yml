@@ -1,0 +1,26 @@
+name: Conad Capodrise Flyer Text Probe
+on:
+  push:
+    paths:
+      - 'conad_capodrise_flyer_text_probe.py'
+      - '.github/workflows/conad_capodrise_flyer_text_probe.yml'
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF parser
+        run: pip install requests pymupdf
+      - name: Extract current Capodrise flyer text
+        run: python conad_capodrise_flyer_text_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conad-capodrise-flyer-texts
+          path: |
+            conad_capodrise_flyer_text_probe.json
+            flyer_texts/
