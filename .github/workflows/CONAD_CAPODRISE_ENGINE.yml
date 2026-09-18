@@ -6,7 +6,6 @@ on:
     paths:
       - 'CONAD_CAPODRISE_ENGINE.py'
       - 'CONAD_BASSI_FISSI_ENGINE.py'
-      - 'conad_current_fallback_probe.py'
       - '.github/workflows/CONAD_CAPODRISE_ENGINE.yml'
   schedule:
     - cron: '30 4 * * *'
@@ -32,9 +31,6 @@ jobs:
       - name: Refresh official Conad Bassi e Fissi base
         run: python CONAD_BASSI_FISSI_ENGINE.py
 
-      - name: Refresh current external Conad staple references
-        run: python conad_current_fallback_probe.py
-
       - name: Overlay active PAC Campania offers for store 010548
         run: python CONAD_CAPODRISE_ENGINE.py
 
@@ -54,6 +50,7 @@ jobs:
               assert rows == positive
               assert stores == [('010548',)]
               assert local >= 40
+              assert refs == 3
               con.close()
           PY
 
