@@ -60,7 +60,7 @@ async def dismiss_cookie(page):
         except Exception:
             pass
 
-async def fetch_page(request, url, referer, retries=4):
+async def fetch_page(request, url, referer, retries=6):
     last = None
     for attempt in range(1, retries + 1):
         try:
@@ -73,9 +73,18 @@ async def fetch_page(request, url, referer, retries=4):
             if r.ok:
                 return body
             last = f"HTTP {r.status}"
+            if r.status == 429:
+                ra = r.headers.get("retry-after")
+                try:
+                    wait = max(20, int(ra)) if ra else min(120, 20 * attempt)
+                except Exception:
+                    wait = min(120, 20 * attempt)
+                print(f"HTTP 429 su {url}: attendo {wait}s (tentativo {attempt}/{retries})", flush=True)
+                await asyncio.sleep(wait)
+                continue
         except Exception as e:
             last = repr(e)
-        await asyncio.sleep(min(8, attempt * 2))
+        await asyncio.sleep(min(12, attempt * 3))
     raise RuntimeError(f"Download fallito: {url} - {last}")
 
 def init_db(path):
@@ -200,7 +209,8 @@ async def main():
                 for code in pp:
                     seen.setdefault(code, []).append(n)
                 merged.update(pp)
-                await asyncio.sleep(0.15)
+                # Ritmo prudente: il sito consente la paginazione pubblica ma applica rate limiting.
+                await asyncio.sleep(4)
 
             if card_count != declared:
                 raise RuntimeError(f"Completezza fallita: dichiarati {declared}, ricevute {card_count} card.")
