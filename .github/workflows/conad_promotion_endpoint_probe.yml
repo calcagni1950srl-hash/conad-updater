@@ -1,0 +1,24 @@
+name: Conad Promotion Endpoint Probe
+on:
+  push:
+    paths:
+      - 'conad_promotion_endpoint_probe.py'
+      - '.github/workflows/conad_promotion_endpoint_probe.yml'
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install requests parser
+        run: pip install requests beautifulsoup4
+      - name: Find official promotion endpoints
+        run: python conad_promotion_endpoint_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conad-promotion-endpoint-probe
+          path: conad_promotion_endpoint_probe.json
