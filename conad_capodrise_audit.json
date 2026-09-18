@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-18T15:31:25Z",
+  "checked_at": "2026-09-18T15:46:55Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -40,7 +40,7 @@
       "price_out_of_range": 2
     }
   },
-  "current_external_references": {
+  "fixed_reference_prices": {
     "inserted": [
       {
         "ingredient": "aglio",
@@ -49,7 +49,7 @@
         "price_eur": 1.49,
         "quantity_value": 0.037,
         "quantity_unit": "KG",
-        "source_url": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199"
+        "reference_scope": "FIXED_MARKET_REFERENCE_V81"
       },
       {
         "ingredient": "cipolla",
@@ -58,7 +58,7 @@
         "price_eur": 1.49,
         "quantity_value": 0.018,
         "quantity_unit": "KG",
-        "source_url": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199"
+        "reference_scope": "FIXED_MARKET_REFERENCE_V81"
       },
       {
         "ingredient": "prezzemolo",
@@ -67,16 +67,12 @@
         "price_eur": 1.09,
         "quantity_value": 0.05,
         "quantity_unit": "KG",
-        "source_url": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199"
+        "reference_scope": "FIXED_MARKET_REFERENCE_V81"
       }
     ],
     "skipped": [],
     "missing_after": [],
-    "sources": {
-      "aglio": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199",
-      "cipolla": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199",
-      "prezzemolo": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199"
-    }
+    "scope": "FIXED_MARKET_REFERENCE_V81"
   },
   "full_db": {
     "rows": 910,
