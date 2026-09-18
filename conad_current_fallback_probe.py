@@ -59,9 +59,6 @@ async def main():
             }
         await browser.close()
 
-    print(json.dumps(out,ensure_ascii=False))
-    open("conad_current_fallback_probe.json","w",encoding="utf-8").write(json.dumps(out,ensure_ascii=False,indent=2))
-
     if out["aglio"].get("ean_present") is not True:
         raise SystemExit("GARLIC_EAN_NOT_CONFIRMED")
     if not all(v.get("price") and v["price"]>0 for v in out.values()):
@@ -69,5 +66,8 @@ async def main():
     # Preferiamo la stessa fonte corrente Glovo per i tre ingredienti.
     # Gresy resta un controllo indipendente sull'identità/prezzo dell'aglio.
     out["aglio_reference"] = out["aglio_glovo"]
+
+    print(json.dumps(out,ensure_ascii=False))
+    open("conad_current_fallback_probe.json","w",encoding="utf-8").write(json.dumps(out,ensure_ascii=False,indent=2))
 
 asyncio.run(main())
