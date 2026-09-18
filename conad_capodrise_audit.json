@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-18T16:09:17Z",
+  "checked_at": "2026-09-18T16:12:58Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -74,18 +74,58 @@
     "missing_after": [],
     "scope": "FIXED_MARKET_AVERAGE_V81"
   },
+  "current_external_conad_references": {
+    "inserted": [
+      {
+        "ingredient": "sale",
+        "product_code": "REF:8003170036826",
+        "product_name": "CONAD Sale Alimentare Fino 1000 g - 8003170036826",
+        "price_eur": 0.39,
+        "quantity_value": 1.0,
+        "quantity_unit": "KG",
+        "verified_at": "2026-09-18T16:12:54.567792Z",
+        "source_url": "https://glovoapp.com/en/it/fano/stores/conad-fan?content=dispensa-salata-sc.35058105%252Fsale-spezie-e-salse-c.35058816",
+        "from_last_good": false
+      },
+      {
+        "ingredient": "peperoncino",
+        "product_code": "REF:80459774",
+        "product_name": "CONAD Peperoncino con Macinino Macina Regolabile 30 g - 80459774",
+        "price_eur": 1.79,
+        "quantity_value": 0.03,
+        "quantity_unit": "KG",
+        "verified_at": "2026-09-18T16:12:54.567792Z",
+        "source_url": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199",
+        "from_last_good": false
+      },
+      {
+        "ingredient": "rosmarino",
+        "product_code": "REF:80459255",
+        "product_name": "CONAD Rosmarino Foglie 22 g - 80459255",
+        "price_eur": 1.49,
+        "quantity_value": 0.022,
+        "quantity_unit": "KG",
+        "verified_at": "2026-09-18T16:12:54.567792Z",
+        "source_url": "https://glovoapp.com/it/it/milano/stores/conad-mil?content=ortofrutta-sc.35059660%2Faromi-e-spezie-c.35059199",
+        "from_last_good": false
+      }
+    ],
+    "skipped": [],
+    "missing_after": [],
+    "scope": "CURRENT_EXTERNAL_CONAD_REFERENCE"
+  },
   "full_db": {
-    "rows": 910,
-    "positive": 910,
+    "rows": 913,
+    "positive": 913,
     "bassi_fissi": 789,
     "local_offers": 118,
-    "reference_fallbacks": 3,
+    "reference_fallbacks": 6,
     "store_codes": [
       "010548"
     ]
   },
   "app_db": {
-    "rows": 733,
+    "rows": 736,
     "local_offers": 118,
     "stores": [
       "010548"
