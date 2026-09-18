@@ -599,6 +599,27 @@ FALLBACK_SPECS = {
     },
 }
 
+EXTERNAL_CURRENT_SPECS = {
+    # Riferimenti Conad correnti esterni al punto vendita 010548.
+    # Sono usati SOLO quando Capodrise/PAC/Bassi e Fissi non espongono
+    # un prodotto standalone equivalente. Fonte e data restano nel DB.
+    "sale": {
+        "product_code": "REF:8003170036826",
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+    },
+    "peperoncino": {
+        "product_code": "REF:80459774",
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+    },
+    "rosmarino": {
+        "product_code": "REF:80459255",
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+    },
+}
+
 _STANDALONE_ALLOWED_CATEGORIES = {
     "frutta e verdura",
     "condimenti e conserve",
@@ -750,6 +771,128 @@ def apply_fixed_reference_prices():
         "scope": "FIXED_MARKET_AVERAGE_V81",
     }
 
+def apply_current_external_conad_references():
+    """
+    Aggiunge tre piccoli prodotti Conad con prezzo corrente verificato fuori
+    dal punto vendita 010548: sale, peperoncino e rosmarino.
+    Non sono presentati come prezzi Capodrise. Il probe live gestisce anche
+    una cache last-good con scadenza massima di 14 giorni.
+    """
+    probe_path = Path("conad_current_fallback_probe.json")
+    if not probe_path.exists():
+        raise RuntimeError("Manca conad_current_fallback_probe.json")
+
+    data = json.loads(probe_path.read_text(encoding="utf-8"))
+    now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    con = sqlite3.connect(FULL_DB)
+    ensure_schema_extensions(con)
+
+    inserted = []
+    skipped = []
+
+    for ingredient, spec in EXTERNAL_CURRENT_SPECS.items():
+        if standalone_ingredient_exists(con, ingredient):
+            skipped.append({
+                "ingredient": ingredient,
+                "reason": "current_local_or_bassi_fissi_product_exists",
+            })
+            continue
+
+        row_data = data.get(ingredient) or {}
+        price = float(row_data.get("price") or 0)
+        qty = float(row_data.get("quantity_value") or 0)
+        unit = str(row_data.get("quantity_unit") or "").upper()
+        name = clean_text(row_data.get("name"))
+        url = clean_text(row_data.get("url"))
+        verified_at = clean_text(row_data.get("verified_at")) or now
+
+        if price <= 0 or qty <= 0 or unit != "KG" or not name or not url:
+            con.rollback()
+            con.close()
+            raise RuntimeError(
+                f"Riferimento Conad esterno non valido per {ingredient}: "
+                + json.dumps(row_data, ensure_ascii=False)
+            )
+
+        unit_price = round(price / qty, 4)
+        source_label = "CURRENT_EXTERNAL_CONAD_REFERENCE|" + url
+
+        con.execute(
+            """
+            INSERT OR REPLACE INTO products_current(
+              supermarket,store_code,store_name,store_address,product_code,product_name,
+              brand,category1,category2,category3,quantity_value,quantity_unit,price_eur,
+              unit_price,unit_price_unit,bassi_fissi,image_url,source_queries,checked_at,
+              variable_weight
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            (
+                "Conad", STORE_CODE, STORE_NAME, STORE_ADDRESS,
+                spec["product_code"], name, "Conad",
+                spec["category1"], spec["category2"], "Fallback Conad esterno corrente",
+                qty, "KG", round(price, 2),
+                unit_price, "EUR/KG", 0,
+                None, source_label, verified_at, 0,
+            ),
+        )
+        con.execute(
+            "INSERT INTO price_history(store_code,product_code,price_eur,unit_price,checked_at) VALUES(?,?,?,?,?)",
+            (STORE_CODE, spec["product_code"], round(price, 2), unit_price, verified_at),
+        )
+        inserted.append({
+            "ingredient": ingredient,
+            "product_code": spec["product_code"],
+            "product_name": name,
+            "price_eur": round(price, 2),
+            "quantity_value": qty,
+            "quantity_unit": "KG",
+            "verified_at": verified_at,
+            "source_url": url,
+            "from_last_good": bool(row_data.get("from_last_good")),
+        })
+
+    missing_after = [
+        ingredient for ingredient in EXTERNAL_CURRENT_SPECS
+        if not standalone_ingredient_exists(con, ingredient)
+    ]
+    if missing_after:
+        con.rollback()
+        con.close()
+        raise RuntimeError(
+            "Riferimenti Conad esterni ancora scoperti: " + ", ".join(missing_after)
+        )
+
+    con.execute(
+        """
+        INSERT INTO update_log(checked_at,store_code,query,declared_total,saved_count,status,message)
+        VALUES(?,?,?,?,?,?,?)
+        """,
+        (
+            now, STORE_CODE, "CURRENT_EXTERNAL_CONAD_REFERENCE",
+            len(EXTERNAL_CURRENT_SPECS), len(inserted), "OK",
+            "Riferimenti correnti Conad esterni al punto vendita per sale, peperoncino e rosmarino; "
+            "usati solo se le fonti locali 010548/PAC/Bassi e Fissi non coprono il prodotto.",
+        ),
+    )
+    con.execute(
+        "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
+        ("external_reference_count", str(len(inserted))),
+    )
+    con.execute(
+        "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
+        ("external_reference_scope", "CURRENT_EXTERNAL_CONAD_REFERENCE"),
+    )
+    con.commit()
+    con.close()
+
+    return {
+        "inserted": inserted,
+        "skipped": skipped,
+        "missing_after": missing_after,
+        "scope": "CURRENT_EXTERNAL_CONAD_REFERENCE",
+    }
+
+
 def build_app_db():
     shutil.copy2(FULL_DB, APP_DB)
     con = sqlite3.connect(APP_DB)
@@ -798,6 +941,7 @@ def main():
 
     apply_local_offers(offers, flyer_info)
     fallback_audit = apply_fixed_reference_prices()
+    external_reference_audit = apply_current_external_conad_references()
     app_stats = build_app_db()
     full_stats = database_stats(FULL_DB)
 
@@ -823,6 +967,7 @@ def main():
         "flyer_candidates": flyer_attempts,
         "parser": parser_audit,
         "fixed_reference_prices": fallback_audit,
+        "current_external_conad_references": external_reference_audit,
         "full_db": full_stats,
         "app_db": app_stats,
         "offer_samples": offers[:30],
