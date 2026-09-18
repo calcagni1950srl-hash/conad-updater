@@ -56,6 +56,7 @@ async def main():
             "CONAD Cipolla Fiocchi 18 g",
             "CONAD Peperoncino con Macinino Macina Regolabile 30 g",
             "CONAD Rosmarino Foglie 22 g",
+            "CONAD Basilico Foglie 17 g",
         ]
         for attempt in range(1,4):
             await page.goto(GLOVO,wait_until="domcontentloaded",timeout=90000)
@@ -74,6 +75,7 @@ async def main():
             ("cipolla","CONAD Cipolla Fiocchi 18 g - 80458951",0.018,"80458951"),
             ("peperoncino","CONAD Peperoncino con Macinino Macina Regolabile 30 g - 80459774",0.030,"80459774"),
             ("rosmarino","CONAD Rosmarino Foglie 22 g - 80459255",0.022,"80459255"),
+            ("basilico","CONAD Basilico Foglie 17 g - 80458944",0.017,"80458944"),
         ]:
             price,chunk=first_price_after(body,name,1200)
             out[key]={
@@ -107,7 +109,7 @@ async def main():
     out["aglio_reference"] = out.get("aglio_glovo", {})
 
     now=datetime.now(timezone.utc)
-    required=("aglio_reference","prezzemolo","cipolla","sale","peperoncino","rosmarino")
+    required=("aglio_reference","prezzemolo","cipolla","sale","peperoncino","rosmarino","basilico")
     last_good={}
     if LAST_GOOD.exists():
         try:
