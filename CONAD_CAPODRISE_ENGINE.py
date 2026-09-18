@@ -20,7 +20,6 @@ STORE_API = "https://www.conad.it/api/corporate/it-it.getPointOfServiceByAnacanI
 FULL_DB = Path("prezzi_conad_capodrise.db")
 APP_DB = Path("prezzi_conad_capodrise_app.db")
 AUDIT = Path("conad_capodrise_audit.json")
-FALLBACK_JSON = Path("conad_current_fallback_probe.json")
 
 MONTHS = {
     "GENNAIO": 1, "FEBBRAIO": 2, "MARZO": 3, "APRILE": 4,
@@ -561,8 +560,10 @@ def apply_local_offers(offers, flyer_info):
 
 
 FALLBACK_SPECS = {
+    # V81: eccezione esplicita approvata dall'utente.
+    # Questi tre prezzi sono riferimenti FISSI e non vengono presentati
+    # come prezzi del punto vendita Capodrise.
     "aglio": {
-        "json_key": "aglio_reference",
         "product_code": "REF:80458920",
         "product_name": "CONAD Aglio Macinato 37 g",
         "brand": "Conad",
@@ -570,9 +571,9 @@ FALLBACK_SPECS = {
         "category2": "Sale, aromi e spezie",
         "quantity_value": 0.037,
         "quantity_unit": "KG",
+        "price_eur": 1.49,
     },
     "cipolla": {
-        "json_key": "cipolla",
         "product_code": "REF:80458951",
         "product_name": "CONAD Cipolla Fiocchi 18 g",
         "brand": "Conad",
@@ -580,9 +581,9 @@ FALLBACK_SPECS = {
         "category2": "Sale, aromi e spezie",
         "quantity_value": 0.018,
         "quantity_unit": "KG",
+        "price_eur": 1.49,
     },
     "prezzemolo": {
-        "json_key": "prezzemolo",
         "product_code": "REF:11146468",
         "product_name": "PREZZEMOLO VASCHETTA CONAD P.Q. 50G",
         "brand": "Conad",
@@ -590,6 +591,7 @@ FALLBACK_SPECS = {
         "category2": "Erbe aromatiche",
         "quantity_value": 0.050,
         "quantity_unit": "KG",
+        "price_eur": 1.09,
     },
 }
 
@@ -628,13 +630,12 @@ def standalone_ingredient_exists(con, ingredient):
     )
 
 
-def apply_current_external_references():
-    if not FALLBACK_JSON.exists():
-        raise RuntimeError(
-            "Manca conad_current_fallback_probe.json: eseguire prima il probe prezzi fallback correnti."
-        )
-
-    data = json.loads(FALLBACK_JSON.read_text(encoding="utf-8"))
+def apply_fixed_reference_prices():
+    """
+    V81: aglio, cipolla e prezzemolo non devono mai bloccare il menu.
+    I prezzi sono fissi e vengono usati solo se non esiste gia' un prodotto
+    standalone valido da Capodrise/PAC/Bassi e Fissi.
+    """
     now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     con = sqlite3.connect(FULL_DB)
     ensure_schema_extensions(con)
@@ -644,32 +645,28 @@ def apply_current_external_references():
 
     inserted = []
     skipped = []
-    sources = {}
 
     for ingredient, spec in FALLBACK_SPECS.items():
         if standalone_ingredient_exists(con, ingredient):
-            skipped.append({"ingredient": ingredient, "reason": "current_local_or_bassi_fissi_product_exists"})
+            skipped.append({
+                "ingredient": ingredient,
+                "reason": "current_local_or_bassi_fissi_product_exists",
+            })
             continue
 
-        ref = data.get(spec["json_key"]) or {}
-        try:
-            price = float(ref.get("price") or 0)
-        except Exception:
-            price = 0.0
-        source_url = str(ref.get("url") or "").strip()
-        if price <= 0 or not source_url.startswith("http"):
-            con.close()
-            raise RuntimeError(
-                f"Fallback corrente non valido per {ingredient}: prezzo={price}, url={source_url!r}"
-            )
-
+        price = float(spec["price_eur"])
         qty = float(spec["quantity_value"])
+        if price <= 0 or qty <= 0:
+            con.close()
+            raise RuntimeError(f"Prezzo fisso non valido per {ingredient}")
+
         unit_price = round(price / qty, 4)
-        source_label = "CURRENT_EXTERNAL_CONAD_REFERENCE|" + source_url
+        source_label = "FIXED_MARKET_REFERENCE_V81|USER_APPROVED|2026-09-18"
+
         row = (
             "Conad", STORE_CODE, STORE_NAME, STORE_ADDRESS,
             spec["product_code"], spec["product_name"], spec["brand"],
-            spec["category1"], spec["category2"], "Fallback corrente esterno",
+            spec["category1"], spec["category2"], "Prezzo riferimento fisso V81",
             qty, spec["quantity_unit"], round(price, 2),
             unit_price, "EUR/KG", 0,
             None, source_label, now, 0,
@@ -696,9 +693,8 @@ def apply_current_external_references():
             "price_eur": round(price, 2),
             "quantity_value": qty,
             "quantity_unit": spec["quantity_unit"],
-            "source_url": source_url,
+            "reference_scope": "FIXED_MARKET_REFERENCE_V81",
         })
-        sources[ingredient] = source_url
 
     missing_after = [
         ingredient for ingredient in FALLBACK_SPECS
@@ -708,7 +704,8 @@ def apply_current_external_references():
         con.rollback()
         con.close()
         raise RuntimeError(
-            "Ingredienti base Conad ancora scoperti dopo i fallback: " + ", ".join(missing_after)
+            "Ingredienti base Conad ancora scoperti dopo i prezzi fissi: "
+            + ", ".join(missing_after)
         )
 
     con.execute(
@@ -717,10 +714,10 @@ def apply_current_external_references():
         VALUES(?,?,?,?,?,?,?)
         """,
         (
-            now, STORE_CODE, "CURRENT_EXTERNAL_CONAD_REFERENCE",
+            now, STORE_CODE, "FIXED_MARKET_REFERENCE_V81",
             len(FALLBACK_SPECS), len(inserted), "OK",
-            "Fallback correnti Conad usati solo per ingredienti base non coperti da Capodrise/PAC/Bassi e Fissi; "
-            "fonte esterna corrente registrata per ogni prodotto.",
+            "V81: prezzi di riferimento fissi approvati dall'utente per aglio, cipolla "
+            "e prezzemolo; usati solo se Capodrise/PAC/Bassi e Fissi non coprono il prodotto.",
         ),
     )
     con.execute(
@@ -729,11 +726,11 @@ def apply_current_external_references():
     )
     con.execute(
         "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
-        ("reference_fallback_scope", "CURRENT_EXTERNAL_CONAD_REFERENCE"),
+        ("reference_fallback_scope", "FIXED_MARKET_REFERENCE_V81"),
     )
     con.execute(
         "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
-        ("reference_fallback_checked_at", now),
+        ("reference_fallback_policy", "USER_APPROVED_FIXED_2026-09-18"),
     )
     con.commit()
     con.close()
@@ -742,7 +739,7 @@ def apply_current_external_references():
         "inserted": inserted,
         "skipped": skipped,
         "missing_after": missing_after,
-        "sources": sources,
+        "scope": "FIXED_MARKET_REFERENCE_V81",
     }
 
 def build_app_db():
@@ -792,7 +789,7 @@ def main():
         )
 
     apply_local_offers(offers, flyer_info)
-    fallback_audit = apply_current_external_references()
+    fallback_audit = apply_fixed_reference_prices()
     app_stats = build_app_db()
     full_stats = database_stats(FULL_DB)
 
@@ -817,7 +814,7 @@ def main():
         "flyer": flyer_info,
         "flyer_candidates": flyer_attempts,
         "parser": parser_audit,
-        "current_external_references": fallback_audit,
+        "fixed_reference_prices": fallback_audit,
         "full_db": full_stats,
         "app_db": app_stats,
         "offer_samples": offers[:30],
