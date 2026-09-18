@@ -561,8 +561,8 @@ def apply_local_offers(offers, flyer_info):
 
 FALLBACK_SPECS = {
     # V81: eccezione esplicita approvata dall'utente.
-    # Questi tre prezzi sono riferimenti FISSI e non vengono presentati
-    # come prezzi del punto vendita Capodrise.
+    # Solo piccoli ingredienti base a impatto economico minimo usano un
+    # riferimento FISSO; non vengono mai presentati come prezzi locali 010548.
     "aglio": {
         "product_code": "REF:80458920",
         "product_name": "CONAD Aglio Macinato 37 g",
@@ -592,6 +592,36 @@ FALLBACK_SPECS = {
         "quantity_value": 0.050,
         "quantity_unit": "KG",
         "price_eur": 1.09,
+    },
+    "peperoncino": {
+        "product_code": "REF:80459774",
+        "product_name": "CONAD Peperoncino con Macinino Macina Regolabile 30 g",
+        "brand": "Conad",
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+        "quantity_value": 0.030,
+        "quantity_unit": "KG",
+        "price_eur": 1.79,
+    },
+    "rosmarino": {
+        "product_code": "REF:80459255",
+        "product_name": "CONAD Rosmarino Foglie 22 g",
+        "brand": "Conad",
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+        "quantity_value": 0.022,
+        "quantity_unit": "KG",
+        "price_eur": 1.49,
+    },
+    "sale": {
+        "product_code": "REF:8003170036826",
+        "product_name": "CONAD Sale Alimentare Fino 1000 g",
+        "brand": "Conad",
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+        "quantity_value": 1.000,
+        "quantity_unit": "KG",
+        "price_eur": 0.32,
     },
 }
 
@@ -632,7 +662,7 @@ def standalone_ingredient_exists(con, ingredient):
 
 def apply_fixed_reference_prices():
     """
-    V81: aglio, cipolla e prezzemolo non devono mai bloccare il menu.
+    V81: i piccoli ingredienti-base di dispensa non devono bloccare il menu.
     I prezzi sono fissi e vengono usati solo se non esiste gia' un prodotto
     standalone valido da Capodrise/PAC/Bassi e Fissi.
     """
