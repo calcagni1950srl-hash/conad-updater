@@ -93,6 +93,7 @@ def init_db(path):
     DROP TABLE IF EXISTS products_current;
     DROP TABLE IF EXISTS price_history;
     DROP TABLE IF EXISTS update_log;
+    DROP TABLE IF EXISTS metadata;
     CREATE TABLE products_current(
       supermarket TEXT NOT NULL,
       store_code TEXT NOT NULL,
