@@ -20,6 +20,7 @@ STORE_API = "https://www.conad.it/api/corporate/it-it.getPointOfServiceByAnacanI
 FULL_DB = Path("prezzi_conad_capodrise.db")
 APP_DB = Path("prezzi_conad_capodrise_app.db")
 AUDIT = Path("conad_capodrise_audit.json")
+FALLBACK_JSON = Path("conad_current_fallback_probe.json")
 
 MONTHS = {
     "GENNAIO": 1, "FEBBRAIO": 2, "MARZO": 3, "APRILE": 4,
@@ -558,6 +559,192 @@ def apply_local_offers(offers, flyer_info):
     con.close()
 
 
+
+FALLBACK_SPECS = {
+    "aglio": {
+        "json_key": "aglio_reference",
+        "product_code": "REF:80458920",
+        "product_name": "CONAD Aglio Macinato 37 g",
+        "brand": "Conad",
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+        "quantity_value": 0.037,
+        "quantity_unit": "KG",
+    },
+    "cipolla": {
+        "json_key": "cipolla",
+        "product_code": "REF:80458951",
+        "product_name": "CONAD Cipolla Fiocchi 18 g",
+        "brand": "Conad",
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+        "quantity_value": 0.018,
+        "quantity_unit": "KG",
+    },
+    "prezzemolo": {
+        "json_key": "prezzemolo",
+        "product_code": "REF:11146468",
+        "product_name": "PREZZEMOLO VASCHETTA CONAD P.Q. 50G",
+        "brand": "Conad",
+        "category1": "Frutta e verdura",
+        "category2": "Erbe aromatiche",
+        "quantity_value": 0.050,
+        "quantity_unit": "KG",
+    },
+}
+
+_STANDALONE_ALLOWED_CATEGORIES = {
+    "frutta e verdura",
+    "condimenti e conserve",
+    "surgelati e gelati",
+}
+
+_STANDALONE_EXCLUDES = {
+    "aglio": ("senza aglio", "pesto", "spiedini", "gratinat", "sugo", "salsa"),
+    "cipolla": ("focaccia", "spianatina", "marinat", "borettane", "agrodolce", "sottolio", "sottaceto"),
+    "prezzemolo": ("gratinat", "spiedini", "filetto", "merluzzo"),
+}
+
+
+def is_standalone_ingredient_product(product_name, category1, ingredient):
+    name = normalized(product_name)
+    category = normalized(category1)
+    if category not in _STANDALONE_ALLOWED_CATEGORIES:
+        return False
+    if not re.search(r"\b" + re.escape(ingredient) + r"\b", name):
+        return False
+    if any(blocked in name for blocked in _STANDALONE_EXCLUDES.get(ingredient, ())):
+        return False
+    return True
+
+
+def standalone_ingredient_exists(con, ingredient):
+    rows = con.execute(
+        "SELECT product_name, category1 FROM products_current WHERE price_eur > 0"
+    ).fetchall()
+    return any(
+        is_standalone_ingredient_product(name, category, ingredient)
+        for name, category in rows
+    )
+
+
+def apply_current_external_references():
+    if not FALLBACK_JSON.exists():
+        raise RuntimeError(
+            "Manca conad_current_fallback_probe.json: eseguire prima il probe prezzi fallback correnti."
+        )
+
+    data = json.loads(FALLBACK_JSON.read_text(encoding="utf-8"))
+    now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    con = sqlite3.connect(FULL_DB)
+    ensure_schema_extensions(con)
+
+    con.execute("DELETE FROM products_current WHERE product_code LIKE 'REF:%'")
+    con.execute("DELETE FROM price_history WHERE product_code LIKE 'REF:%'")
+
+    inserted = []
+    skipped = []
+    sources = {}
+
+    for ingredient, spec in FALLBACK_SPECS.items():
+        if standalone_ingredient_exists(con, ingredient):
+            skipped.append({"ingredient": ingredient, "reason": "current_local_or_bassi_fissi_product_exists"})
+            continue
+
+        ref = data.get(spec["json_key"]) or {}
+        try:
+            price = float(ref.get("price") or 0)
+        except Exception:
+            price = 0.0
+        source_url = str(ref.get("url") or "").strip()
+        if price <= 0 or not source_url.startswith("http"):
+            con.close()
+            raise RuntimeError(
+                f"Fallback corrente non valido per {ingredient}: prezzo={price}, url={source_url!r}"
+            )
+
+        qty = float(spec["quantity_value"])
+        unit_price = round(price / qty, 4)
+        source_label = "CURRENT_EXTERNAL_CONAD_REFERENCE|" + source_url
+        row = (
+            "Conad", STORE_CODE, STORE_NAME, STORE_ADDRESS,
+            spec["product_code"], spec["product_name"], spec["brand"],
+            spec["category1"], spec["category2"], "Fallback corrente esterno",
+            qty, spec["quantity_unit"], round(price, 2),
+            unit_price, "EUR/KG", 0,
+            None, source_label, now, 0,
+        )
+        con.execute(
+            """
+            INSERT OR REPLACE INTO products_current(
+              supermarket,store_code,store_name,store_address,product_code,product_name,
+              brand,category1,category2,category3,quantity_value,quantity_unit,price_eur,
+              unit_price,unit_price_unit,bassi_fissi,image_url,source_queries,checked_at,
+              variable_weight
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            row,
+        )
+        con.execute(
+            "INSERT INTO price_history(store_code,product_code,price_eur,unit_price,checked_at) VALUES(?,?,?,?,?)",
+            (STORE_CODE, spec["product_code"], round(price, 2), unit_price, now),
+        )
+        inserted.append({
+            "ingredient": ingredient,
+            "product_code": spec["product_code"],
+            "product_name": spec["product_name"],
+            "price_eur": round(price, 2),
+            "quantity_value": qty,
+            "quantity_unit": spec["quantity_unit"],
+            "source_url": source_url,
+        })
+        sources[ingredient] = source_url
+
+    missing_after = [
+        ingredient for ingredient in FALLBACK_SPECS
+        if not standalone_ingredient_exists(con, ingredient)
+    ]
+    if missing_after:
+        con.rollback()
+        con.close()
+        raise RuntimeError(
+            "Ingredienti base Conad ancora scoperti dopo i fallback: " + ", ".join(missing_after)
+        )
+
+    con.execute(
+        """
+        INSERT INTO update_log(checked_at,store_code,query,declared_total,saved_count,status,message)
+        VALUES(?,?,?,?,?,?,?)
+        """,
+        (
+            now, STORE_CODE, "CURRENT_EXTERNAL_CONAD_REFERENCE",
+            len(FALLBACK_SPECS), len(inserted), "OK",
+            "Fallback correnti Conad usati solo per ingredienti base non coperti da Capodrise/PAC/Bassi e Fissi; "
+            "fonte esterna corrente registrata per ogni prodotto.",
+        ),
+    )
+    con.execute(
+        "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
+        ("reference_fallback_count", str(len(inserted))),
+    )
+    con.execute(
+        "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
+        ("reference_fallback_scope", "CURRENT_EXTERNAL_CONAD_REFERENCE"),
+    )
+    con.execute(
+        "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
+        ("reference_fallback_checked_at", now),
+    )
+    con.commit()
+    con.close()
+
+    return {
+        "inserted": inserted,
+        "skipped": skipped,
+        "missing_after": missing_after,
+        "sources": sources,
+    }
+
 def build_app_db():
     shutil.copy2(FULL_DB, APP_DB)
     con = sqlite3.connect(APP_DB)
@@ -583,6 +770,7 @@ def database_stats(path):
         "positive": con.execute("SELECT COUNT(*) FROM products_current WHERE price_eur > 0").fetchone()[0],
         "bassi_fissi": con.execute("SELECT COUNT(*) FROM products_current WHERE bassi_fissi=1").fetchone()[0],
         "local_offers": con.execute("SELECT COUNT(*) FROM products_current WHERE product_code LIKE 'FLYER:%'").fetchone()[0],
+        "reference_fallbacks": con.execute("SELECT COUNT(*) FROM products_current WHERE product_code LIKE 'REF:%'").fetchone()[0],
         "store_codes": [row[0] for row in con.execute("SELECT DISTINCT store_code FROM products_current")],
     }
     con.close()
@@ -604,6 +792,7 @@ def main():
         )
 
     apply_local_offers(offers, flyer_info)
+    fallback_audit = apply_current_external_references()
     app_stats = build_app_db()
     full_stats = database_stats(FULL_DB)
 
@@ -628,6 +817,7 @@ def main():
         "flyer": flyer_info,
         "flyer_candidates": flyer_attempts,
         "parser": parser_audit,
+        "current_external_references": fallback_audit,
         "full_db": full_stats,
         "app_db": app_stats,
         "offer_samples": offers[:30],
@@ -639,6 +829,7 @@ def main():
         "flyer_valid_from": flyer_info["valid_from"],
         "flyer_valid_to": flyer_info["valid_to"],
         "accepted_local_offers": len(offers),
+        "reference_fallbacks": full_stats["reference_fallbacks"],
         "full_rows": full_stats["rows"],
         "app_rows": app_stats["rows"],
     }, ensure_ascii=False))
