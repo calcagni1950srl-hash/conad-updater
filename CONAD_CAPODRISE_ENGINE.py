@@ -573,9 +573,9 @@ FALLBACK_SPECS = {
         "brand": None,
         "category1": "Frutta e verdura",
         "category2": "Aromi freschi",
-        "quantity_value": 1.000,
+        "quantity_value": 0.050,
         "quantity_unit": "KG",
-        "price_eur": 8.00,
+        "price_eur": 0.40,
     },
     "cipolla": {
         "product_code": "REF:AVG_CIPOLLA",
@@ -583,9 +583,9 @@ FALLBACK_SPECS = {
         "brand": None,
         "category1": "Frutta e verdura",
         "category2": "Ortaggi",
-        "quantity_value": 1.000,
+        "quantity_value": 0.250,
         "quantity_unit": "KG",
-        "price_eur": 1.80,
+        "price_eur": 0.45,
     },
     "prezzemolo": {
         "product_code": "REF:AVG_PREZZEMOLO",
@@ -593,9 +593,9 @@ FALLBACK_SPECS = {
         "brand": None,
         "category1": "Frutta e verdura",
         "category2": "Erbe aromatiche",
-        "quantity_value": 1.000,
+        "quantity_value": 0.030,
         "quantity_unit": "KG",
-        "price_eur": 12.00,
+        "price_eur": 0.36,
     },
 }
 
@@ -664,7 +664,11 @@ def apply_fixed_reference_prices():
             con.close()
             raise RuntimeError(f"Prezzo fisso non valido per {ingredient}")
 
-        unit_price = round(price / qty, 4)
+        unit_price = {
+            "aglio": 8.00,
+            "cipolla": 1.80,
+            "prezzemolo": 12.00,
+        }[ingredient]
         source_label = "FIXED_MARKET_AVERAGE_V81|USER_APPROVED|2026-09-18"
 
         row = (
