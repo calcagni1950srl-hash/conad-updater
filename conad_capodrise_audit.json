@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-18T16:06:14Z",
+  "checked_at": "2026-09-18T16:09:17Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -46,8 +46,8 @@
         "ingredient": "aglio",
         "product_code": "REF:AVG_AGLIO",
         "product_name": "Aglio fresco - prezzo medio di mercato",
-        "price_eur": 8.0,
-        "quantity_value": 1.0,
+        "price_eur": 0.4,
+        "quantity_value": 0.05,
         "quantity_unit": "KG",
         "reference_scope": "FIXED_MARKET_AVERAGE_V81"
       },
@@ -55,8 +55,8 @@
         "ingredient": "cipolla",
         "product_code": "REF:AVG_CIPOLLA",
         "product_name": "Cipolla - prezzo medio di mercato",
-        "price_eur": 1.8,
-        "quantity_value": 1.0,
+        "price_eur": 0.45,
+        "quantity_value": 0.25,
         "quantity_unit": "KG",
         "reference_scope": "FIXED_MARKET_AVERAGE_V81"
       },
@@ -64,8 +64,8 @@
         "ingredient": "prezzemolo",
         "product_code": "REF:AVG_PREZZEMOLO",
         "product_name": "Prezzemolo fresco - prezzo medio di mercato",
-        "price_eur": 12.0,
-        "quantity_value": 1.0,
+        "price_eur": 0.36,
+        "quantity_value": 0.03,
         "quantity_unit": "KG",
         "reference_scope": "FIXED_MARKET_AVERAGE_V81"
       }
