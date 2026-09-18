@@ -6,7 +6,6 @@ on:
     paths:
       - 'CONAD_CAPODRISE_ENGINE.py'
       - 'CONAD_BASSI_FISSI_ENGINE.py'
-      - 'conad_current_fallback_probe.py'
       - '.github/workflows/CONAD_CAPODRISE_ENGINE.yml'
   schedule:
     - cron: '30 4 * * *'
@@ -31,9 +30,6 @@ jobs:
 
       - name: Refresh official Conad Bassi e Fissi base
         run: python CONAD_BASSI_FISSI_ENGINE.py
-
-      - name: Read live current Conad staple fallback prices
-        run: python conad_current_fallback_probe.py
 
       - name: Overlay active PAC Campania offers for store 010548
         run: python CONAD_CAPODRISE_ENGINE.py
@@ -65,14 +61,12 @@ jobs:
             prezzi_conad_capodrise_app.db
             conad_bassifissi_audit.json
             conad_capodrise_audit.json
-            conad_current_fallback_probe.json
-            conad_current_fallback_last_good.json
 
       - name: Commit validated Conad Capodrise databases
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add prezzi_conad_capodrise.db prezzi_conad_capodrise_app.db conad_bassifissi_audit.json conad_capodrise_audit.json conad_current_fallback_probe.json conad_current_fallback_last_good.json
+          git add prezzi_conad_capodrise.db prezzi_conad_capodrise_app.db conad_bassifissi_audit.json conad_capodrise_audit.json
           git diff --cached --quiet && exit 0
           git commit -m "Update validated Conad Capodrise databases"
           git push
