@@ -618,6 +618,11 @@ EXTERNAL_CURRENT_SPECS = {
         "category1": "Condimenti e conserve",
         "category2": "Sale, aromi e spezie",
     },
+    "basilico": {
+        "product_code": "REF:80458944",
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+    },
 }
 
 _STANDALONE_ALLOWED_CATEGORIES = {
@@ -773,8 +778,8 @@ def apply_fixed_reference_prices():
 
 def apply_current_external_conad_references():
     """
-    Aggiunge tre piccoli prodotti Conad con prezzo corrente verificato fuori
-    dal punto vendita 010548: sale, peperoncino e rosmarino.
+    Aggiunge quattro piccoli prodotti Conad con prezzo corrente verificato fuori
+    dal punto vendita 010548: sale, peperoncino, rosmarino e basilico.
     Non sono presentati come prezzi Capodrise. Il probe live gestisce anche
     una cache last-good con scadenza massima di 14 giorni.
     """
@@ -870,7 +875,7 @@ def apply_current_external_conad_references():
         (
             now, STORE_CODE, "CURRENT_EXTERNAL_CONAD_REFERENCE",
             len(EXTERNAL_CURRENT_SPECS), len(inserted), "OK",
-            "Riferimenti correnti Conad esterni al punto vendita per sale, peperoncino e rosmarino; "
+            "Riferimenti correnti Conad esterni al punto vendita per sale, peperoncino, rosmarino e basilico; "
             "usati solo se le fonti locali 010548/PAC/Bassi e Fissi non coprono il prodotto.",
         ),
     )
