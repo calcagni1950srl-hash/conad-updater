@@ -6,6 +6,7 @@ on:
     paths:
       - 'CONAD_CAPODRISE_ENGINE.py'
       - 'CONAD_BASSI_FISSI_ENGINE.py'
+      - 'conad_current_fallback_probe.py'
       - '.github/workflows/CONAD_CAPODRISE_ENGINE.yml'
   schedule:
     - cron: '30 4 * * *'
@@ -25,11 +26,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install playwright requests pymupdf
+          pip install playwright requests pymupdf beautifulsoup4
           python -m playwright install --with-deps chromium
 
       - name: Refresh official Conad Bassi e Fissi base
         run: python CONAD_BASSI_FISSI_ENGINE.py
+
+      - name: Read live current Conad staple fallback prices
+        run: python conad_current_fallback_probe.py
 
       - name: Overlay active PAC Campania offers for store 010548
         run: python CONAD_CAPODRISE_ENGINE.py
@@ -44,7 +48,8 @@ jobs:
               positive=con.execute('select count(*) from products_current where price_eur>0').fetchone()[0]
               stores=con.execute('select distinct store_code from products_current').fetchall()
               local=con.execute("select count(*) from products_current where product_code like 'FLYER:%'").fetchone()[0]
-              print(json.dumps({'db':name,'rows':rows,'positive':positive,'stores':stores,'local_offers':local}))
+              refs=con.execute("select count(*) from products_current where product_code like 'REF:%'").fetchone()[0]
+              print(json.dumps({'db':name,'rows':rows,'positive':positive,'stores':stores,'local_offers':local,'reference_fallbacks':refs}))
               assert rows >= minimum
               assert rows == positive
               assert stores == [('010548',)]
@@ -60,12 +65,13 @@ jobs:
             prezzi_conad_capodrise_app.db
             conad_bassifissi_audit.json
             conad_capodrise_audit.json
+            conad_current_fallback_probe.json
 
       - name: Commit validated Conad Capodrise databases
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add prezzi_conad_capodrise.db prezzi_conad_capodrise_app.db conad_bassifissi_audit.json conad_capodrise_audit.json
+          git add prezzi_conad_capodrise.db prezzi_conad_capodrise_app.db conad_bassifissi_audit.json conad_capodrise_audit.json conad_current_fallback_probe.json
           git diff --cached --quiet && exit 0
           git commit -m "Update validated Conad Capodrise databases"
           git push
