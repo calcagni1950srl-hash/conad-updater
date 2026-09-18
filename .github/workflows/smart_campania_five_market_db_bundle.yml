@@ -1,0 +1,40 @@
+name: Smart Campania Five Market DB Bundle
+on:
+  push:
+    paths:
+      - '.github/workflows/smart_campania_five_market_db_bundle.yml'
+  workflow_dispatch:
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download validated Piccolo DB
+        run: |
+          curl -fL --retry 3 --retry-delay 3             https://raw.githubusercontent.com/calcagni1950srl-hash/piccolo-updater/main/prezzi.db             -o prezzi_piccolo.db
+          python - <<'PY'
+          import sqlite3
+          con=sqlite3.connect('prezzi_piccolo.db')
+          print('Piccolo tables:', [r[0] for r in con.execute("select name from sqlite_master where type='table'")])
+          con.close()
+          PY
+      - name: Verify market DB files
+        run: |
+          python - <<'PY'
+          import os, sqlite3
+          names=['prezzi_piccolo.db','prezzi_deco.db','prezzi_famila_app.db','prezzi_sole365_app.db']
+          for n in names:
+              assert os.path.exists(n), n
+              con=sqlite3.connect(n)
+              tables=[r[0] for r in con.execute("select name from sqlite_master where type='table'")]
+              print(n, os.path.getsize(n), tables[:10])
+              con.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: smart-campania-five-market-db-bundle
+          path: |
+            prezzi_piccolo.db
+            prezzi_deco.db
+            prezzi_famila_app.db
+            prezzi_sole365_app.db
