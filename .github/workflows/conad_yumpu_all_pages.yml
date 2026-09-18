@@ -1,0 +1,27 @@
+name: Conad Yumpu All Pages
+
+on:
+  push:
+    paths:
+      - 'conad_yumpu_all_pages.py'
+      - '.github/workflows/conad_yumpu_all_pages.yml'
+  workflow_dispatch:
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install requests
+        run: pip install requests
+      - name: Download official flyer page images
+        run: python conad_yumpu_all_pages.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: conad-yumpu-all-pages
+          path: |
+            yumpu_pages/
+            conad_yumpu_pages_manifest.json
