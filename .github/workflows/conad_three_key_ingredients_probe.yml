@@ -1,0 +1,24 @@
+name: Conad Three Key Ingredients Probe
+on:
+  push:
+    paths:
+      - 'conad_three_key_ingredients_probe.py'
+      - '.github/workflows/conad_three_key_ingredients_probe.yml'
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install requests
+        run: pip install requests
+      - name: Probe current public prices
+        run: python conad_three_key_ingredients_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conad-three-key-ingredients-probe
+          path: conad_three_key_ingredients_probe.json
