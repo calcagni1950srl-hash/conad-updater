@@ -1,0 +1,119 @@
+name: V81 KOTLIN CONAD QA
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'qa_v81/**'
+      - 'conad_v81_android_products.jsonl'
+      - '.github/workflows/V81_KOTLIN_CONAD_QA.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  kotlin-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install Kotlin compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y kotlin
+          kotlinc -version
+
+      - name: Build exact Android-product TSV
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          src=Path("conad_v81_android_products.jsonl")
+          out=Path("qa_v81/products_v81_android.tsv")
+          rows=[]
+          for line in src.read_text(encoding="utf-8").splitlines():
+              if not line.strip():
+                  continue
+              x=json.loads(line)
+              def clean(v):
+                  if v is None:
+                      return ""
+                  return str(v).replace("\\t"," ").replace("\\r"," ").replace("\\n"," ")
+              rows.append([
+                  clean(x.get("key")),
+                  clean(x.get("name")),
+                  clean(x.get("brand")),
+                  clean(x.get("category")),
+                  clean(x.get("quantityValue")),
+                  clean(x.get("quantityUnit")),
+                  clean(x.get("priceEur")),
+                  clean(x.get("unitPriceEur")),
+                  clean(x.get("unitPriceUnit")),
+                  "1" if x.get("variableWeight") else "0",
+                  clean(x.get("sourceUrl")),
+                  clean(x.get("checkedAt")),
+              ])
+          with out.open("w",encoding="utf-8") as f:
+              f.write("key\tname\tbrand\tcategory\tquantityValue\tquantityUnit\tpriceEur\tunitPriceEur\tunitPriceUnit\tvariableWeight\tsourceUrl\tcheckedAt\n")
+              for row in rows:
+                  f.write("\t".join(row)+"\n")
+          print({"products":len(rows),"out":str(out)})
+          if len(rows) != 733:
+              raise SystemExit(f"Expected 733 Android products, got {len(rows)}")
+          PY
+
+      - name: Compile real Kotlin matcher and shopping calculator
+        run: |
+          kotlinc             qa_v81/SupermarketRepositoryStub.kt             qa_v81/ShoppingCalculator.kt             qa_v81/IngredientMatcher_V81_CONAD.kt             qa_v81/ConadV81Harness.kt             -include-runtime             -d qa_v81/v81-conad-harness.jar
+
+      - name: Run real 157-recipe QA
+        run: |
+          java -jar qa_v81/v81-conad-harness.jar             qa_v81/products_v81_android.tsv             qa_v81/recipes_v61_157.tsv             2 | tee qa_v81/v81_kotlin_conad_report.txt
+
+      - name: Assert weekly-menu coverage thresholds
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path("qa_v81/v81_kotlin_conad_report.txt").read_text(encoding="utf-8")
+          def val(k):
+              m=re.search(rf"(?m)^{re.escape(k)}=(.+)$",text)
+              if not m:
+                  raise SystemExit(f"Missing {k}")
+              return m.group(1).strip()
+          expected={
+              "recipes_total":"157",
+              "products":"733",
+              "threshold_primi":"true",
+              "threshold_secondi":"true",
+              "threshold_contorni":"true",
+          }
+          for k,v in expected.items():
+              got=val(k)
+              if got.lower()!=v.lower():
+                  raise SystemExit(f"{k}: expected {v}, got {got}")
+          print({
+              "recipes_total":val("recipes_total"),
+              "recipes_testable":val("recipes_testable"),
+              "recipes_complete":val("recipes_complete"),
+              "primi_complete":val("primi_complete"),
+              "secondi_complete":val("secondi_complete"),
+              "contorni_complete":val("contorni_complete"),
+          })
+          PY
+
+      - name: Commit QA report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa_v81/v81_kotlin_conad_report.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Record validated V81 Kotlin Conad QA"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
