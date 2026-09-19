@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-19T09:59:32Z",
+  "checked_at": "2026-09-19T13:16:30Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -40,6 +40,21 @@
       "price_out_of_range": 2
     }
   },
+  "visual_verified_offers": {
+    "inserted": [
+      {
+        "product_code": "VISUAL:SPUNTA2026_ACETO_BIANCO_PONTI_1L",
+        "product_name": "Aceto di vino bianco Ponti 1 L",
+        "price_eur": 1.19,
+        "quantity_value": 1.0,
+        "quantity_unit": "L",
+        "valid_from": "2026-08-01",
+        "valid_to": "2026-09-30",
+        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
+      }
+    ],
+    "expired": []
+  },
   "fixed_reference_prices": {
     "inserted": [
       {
@@ -75,8 +90,8 @@
     "scope": "FIXED_MARKET_AVERAGE_V81"
   },
   "full_db": {
-    "rows": 907,
-    "positive": 907,
+    "rows": 908,
+    "positive": 908,
     "bassi_fissi": 789,
     "local_offers": 115,
     "reference_fallbacks": 3,
@@ -85,7 +100,7 @@
     ]
   },
   "app_db": {
-    "rows": 730,
+    "rows": 731,
     "local_offers": 115,
     "stores": [
       "010548"
