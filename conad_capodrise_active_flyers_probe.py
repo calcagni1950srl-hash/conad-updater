@@ -21,6 +21,12 @@ KEY_TERMS = [
 ]
 PRICE_RE = re.compile(r"(?<!\d)(\d{1,3}[,.]\d{2})(?!\d)")
 
+TARGET_CONTEXT_TERMS = [
+    "cavolfiore", "verza", "rosmarino", "origano", "scarola", "sedano",
+    "peperoncino", "pepe", "basilico", "vongole", "colatura", "fagiolini",
+    "limone", "gamber",
+]
+
 
 def millis_now():
     return int(datetime.now(timezone.utc).timestamp() * 1000)
@@ -96,6 +102,22 @@ def extract_pdf(session, flyer):
             "price_tokens": len(PRICE_RE.findall(compact)),
         })
     joined = "\n".join(all_text).lower()
+    target_contexts = {}
+    for page_no, page_text in enumerate(all_text, start=1):
+        low = page_text.lower()
+        for term in TARGET_CONTEXT_TERMS:
+            start = 0
+            while True:
+                idx = low.find(term, start)
+                if idx < 0:
+                    break
+                left = max(0, idx - 180)
+                right = min(len(page_text), idx + len(term) + 220)
+                target_contexts.setdefault(term, []).append({
+                    "page": page_no,
+                    "context": page_text[left:right],
+                })
+                start = idx + len(term)
     term_hits = {}
     for term in KEY_TERMS:
         count = joined.count(term)
@@ -107,6 +129,7 @@ def extract_pdf(session, flyer):
         "text_chars": sum(len(x) for x in all_text),
         "price_tokens": len(PRICE_RE.findall(joined)),
         "term_hits": term_hits,
+        "target_contexts": target_contexts,
         "page_stats": pages,
         "text_sample": "\n".join(all_text)[:12000],
     }
