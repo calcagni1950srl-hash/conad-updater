@@ -19,7 +19,7 @@ def write_rows(name, rows):
     raw=tsv.read_bytes()
     packed=base64.b64encode(gzip.compress(raw,9)).decode("ascii")
     (OUT/f"{name}.tsv.gz.b64").write_text(packed,encoding="ascii")
-    tsv.unlink()
+    # Keep TSV for workflow artifact; only compressed text is committed.
     return {"rows":len(rows),"b64_chars":len(packed)}
 
 def piccolo(path):
