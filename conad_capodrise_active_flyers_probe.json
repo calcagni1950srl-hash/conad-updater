@@ -1,6 +1,6 @@
 {
   "store_id": "010548",
-  "checked_at": "2026-09-19T10:12:29.895365+00:00",
+  "checked_at": "2026-09-19T10:40:10.713320+00:00",
   "flyers_total": 6,
   "active_flyers": [
     {
@@ -93,13 +93,13 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "promoDetails": "",
-        "cooperative": "PAC",
         "feTitle": "Convenienza Più",
         "visibilitySet": true,
         "onYumpu": true,
         "disaggregatedId": "Integrativa19Campania__d",
         "hideDefaultFlyer": false,
+        "promoDetails": "",
+        "cooperative": "PAC",
         "id": "v-1962687935",
         "link": {
           "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Integrativa19-Campania",
@@ -120,6 +120,7 @@
         "text_chars": 0,
         "price_tokens": 0,
         "term_hits": {},
+        "target_contexts": {},
         "page_stats": [
           {
             "page": 1,
@@ -255,13 +256,13 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "promoDetails": "PPN19",
-        "cooperative": "PAC",
         "feTitle": "Campioni del Risparmio",
         "visibilitySet": true,
         "onYumpu": true,
         "disaggregatedId": "202619SuperstoreCampania__d",
         "hideDefaultFlyer": false,
+        "promoDetails": "PPN19",
+        "cooperative": "PAC",
         "id": "v-1796946686",
         "link": {
           "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Offerte19-Superstore-Campania",
@@ -314,6 +315,80 @@
           "limone": 6,
           "gamber": 3,
           "orata": 1
+        },
+        "target_contexts": {
+          "limone": [
+            {
+              "page": 4,
+              "context": "rik - 12x200ml 1,69 € 2,09 € 3,99 € 1,49 € 1,29 € 1,29 € 3,90 € BIRRA PERONI 3x33cl MASSIMO ACQUISTABILE 6 PEZZI OFFERTA VALIDA DA MERCOLEDÌ 9 A DOMENICA 20 SETTEMBRE 2026 ESTATHÈ limone/pesca classico/zero/deteinato 3x20cl 1,89 € OLIO EXTRA VERGINE DI OLIVA CIRIO 1L 4,49 € MASSIMO ACQUISTABILE 6 PEZZI"
+            },
+            {
+              "page": 14,
+              "context": "A 20 SETTEMBRE 2026 20,90 € al kg € ARROSTICINI DI OVINO 7,90 € al kg € PETTO DI POLLO INTERO 7 17,90 € al kg € BISTECCA CON OSSO DI BOVINO ADULTO I cosciotti di pollo al forno al limone sono un secondo piatto semplice e saporito, ideale per tutta la famiglia. Il limone e le erbe aromatiche rendono la carne profumata e succosa, mentre la cottura in forno crea una deliziosa doratura. Puoi accompagnarli c"
+            },
+            {
+              "page": 14,
+              "context": "LO INTERO 7 17,90 € al kg € BISTECCA CON OSSO DI BOVINO ADULTO I cosciotti di pollo al forno al limone sono un secondo piatto semplice e saporito, ideale per tutta la famiglia. Il limone e le erbe aromatiche rendono la carne profumata e succosa, mentre la cottura in forno crea una deliziosa doratura. Puoi accompagnarli con patate, verdure o una fresca insalata per un pasto completo e gustoso. Trovi la r"
+            },
+            {
+              "page": 14,
+              "context": "ovi la ricetta completa, ingredienti e quantità su gustour.it COSCIOTTO DI POLLO RICETTA COMPLETA 2,99 € 16,61 al kg € HAMBURGER GUSTO DELICATO 180g COSCIOTTI DI POLLO AL FORNO AL LIMONE ED ERBE AROMATICHE la ricetta"
+            },
+            {
+              "page": 20,
+              "context": "9 € 12,17 al Kg € INSALATA PER RISO PEPERLIZIA PONTI classico - 2x350g light senza olio - 2x350g/420g Sgocc 3,99 € SALSA TAHINI MIGHTY SESAME CO. 454g 4,49 € 9,89 al Kg € SUCCO DI LIMONE LIMMI con limoni di Siracusa IGP 250ml 1,29 € 5,16 al L € DADO STAR vari tipi 10 dadi - 100g 0,99 € 9,90 al Kg € CUORE DI BRODO KNORR vari tipi 112g 1,49 € 13,30 al Kg € OFFERTA VALIDA DA MERCOLEDÌ 9 A DOMENICA 20 SETTE"
+            },
+            {
+              "page": 24,
+              "context": "TZ 3x275ml 2,49 € OFFERTA VALIDA DA MERCOLEDÌ 9 A DOMENICA 20 SETTEMBRE 2026 BevandeBevande ANALCOLICO CRODINO biondo/arancia rossa 10cl 4,99 € BEVANDA ZERO PFANNER arancia carote limone/ multivitaminico/ frutti rossi pet - 1L 1,00 € ACQUA NATURALE SANT’ANNA pet - 12x50cl 2,49 € BEVANDA SENZA ZUCCHERI AGGIUNTI CONAD vari gusti brik - 1L 1,59 € BEVANDA SENZA ZUCCHERI AGGIUNTI vari tipi brik - 3x200ml 1,1"
+            }
+          ],
+          "gamber": [
+            {
+              "page": 9,
+              "context": "6,63 al Kg € BOCCONCINI RIPIENI VALLELATA con crema di latte 180g 2,99 € 16,61 al Kg € MOZZARELLA JULIENNE CONAD 200g 1,89 € 9,45 al Kg € CERTOSA GALBANI 165g 1,69 € 10,24 al Kg € GAMBERETTI IN SALAMOIA CONAD 230g/125g sgocc 3,39 € 27,12 al Kg Sgocc € 1,99 € 13,26 al Kg € PANCETTA A CUBETTI BERETTA dolce/aﬀ umicata 2x75g WÜRSTEL WUDY CLASSICO AIA 3 pezzi 300g 1,19 € 3,97 al Kg € FETTE CITTERIO guanciale"
+            },
+            {
+              "page": 11,
+              "context": "urgelati PREPARATI DI POLLO FINDUS vari tipi MINESTRONE LEGGEREZZA OROGEL 750g PIZZA RISTORANTE CAMEO vari tipi SUGO SAPORI&IDEE CONAD scampi e frutti di mare - 450g crostacei con gamberi argentini - 300g 4,49 € FAGOTTINO TRE MARIE al cioccolato 6 fagottini 390g 3,59 € 9,21 al Kg € CARTE D’OR ALGIDA vari gusti 500g 11 3,69 € 7,38 al Kg € FILETTI DI MERLUZZO D’ALASKA FROSTA 340g 4,79 € 14,09 al Kg € Bont"
+            },
+            {
+              "page": 15,
+              "context": "kg € 5,90 € al kg € TRIS DI MARE 220g TENTACOLI DI POLPO SAPORI&IDEE CONAD 200g 8,90 € 44,50 al kg € 4,90 € 22,27 al kg € TRIS DI MARE 220 g 4 ,90 € 6 € ,90 € al Kg 14,90 € al kg €GAMBERONI ARGENTINA DECONGELATI € SUPER OFFERTA SUPER OFFERTA del del GiornoGiorno VENERDÌ 18 SETTEMBRE FETTINE DI COSCIA DI BOVINO ADULTO 15,90 € al kg €"
+            }
+          ],
+          "pepe": [
+            {
+              "page": 13,
+              "context": " Categoria 0 2 1,79 € 14,32 al kg € FAGIOLINI BOBY CONAD PERCORSO QUALITÀ origine Italia 1a Categoria 500 g PRODOTTO ITALIANO PRODOTTO ITALIANO PRODOTTO ITALIANO PRODOTTO ITALIANO PEPERONI OLIVE E CAPPERI PAN CIABATTA CALZONE AL FORNO PROSCIUTTO COTTO E FIOR DI LATTE Nostra ProduzioneNostra Produzione 13 PEPERONI OLIVE E CAPPERI 1,05 € 10,50 al Kg € all'etto 0,29 € 2,90 al Kg € all'etto 1,30 € al pezz"
+            },
+            {
+              "page": 13,
+              "context": "PRODOTTO ITALIANO PRODOTTO ITALIANO PRODOTTO ITALIANO PEPERONI OLIVE E CAPPERI PAN CIABATTA CALZONE AL FORNO PROSCIUTTO COTTO E FIOR DI LATTE Nostra ProduzioneNostra Produzione 13 PEPERONI OLIVE E CAPPERI 1,05 € 10,50 al Kg € all'etto 0,29 € 2,90 al Kg € all'etto 1,30 € al pezzo € 1,20 € al pezzo € PASTE GRANDI ASSORTITE LA QUALITÀ, DA FILIERA CONTROLLATA LA QUALITÀ, DA FILIERA CONTROLLATA SUSINE NERE"
+            },
+            {
+              "page": 20,
+              "context": "IONESE CALVÈ vari tipi - 150ml 1,25 € 8,33 al L € PESTO BARILLA vari tipi 1,65 € PESTO DI BASILICO, RICOTTA E MANDORLE ROSSO DI SICILIA 180g 2,19 € 12,17 al Kg € INSALATA PER RISO PEPERLIZIA PONTI classico - 2x350g light senza olio - 2x350g/420g Sgocc 3,99 € SALSA TAHINI MIGHTY SESAME CO. 454g 4,49 € 9,89 al Kg € SUCCO DI LIMONE LIMMI con limoni di Siracusa IGP 250ml 1,29 € 5,16 al L € DADO STAR vari "
+            }
+          ],
+          "fagiolini": [
+            {
+              "page": 13,
+              "context": "g € UVA BIANCA SENZA SEMI BIO ALCE NERO origine Italia 1a Categoria - 750 g 1 MIRTILLI CONAD 125 g ANGURIE NERE MIDI KOKO MERO origine Italia 1a Categoria 0 2 1,79 € 14,32 al kg € FAGIOLINI BOBY CONAD PERCORSO QUALITÀ origine Italia 1a Categoria 500 g PRODOTTO ITALIANO PRODOTTO ITALIANO PRODOTTO ITALIANO PRODOTTO ITALIANO PEPERONI OLIVE E CAPPERI PAN CIABATTA CALZONE AL FORNO PROSCIUTTO COTTO E FIOR DI LAT"
+            }
+          ],
+          "basilico": [
+            {
+              "page": 20,
+              "context": "MAIONESE CALVÈ vari tipi - 150ml 1,25 € 8,33 al L € PESTO BARILLA vari tipi 1,65 € PESTO DI BASILICO, RICOTTA E MANDORLE ROSSO DI SICILIA 180g 2,19 € 12,17 al Kg € INSALATA PER RISO PEPERLIZIA PONTI classico - 2x350g light senza olio - 2x350g/420g Sgocc 3,99 € SALSA TAHINI MIGHTY SESAME CO. 454g 4,49 € 9,89 al Kg € SUC"
+            }
+          ],
+          "rosmarino": [
+            {
+              "page": 21,
+              "context": "A OMOGENEIZZATO NIPIOL a partire da 1,00 € la Dispensala Dispensa FILETTI DI SGOMBRO NOSTROMO all'olio di oliva 120g 1,99 € 16,58 al Kg € PETALI SNACK GUSTO IN LIBERTÀ SCOTTI mais/rosmarino 60g 0,99 € 16,50 al Kg € 1,59 € 2,84 al Kg € 1 CRACKER GRAN PAVESI salati/ non salati 560g 1,29 € 5,38 al Kg € TORTILLAS ROBERTO sottilissima e arrotolabile 4 tortillas - 240g PIADELLE MULINO BIANCO vari tipi 1,49 €"
+            }
+          ]
         },
         "page_stats": [
           {
@@ -570,13 +645,13 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "promoDetails": "gourmet",
-        "cooperative": "PAC",
         "feTitle": "Autunno dai sapori che scaldano",
         "visibilitySet": true,
         "onYumpu": true,
         "disaggregatedId": "CatalogoGourmetCampania__d",
         "hideDefaultFlyer": false,
+        "promoDetails": "gourmet",
+        "cooperative": "PAC",
         "id": "v-724033612",
         "link": {
           "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Offerte-Catalogo-Gourmet3",
@@ -597,6 +672,7 @@
         "text_chars": 0,
         "price_tokens": 0,
         "term_hits": {},
+        "target_contexts": {},
         "page_stats": [
           {
             "page": 1,
@@ -792,13 +868,13 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "promoDetails": "scuola-2",
-        "cooperative": "PAC",
         "feTitle": "Catalogo Scuola",
         "visibilitySet": true,
         "onYumpu": true,
         "disaggregatedId": "202617BISScuolaMinuteria__d",
         "hideDefaultFlyer": false,
+        "promoDetails": "scuola-2",
+        "cooperative": "PAC",
         "id": "v-568157624",
         "link": {
           "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Catalogo-Scuola2",
@@ -825,6 +901,7 @@
           "olio": 1,
           "manzo": 1
         },
+        "target_contexts": {},
         "page_stats": [
           {
             "page": 1,
@@ -980,13 +1057,13 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "promoDetails": "",
-        "cooperative": "PAC",
         "feTitle": "Spunta il Risparmio",
         "visibilitySet": true,
         "onYumpu": true,
         "disaggregatedId": "20264spuntacampania__d",
         "hideDefaultFlyer": false,
+        "promoDetails": "",
+        "cooperative": "PAC",
         "id": "v-452021323",
         "link": {
           "path": "/content/conad-corporate/it/it/jcr:content/vlLink-04-Spunta-Risparmio-Campania",
@@ -1007,6 +1084,7 @@
         "text_chars": 0,
         "price_tokens": 0,
         "term_hits": {},
+        "target_contexts": {},
         "page_stats": [
           {
             "page": 1,
@@ -1137,13 +1215,13 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "promoDetails": "scuola-1",
-        "cooperative": "PAC",
         "feTitle": "Catalogo Scuola",
         "visibilitySet": true,
         "onYumpu": true,
         "disaggregatedId": "202615BISScuolaCucito__d",
         "hideDefaultFlyer": false,
+        "promoDetails": "scuola-1",
+        "cooperative": "PAC",
         "id": "v-1817826903",
         "link": {
           "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Catalogo-Scuola1-Area1",
@@ -1167,6 +1245,7 @@
           "uova": 3,
           "manzo": 1
         },
+        "target_contexts": {},
         "page_stats": [
           {
             "page": 1,
@@ -1324,13 +1403,13 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "promoDetails": "",
-        "cooperative": "PAC",
         "feTitle": "Convenienza Più",
         "visibilitySet": true,
         "onYumpu": true,
         "disaggregatedId": "Integrativa19Campania__d",
         "hideDefaultFlyer": false,
+        "promoDetails": "",
+        "cooperative": "PAC",
         "id": "v-1962687935",
         "link": {
           "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Integrativa19-Campania",
@@ -1436,13 +1515,13 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "promoDetails": "PPN19",
-        "cooperative": "PAC",
         "feTitle": "Campioni del Risparmio",
         "visibilitySet": true,
         "onYumpu": true,
         "disaggregatedId": "202619SuperstoreCampania__d",
         "hideDefaultFlyer": false,
+        "promoDetails": "PPN19",
+        "cooperative": "PAC",
         "id": "v-1796946686",
         "link": {
           "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Offerte19-Superstore-Campania",
@@ -1548,13 +1627,13 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "promoDetails": "gourmet",
-        "cooperative": "PAC",
         "feTitle": "Autunno dai sapori che scaldano",
         "visibilitySet": true,
         "onYumpu": true,
         "disaggregatedId": "CatalogoGourmetCampania__d",
         "hideDefaultFlyer": false,
+        "promoDetails": "gourmet",
+        "cooperative": "PAC",
         "id": "v-724033612",
         "link": {
           "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Offerte-Catalogo-Gourmet3",
@@ -1660,13 +1739,13 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "promoDetails": "scuola-2",
-        "cooperative": "PAC",
         "feTitle": "Catalogo Scuola",
         "visibilitySet": true,
         "onYumpu": true,
         "disaggregatedId": "202617BISScuolaMinuteria__d",
         "hideDefaultFlyer": false,
+        "promoDetails": "scuola-2",
+        "cooperative": "PAC",
         "id": "v-568157624",
         "link": {
           "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Catalogo-Scuola2",
@@ -1772,13 +1851,13 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "promoDetails": "",
-        "cooperative": "PAC",
         "feTitle": "Spunta il Risparmio",
         "visibilitySet": true,
         "onYumpu": true,
         "disaggregatedId": "20264spuntacampania__d",
         "hideDefaultFlyer": false,
+        "promoDetails": "",
+        "cooperative": "PAC",
         "id": "v-452021323",
         "link": {
           "path": "/content/conad-corporate/it/it/jcr:content/vlLink-04-Spunta-Risparmio-Campania",
@@ -1884,13 +1963,13 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "promoDetails": "scuola-1",
-        "cooperative": "PAC",
         "feTitle": "Catalogo Scuola",
         "visibilitySet": true,
         "onYumpu": true,
         "disaggregatedId": "202615BISScuolaCucito__d",
         "hideDefaultFlyer": false,
+        "promoDetails": "scuola-1",
+        "cooperative": "PAC",
         "id": "v-1817826903",
         "link": {
           "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Catalogo-Scuola1-Area1",
