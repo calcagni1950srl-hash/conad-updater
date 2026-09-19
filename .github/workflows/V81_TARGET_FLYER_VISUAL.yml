@@ -8,7 +8,7 @@ on:
       - '.github/workflows/V81_TARGET_FLYER_VISUAL.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   render:
@@ -20,9 +20,29 @@ jobs:
           python-version: '3.12'
       - run: pip install requests pymupdf
       - run: python qa_v81_visual/render_target_flyers.py
+      - name: Stamp run id
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path("qa_v81_visual/summary.json")
+          d=json.loads(p.read_text())
+          d["run_id"]=int(os.environ["GITHUB_RUN_ID"])
+          p.write_text(json.dumps(d,indent=2),encoding="utf-8")
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: v81-target-flyer-pages
           path: |
             qa_v81_visual/*.png
             qa_v81_visual/summary.json
+
+      - name: Commit visual summary
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa_v81_visual/summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record V81 target flyer visual run"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
