@@ -560,7 +560,9 @@ def apply_local_offers(offers, flyer_info):
 
 
 FALLBACK_SPECS = {
-    # V81: riferimenti medi fissi, separati dai prezzi Conad/PAC reali.
+    # V81: SOLO tre prezzi medi fissi approvati dall'utente.
+    # Non sono prezzi Conad/Capodrise; servono unicamente a non bloccare
+    # le ricette per tre ingredienti base a impatto economico minimo.
     "aglio": {
         "product_code": "REF:AVG_AGLIO",
         "product_name": "Aglio fresco - prezzo medio di mercato",
@@ -593,50 +595,6 @@ FALLBACK_SPECS = {
         "quantity_unit": "KG",
         "price_eur": 0.36,
         "variable_weight": True,
-    },
-    "sale": {
-        "product_code": "REF:AVG_SALE",
-        "product_name": "Sale fino - prezzo medio di mercato",
-        "brand": None,
-        "category1": "Condimenti e conserve",
-        "category2": "Sale, aromi e spezie",
-        "quantity_value": 1.000,
-        "quantity_unit": "KG",
-        "price_eur": 0.50,
-        "variable_weight": False,
-    },
-    "peperoncino": {
-        "product_code": "REF:AVG_PEPERONCINO",
-        "product_name": "Peperoncino - prezzo medio di mercato",
-        "brand": None,
-        "category1": "Condimenti e conserve",
-        "category2": "Sale, aromi e spezie",
-        "quantity_value": 0.025,
-        "quantity_unit": "KG",
-        "price_eur": 2.00,
-        "variable_weight": False,
-    },
-    "origano": {
-        "product_code": "REF:AVG_ORIGANO",
-        "product_name": "Origano - prezzo medio di mercato",
-        "brand": None,
-        "category1": "Condimenti e conserve",
-        "category2": "Sale, aromi e spezie",
-        "quantity_value": 0.010,
-        "quantity_unit": "KG",
-        "price_eur": 1.00,
-        "variable_weight": False,
-    },
-    "rosmarino": {
-        "product_code": "REF:AVG_ROSMARINO",
-        "product_name": "Rosmarino - prezzo medio di mercato",
-        "brand": None,
-        "category1": "Condimenti e conserve",
-        "category2": "Sale, aromi e spezie",
-        "quantity_value": 0.030,
-        "quantity_unit": "KG",
-        "price_eur": 1.00,
-        "variable_weight": False,
     },
 }
 
