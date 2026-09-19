@@ -1,0 +1,37 @@
+name: V81 APPLY APPROVED REFERENCES
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'V81_APPLY_APPROVED_REFS.py'
+      - '.github/workflows/V81_APPLY_APPROVED_REFS.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install engine dependencies
+        run: pip install pymupdf requests
+
+      - name: Apply only audited V81 overlays to validated DB
+        run: python V81_APPLY_APPROVED_REFS.py
+
+      - name: Commit validated overlay DBs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add prezzi_conad_capodrise.db prezzi_conad_capodrise_app.db conad_v81_overlay_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Apply validated V81 Conad reference overlay"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
