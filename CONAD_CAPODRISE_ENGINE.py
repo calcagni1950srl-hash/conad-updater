@@ -560,13 +560,7 @@ def apply_local_offers(offers, flyer_info):
 
 
 FALLBACK_SPECS = {
-    # V81: eccezione esplicita approvata dall'utente.
-    # SOLO tre ingredienti base che bloccano molte ricette usano un prezzo
-    # medio di mercato fisso. Non sono prezzi Conad/Capodrise e vengono
-    # mantenuti separati e tracciati come riferimento.
-    #
-    # Il riferimento e' per kg e viene trattato come peso variabile:
-    # l'app addebita solo la quantita' realmente necessaria alla ricetta.
+    # V81: riferimenti medi fissi, separati dai prezzi Conad/PAC reali.
     "aglio": {
         "product_code": "REF:AVG_AGLIO",
         "product_name": "Aglio fresco - prezzo medio di mercato",
@@ -576,6 +570,7 @@ FALLBACK_SPECS = {
         "quantity_value": 0.050,
         "quantity_unit": "KG",
         "price_eur": 0.40,
+        "variable_weight": True,
     },
     "cipolla": {
         "product_code": "REF:AVG_CIPOLLA",
@@ -586,6 +581,7 @@ FALLBACK_SPECS = {
         "quantity_value": 0.250,
         "quantity_unit": "KG",
         "price_eur": 0.45,
+        "variable_weight": True,
     },
     "prezzemolo": {
         "product_code": "REF:AVG_PREZZEMOLO",
@@ -596,6 +592,51 @@ FALLBACK_SPECS = {
         "quantity_value": 0.030,
         "quantity_unit": "KG",
         "price_eur": 0.36,
+        "variable_weight": True,
+    },
+    "sale": {
+        "product_code": "REF:AVG_SALE",
+        "product_name": "Sale fino - prezzo medio di mercato",
+        "brand": None,
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+        "quantity_value": 1.000,
+        "quantity_unit": "KG",
+        "price_eur": 0.50,
+        "variable_weight": False,
+    },
+    "peperoncino": {
+        "product_code": "REF:AVG_PEPERONCINO",
+        "product_name": "Peperoncino - prezzo medio di mercato",
+        "brand": None,
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+        "quantity_value": 0.025,
+        "quantity_unit": "KG",
+        "price_eur": 2.00,
+        "variable_weight": False,
+    },
+    "origano": {
+        "product_code": "REF:AVG_ORIGANO",
+        "product_name": "Origano - prezzo medio di mercato",
+        "brand": None,
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+        "quantity_value": 0.010,
+        "quantity_unit": "KG",
+        "price_eur": 1.00,
+        "variable_weight": False,
+    },
+    "rosmarino": {
+        "product_code": "REF:AVG_ROSMARINO",
+        "product_name": "Rosmarino - prezzo medio di mercato",
+        "brand": None,
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+        "quantity_value": 0.030,
+        "quantity_unit": "KG",
+        "price_eur": 1.00,
+        "variable_weight": False,
     },
 }
 
@@ -677,7 +718,7 @@ def apply_fixed_reference_prices():
             spec["category1"], spec["category2"], "Prezzo riferimento fisso V81",
             qty, spec["quantity_unit"], round(price, 2),
             unit_price, "EUR/KG", 0,
-            None, source_label, now, 1,
+            None, source_label, now, int(bool(spec.get("variable_weight", False))),
         )
         con.execute(
             """
