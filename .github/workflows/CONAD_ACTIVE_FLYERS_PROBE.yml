@@ -1,0 +1,36 @@
+name: CONAD ACTIVE FLYERS PROBE
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'conad_capodrise_active_flyers_probe.py'
+      - '.github/workflows/CONAD_ACTIVE_FLYERS_PROBE.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests pypdf
+
+      - name: Probe official active flyers for store 010548
+        run: python conad_capodrise_active_flyers_probe.py
+
+      - name: Commit probe audit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add conad_capodrise_active_flyers_probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Audit active Conad Capodrise flyers"
+          git push
