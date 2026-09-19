@@ -705,11 +705,7 @@ def apply_fixed_reference_prices():
             con.close()
             raise RuntimeError(f"Prezzo fisso non valido per {ingredient}")
 
-        unit_price = {
-            "aglio": 8.00,
-            "cipolla": 1.80,
-            "prezzemolo": 12.00,
-        }[ingredient]
+        unit_price = round(price / qty, 4)
         source_label = "FIXED_MARKET_AVERAGE_V81|USER_APPROVED|2026-09-18"
 
         row = (
