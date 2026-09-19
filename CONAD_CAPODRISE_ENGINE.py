@@ -560,6 +560,120 @@ def apply_local_offers(offers, flyer_info):
 
 
 
+VISUAL_VERIFIED_OFFERS_V81 = [
+    {
+        # Volantino ufficiale PAC "Spunta il Risparmio", collegato al PDV 010548.
+        # PDF image-only: riga verificata visivamente, NON ottenuta con OCR.
+        "product_code": "VISUAL:SPUNTA2026_ACETO_BIANCO_PONTI_1L",
+        "product_name": "Aceto di vino bianco Ponti 1 L",
+        "brand": "Ponti",
+        "category1": "Condimenti e conserve",
+        "category2": "Aceti",
+        "quantity_value": 1.0,
+        "quantity_unit": "L",
+        "price_eur": 1.19,
+        "unit_price": 1.19,
+        "unit_price_unit": "EUR/L",
+        "variable_weight": False,
+        "valid_from": "2026-08-01",
+        "valid_to": "2026-09-30",
+        "source_url": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026-4-spunta-campania.pdf",
+        "source_label": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81|SPUNTA_RISPARMIO_CAMPANIA|NO_OCR",
+    },
+]
+
+
+def apply_visual_verified_offers():
+    """
+    V81: overlay strettamente limitato a righe di volantini ufficiali image-only
+    verificate visivamente. Nessun OCR e nessun prezzo stimato.
+    Le righe scadono automaticamente fuori dal periodo ufficiale.
+    """
+    today = date.today()
+    now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    con = sqlite3.connect(FULL_DB)
+    ensure_schema_extensions(con)
+
+    con.execute("DELETE FROM products_current WHERE product_code LIKE 'VISUAL:%'")
+    con.execute("DELETE FROM price_history WHERE product_code LIKE 'VISUAL:%'")
+
+    inserted = []
+    expired = []
+    for spec in VISUAL_VERIFIED_OFFERS_V81:
+        valid_from = date.fromisoformat(spec["valid_from"])
+        valid_to = date.fromisoformat(spec["valid_to"])
+        if not (valid_from <= today <= valid_to):
+            expired.append({
+                "product_code": spec["product_code"],
+                "valid_from": spec["valid_from"],
+                "valid_to": spec["valid_to"],
+            })
+            continue
+
+        price = float(spec["price_eur"])
+        qty = float(spec["quantity_value"])
+        if price <= 0 or qty <= 0:
+            con.close()
+            raise RuntimeError("Offerta visuale V81 con prezzo/quantita non validi")
+
+        row = (
+            "Conad", STORE_CODE, STORE_NAME, STORE_ADDRESS,
+            spec["product_code"], spec["product_name"], spec.get("brand"),
+            spec["category1"], spec.get("category2"), "Offerta ufficiale verificata visivamente",
+            qty, spec["quantity_unit"], round(price, 2),
+            float(spec["unit_price"]), spec["unit_price_unit"], 0,
+            None, spec["source_label"] + "|" + spec["source_url"], now,
+            int(bool(spec.get("variable_weight", False))),
+        )
+        con.execute(
+            """
+            INSERT OR REPLACE INTO products_current(
+              supermarket,store_code,store_name,store_address,product_code,product_name,
+              brand,category1,category2,category3,quantity_value,quantity_unit,price_eur,
+              unit_price,unit_price_unit,bassi_fissi,image_url,source_queries,checked_at,
+              variable_weight
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            row,
+        )
+        con.execute(
+            "INSERT INTO price_history(store_code,product_code,price_eur,unit_price,checked_at) VALUES(?,?,?,?,?)",
+            (STORE_CODE, spec["product_code"], round(price, 2), float(spec["unit_price"]), now),
+        )
+        inserted.append({
+            "product_code": spec["product_code"],
+            "product_name": spec["product_name"],
+            "price_eur": round(price, 2),
+            "quantity_value": qty,
+            "quantity_unit": spec["quantity_unit"],
+            "valid_from": spec["valid_from"],
+            "valid_to": spec["valid_to"],
+            "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81",
+        })
+
+    con.execute(
+        """
+        INSERT INTO update_log(checked_at,store_code,query,declared_total,saved_count,status,message)
+        VALUES(?,?,?,?,?,?,?)
+        """,
+        (
+            now, STORE_CODE, "OFFICIAL_FLYER_VISUAL_VERIFIED_V81",
+            len(VISUAL_VERIFIED_OFFERS_V81), len(inserted), "OK",
+            "V81: sole righe di volantini ufficiali image-only verificate visivamente; "
+            "nessun OCR e nessun prezzo stimato; scadenza automatica.",
+        ),
+    )
+    con.execute(
+        "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
+        ("visual_verified_offer_count", str(len(inserted))),
+    )
+    con.commit()
+    con.close()
+    return {"inserted": inserted, "expired": expired}
+
+
+
+
 FALLBACK_SPECS = {
     # V81: riferimenti fissi SOLO per piccoli ingredienti-base che altrimenti
     # bloccano il menu. Non sono prezzi Conad/Capodrise.
@@ -795,6 +909,7 @@ def main():
         )
 
     apply_local_offers(offers, flyer_info)
+    visual_audit = apply_visual_verified_offers()
     fallback_audit = apply_fixed_reference_prices()
     app_stats = build_app_db()
     full_stats = database_stats(FULL_DB)
@@ -820,6 +935,7 @@ def main():
         "flyer": flyer_info,
         "flyer_candidates": flyer_attempts,
         "parser": parser_audit,
+        "visual_verified_offers": visual_audit,
         "fixed_reference_prices": fallback_audit,
         "full_db": full_stats,
         "app_db": app_stats,
@@ -832,6 +948,7 @@ def main():
         "flyer_valid_from": flyer_info["valid_from"],
         "flyer_valid_to": flyer_info["valid_to"],
         "accepted_local_offers": len(offers),
+        "visual_verified_offers": len(visual_audit["inserted"]),
         "reference_fallbacks": full_stats["reference_fallbacks"],
         "full_rows": full_stats["rows"],
         "app_rows": app_stats["rows"],
