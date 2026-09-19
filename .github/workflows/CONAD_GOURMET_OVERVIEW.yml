@@ -27,7 +27,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add probe_gourmet_pages/overview_20_pages.jpg probe_gourmet_pages/overview_20_pages.b64.txt
+          git add probe_gourmet_pages/overview_20_pages_tiny.jpg probe_gourmet_pages/overview_20_pages_tiny.b64.txt
           git diff --cached --quiet && exit 0
           git commit -m "Build Gourmet flyer visual overview"
           git push
