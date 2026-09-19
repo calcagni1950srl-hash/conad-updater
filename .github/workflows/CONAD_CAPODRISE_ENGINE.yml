@@ -54,6 +54,86 @@ jobs:
               con.close()
           PY
 
+      - name: V81 final Kotlin QA
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip curl
+          curl -L -o /tmp/kotlin.zip https://github.com/JetBrains/kotlin/releases/download/v2.0.21/kotlin-compiler-2.0.21.zip
+          unzip -q /tmp/kotlin.zip -d /tmp/kotlin
+          export PATH="/tmp/kotlin/kotlinc/bin:$PATH"
+          kotlinc -version
+
+          python V81_EXPORT_ANDROID_PRODUCTS.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          src=Path("conad_v81_android_products.jsonl")
+          out=Path("qa_v81/products_v81_android.tsv")
+          rows=[]
+          for line in src.read_text(encoding="utf-8").splitlines():
+              if not line.strip():
+                  continue
+              x=json.loads(line)
+              def clean(v):
+                  if v is None:
+                      return ""
+                  return str(v).replace("\t"," ").replace("\r"," ").replace("\n"," ")
+              rows.append([
+                  clean(x.get("key")),
+                  clean(x.get("name")),
+                  clean(x.get("brand")),
+                  clean(x.get("category")),
+                  clean(x.get("quantityValue")),
+                  clean(x.get("quantityUnit")),
+                  clean(x.get("priceEur")),
+                  clean(x.get("unitPriceEur")),
+                  clean(x.get("unitPriceUnit")),
+                  "1" if x.get("variableWeight") else "0",
+                  clean(x.get("sourceUrl")),
+                  clean(x.get("checkedAt")),
+              ])
+          with out.open("w", encoding="utf-8") as fh:
+              fh.write("key\tname\tbrand\tcategory\tquantityValue\tquantityUnit\tpriceEur\tunitPriceEur\tunitPriceUnit\tvariableWeight\tsourceUrl\tcheckedAt\n")
+              for row in rows:
+                  fh.write("\t".join(row)+"\n")
+          if len(rows) != 733:
+              raise SystemExit(f"Expected 733 Android products, got {len(rows)}")
+          PY
+
+          kotlinc             qa_v81/SupermarketRepositoryStub.kt             qa_v81/ShoppingCalculator.kt             qa_v81/IngredientMatcher_V81_CONAD.kt             qa_v81/ConadV81Harness.kt             -include-runtime             -d qa_v81/v81-conad-harness.jar
+
+          java -jar qa_v81/v81-conad-harness.jar             qa_v81/products_v81_android.tsv             qa_v81/recipes_v61_157.tsv             2 | tee qa_v81/v81_kotlin_conad_report.txt
+
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path("qa_v81/v81_kotlin_conad_report.txt").read_text(encoding="utf-8")
+          def val(k):
+              m=re.search(rf"(?m)^{re.escape(k)}=(.+)$", text)
+              if not m:
+                  raise SystemExit(f"Missing {k}")
+              return m.group(1).strip()
+          expected={
+              "recipes_total":"157",
+              "products":"733",
+              "threshold_primi":"true",
+              "threshold_secondi":"true",
+              "threshold_contorni":"true",
+          }
+          for k,v in expected.items():
+              got=val(k)
+              if got.lower()!=v.lower():
+                  raise SystemExit(f"{k}: expected {v}, got {got}")
+          print({
+              "recipes_total":val("recipes_total"),
+              "recipes_testable":val("recipes_testable"),
+              "recipes_complete":val("recipes_complete"),
+              "primi_complete":val("primi_complete"),
+              "secondi_complete":val("secondi_complete"),
+              "contorni_complete":val("contorni_complete"),
+          })
+          PY
+
       - uses: actions/upload-artifact@v4
         with:
           name: conad-capodrise-validated
@@ -67,7 +147,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add prezzi_conad_capodrise.db prezzi_conad_capodrise_app.db conad_bassifissi_audit.json conad_capodrise_audit.json
+          git add prezzi_conad_capodrise.db prezzi_conad_capodrise_app.db conad_bassifissi_audit.json conad_capodrise_audit.json qa_v81/v81_kotlin_conad_report.txt conad_v81_android_products.jsonl
           git diff --cached --quiet && exit 0
           git commit -m "Update validated Conad Capodrise databases"
           git pull --rebase origin "${GITHUB_REF_NAME}"
