@@ -357,7 +357,7 @@ def classify_food(description):
         "detersiv", "sapone", "shampoo", "balsamo", "deodorante", "dentifric",
         "forcelle", "scovolino", "bagno doccia", "pianta ", "vaso da",
         "alimento per gatti", "pannolini", "ambipur", "oxi action",
-        "spumante", "grappa", "whiskey", "gin ", "amaro ", "birra ",
+        "vino ", "spumante", "grappa", "whiskey", "gin ", "amaro ", "birra ",
         "lavatrice", "televisore", "smart tv", "friggitrice", "caffettiera",
         "profumo", "disinfettante", "gel mani", "amuchina",
     ]
@@ -400,7 +400,7 @@ def classify_food(description):
         ]),
         ("Bevande e preparati", [
             "caffe", "te ", "bevanda", "succo", "nettare", "estath",
-            "red bull", "analcolico", "crodino", "vino ",
+            "red bull", "analcolico", "crodino",
         ]),
     ]
     for category, words in groups:
