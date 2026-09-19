@@ -601,6 +601,25 @@ VISUAL_VERIFIED_OFFERS_V81 = [
         "source_url": "https://www.conad.it/assets/common/volantini/pac/vinteg/Integrativa%2019%20Campania.pdf",
         "source_label": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81|CONVENIENZA_PIU_INTEGRATIVA19_CAMPANIA|NO_OCR",
     },
+    {
+        # Volantino ufficiale PAC "Campioni del Risparmio" Superstore Campania, PDV 010548.
+        # Pagina 12: prodotto verificato visivamente, NON ottenuto con OCR.
+        "product_code": "VISUAL:OFF19_POMODORO_CILIEGINO_PQ_500G",
+        "product_name": "Pomodoro ciliegino Percorso Qualità Conad 500 g",
+        "brand": "Conad Percorso Qualità",
+        "category1": "Frutta e verdura",
+        "category2": "Pomodori freschi",
+        "quantity_value": 0.500,
+        "quantity_unit": "KG",
+        "price_eur": 1.79,
+        "unit_price": 3.58,
+        "unit_price_unit": "EUR/KG",
+        "variable_weight": False,
+        "valid_from": "2026-09-09",
+        "valid_to": "2026-09-20",
+        "source_url": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026_19_Superstore_Campania.pdf",
+        "source_label": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81|OFF19_SUPERSTORE_CAMPANIA|PAGE12|NO_OCR",
+    },
 ]
 
 
