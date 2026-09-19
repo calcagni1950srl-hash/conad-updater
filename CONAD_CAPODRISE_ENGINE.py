@@ -678,7 +678,7 @@ FALLBACK_SPECS = {
     # V81: riferimenti fissi SOLO per piccoli ingredienti-base che altrimenti
     # bloccano il menu. Non sono prezzi Conad/Capodrise.
     #
-    # SOLO questi tre riferimenti medi sono approvati dall'utente.
+    # SOLO questi cinque riferimenti medi sono approvati dall'utente.
     # Non aggiungere altri prezzi fissi senza nuova autorizzazione.
     "aglio": {
         "product_code": "REF:AVG_AGLIO",
@@ -713,6 +713,28 @@ FALLBACK_SPECS = {
         "price_eur": 0.36,
         "variable_weight": True,
     },
+    "rosmarino": {
+        "product_code": "REF:AVG_ROSMARINO",
+        "product_name": "Rosmarino - prezzo medio di mercato",
+        "brand": None,
+        "category1": "Condimenti e conserve",
+        "category2": "Erbe aromatiche",
+        "quantity_value": 0.030,
+        "quantity_unit": "KG",
+        "price_eur": 1.47,
+        "variable_weight": True,
+    },
+    "peperoncino": {
+        "product_code": "REF:AVG_PEPERONCINO",
+        "product_name": "Peperoncino - prezzo medio di mercato",
+        "brand": None,
+        "category1": "Condimenti e conserve",
+        "category2": "Spezie",
+        "quantity_value": 0.020,
+        "quantity_unit": "KG",
+        "price_eur": 0.67,
+        "variable_weight": True,
+    },
 }
 
 _STANDALONE_ALLOWED_CATEGORIES = {
@@ -725,6 +747,8 @@ _STANDALONE_EXCLUDES = {
     "aglio": ("senza aglio", "pesto", "spiedini", "gratinat", "sugo", "salsa"),
     "cipolla": ("focaccia", "spianatina", "marinat", "borettane", "agrodolce", "sottolio", "sottaceto"),
     "prezzemolo": ("gratinat", "spiedini", "filetto", "merluzzo"),
+    "rosmarino": ("snack", "cracker", "tarall", "patatin", "merluzzo", "hamburger", "costine", "patate al rosmarino"),
+    "peperoncino": ("sugo", "salsa", "tarall", "tonno", "sgombro", "formaggio", "salame", "olio aromatizzato", "condimento aromatizzato"),
 }
 
 
@@ -752,8 +776,8 @@ def standalone_ingredient_exists(con, ingredient):
 
 def apply_fixed_reference_prices():
     """
-    V81: SOLO aglio, cipolla e prezzemolo possono usare i riferimenti medi
-    approvati dall'utente. Sono usati solo se non esiste gia' un prodotto
+    V81: SOLO aglio, cipolla, prezzemolo, rosmarino e peperoncino possono usare
+    i riferimenti medi approvati dall'utente. Sono usati solo se non esiste gia' un prodotto
     standalone valido da Capodrise/PAC/Bassi e Fissi.
     """
     now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
@@ -836,8 +860,8 @@ def apply_fixed_reference_prices():
         (
             now, STORE_CODE, "FIXED_MARKET_AVERAGE_V81",
             len(FALLBACK_SPECS), len(inserted), "OK",
-            "V81: prezzi medi di mercato fissi approvati dall'utente SOLO per aglio, cipolla "
-            "e prezzemolo; non sono prezzi Conad/Capodrise e sono usati solo se le fonti reali non coprono il prodotto.",
+            "V81: prezzi medi di mercato fissi approvati dall'utente SOLO per aglio, cipolla, prezzemolo, "
+            "rosmarino e peperoncino; non sono prezzi Conad/Capodrise e sono usati solo se le fonti reali non coprono il prodotto.",
         ),
     )
     con.execute(
@@ -850,7 +874,7 @@ def apply_fixed_reference_prices():
     )
     con.execute(
         "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
-        ("reference_fallback_policy", "LOW_IMPACT_STAPLES_FIXED_2026-09-19"),
+        ("reference_fallback_policy", "LOW_IMPACT_STAPLES_FIXED_5_APPROVED_2026-09-19"),
     )
     con.commit()
     con.close()
