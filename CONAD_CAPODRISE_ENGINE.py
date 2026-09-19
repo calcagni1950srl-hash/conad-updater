@@ -563,9 +563,8 @@ FALLBACK_SPECS = {
     # V81: riferimenti fissi SOLO per piccoli ingredienti-base che altrimenti
     # bloccano il menu. Non sono prezzi Conad/Capodrise.
     #
-    # I primi tre sono i riferimenti medi gia' approvati; peperoncino,
-    # origano e rosmarino sono il set minimo aggiuntivo emerso dal test
-    # reale sulle 157 ricette per raggiungere 14 primi + 14 secondi + 7 contorni.
+    # SOLO questi tre riferimenti medi sono approvati dall'utente.
+    # Non aggiungere altri prezzi fissi senza nuova autorizzazione.
     "aglio": {
         "product_code": "REF:AVG_AGLIO",
         "product_name": "Aglio fresco - prezzo medio di mercato",
@@ -597,39 +596,6 @@ FALLBACK_SPECS = {
         "quantity_value": 0.030,
         "quantity_unit": "KG",
         "price_eur": 0.36,
-        "variable_weight": True,
-    },
-    "peperoncino": {
-        "product_code": "REF:AVG_PEPERONCINO",
-        "product_name": "Peperoncino essiccato - riferimento fisso di mercato",
-        "brand": None,
-        "category1": "Condimenti e conserve",
-        "category2": "Sale, aromi e spezie",
-        "quantity_value": 0.030,
-        "quantity_unit": "KG",
-        "price_eur": 1.80,
-        "variable_weight": True,
-    },
-    "origano": {
-        "product_code": "REF:AVG_ORIGANO",
-        "product_name": "Origano essiccato - riferimento fisso di mercato",
-        "brand": None,
-        "category1": "Condimenti e conserve",
-        "category2": "Sale, aromi e spezie",
-        "quantity_value": 0.012,
-        "quantity_unit": "KG",
-        "price_eur": 1.50,
-        "variable_weight": True,
-    },
-    "rosmarino": {
-        "product_code": "REF:AVG_ROSMARINO",
-        "product_name": "Rosmarino essiccato - riferimento fisso di mercato",
-        "brand": None,
-        "category1": "Condimenti e conserve",
-        "category2": "Sale, aromi e spezie",
-        "quantity_value": 0.022,
-        "quantity_unit": "KG",
-        "price_eur": 1.50,
         "variable_weight": True,
     },
 }
@@ -671,8 +637,8 @@ def standalone_ingredient_exists(con, ingredient):
 
 def apply_fixed_reference_prices():
     """
-    V81: i piccoli ingredienti-base di dispensa non devono bloccare il menu.
-    I prezzi sono fissi e vengono usati solo se non esiste gia' un prodotto
+    V81: SOLO aglio, cipolla e prezzemolo possono usare i riferimenti medi
+    approvati dall'utente. Sono usati solo se non esiste gia' un prodotto
     standalone valido da Capodrise/PAC/Bassi e Fissi.
     """
     now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
