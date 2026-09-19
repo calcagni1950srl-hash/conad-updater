@@ -32,7 +32,12 @@ private fun loadProducts(path: String): List<SupermarketRepository.Product> {
             quantityUnit = c[5].ifBlank { null },
             priceEur = d(c[6]) ?: error("prezzo mancante ${c[0]}"),
             unitPriceEur = d(c[7]),
-            unitPriceUnit = c[8].ifBlank { null },
+            unitPriceUnit = when (c[8].trim().uppercase()) {
+                "EUR/KG", "KG" -> "kg"
+                "EUR/L", "L", "LT" -> "litro"
+                "EUR/PZ", "PZ", "PEZZO" -> "pezzo"
+                else -> c[8].ifBlank { null }
+            },
             variableWeight = c[9] == "1" || c[9].equals("true", true),
             sourceUrl = c.getOrNull(10)?.ifBlank { null },
             checkedAt = c.getOrNull(11)?.ifBlank { null }
@@ -51,13 +56,15 @@ private fun loadRecipes(path: String, persons: Int): List<HarnessRecipe> {
         val r = map.getOrPut(c[0]) {
             HarnessRecipe(c[0], c[1], c[2], c[3], c[4])
         }
-        val perPerson = d(c[6]) ?: 0.0
-        r.ingredients += IngredientDemand(
-            name = c[5],
-            quantity = perPerson * persons,
-            unit = c[7],
-            recipeNames = setOf(c[1])
-        )
+        if (c[5].isNotBlank()) {
+            val perPerson = d(c[6]) ?: 0.0
+            r.ingredients += IngredientDemand(
+                name = c[5],
+                quantity = perPerson * persons,
+                unit = c[7],
+                recipeNames = setOf(c[1])
+            )
+        }
     }
     return map.values.toList()
 }
