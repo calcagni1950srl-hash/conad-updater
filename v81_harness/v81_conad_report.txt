@@ -1,38 +1,53 @@
 V81_CONAD_REAL_KOTLIN_HARNESS
 persons=2
 products=733
-recipes_total=137
+recipes_total=157
 recipes_testable=137
-recipes_complete=7
-recipes_failed=130
-primi_complete=3
-secondi_complete=2
-contorni_complete=2
-piatti_unici_complete=0
+recipes_complete=28
+recipes_failed=109
+primi_complete=10
+secondi_complete=13
+contorni_complete=6
+piatti_unici_complete=2
 dolci_complete=0
 threshold_primi=false
 threshold_secondi=false
 threshold_contorni=false
 --- COMPLETE_RECIPES ---
+OK	contorno	ceci_prezzemolo_v60	Ceci al prezzemolo	5.4040
+OK	contorno	fagioli_insalata_v60	Fagioli all’insalata	5.4760
 OK	contorno	insalata_verde_v57	Insalata verde	1.1900
+OK	contorno	patate_prezzemolate_v60	Patate prezzemolate	5.5040
 OK	contorno	patate_schiacciate_olio_v60	Patate schiacciate all’olio	5.4800
+OK	piatto_unico	mozzarella_carrozza	Mozzarella in carrozza	6.9600
+OK	piatto_unico	peperoni_imbottiti	Peperoni imbottiti	19.2480
 OK	primo	pasta_fagioli	Pasta e fagioli	9.1600
+OK	primo	pasta_piselli	Pasta e piselli	7.2780
+OK	primo	pasta_zucca	Pasta e zucca	10.3320
 OK	primo	riso_parmigiano_v61	Riso al parmigiano	7.6700
 OK	primo	riso_pomodoro_semplice_v61	Riso al pomodoro	6.0700
+OK	primo	riso_fagioli_v60	Riso e fagioli	7.0320
+OK	primo	riso_lenticchie_v60	Riso e lenticchie	8.0320
+OK	primo	riso_piselli_v60	Riso e piselli	7.1420
+OK	primo	riso_zucca_v60	Riso e zucca	10.3500
+OK	primo	vermicelli_vesuviana_v57	Spaghetti alla vesuviana	9.6225
+OK	secondo	alici_indorate	Alici indorate e fritte	22.7800
+OK	secondo	fagioli_pomodoro_v60	Fagioli al pomodoro	6.0420
+OK	secondo	frittata_cipolle_v47_4	Frittata di cipolle	8.1900
+OK	secondo	frittata_semplice_v47_4	Frittata semplice	7.8300
+OK	secondo	lenticchie_umido_v60	Lenticchie in umido	7.0600
 OK	secondo	lonza_piastra_v60	Lonza alla piastra	9.4900
 OK	secondo	ricotta_piatto_v61	Ricotta al piatto	6.6700
+OK	secondo	salsiccia_piastra_v60	Salsiccia alla piastra	8.7740
+OK	secondo	uova_occhio_bue_v47_4	Uova all'occhio di bue	6.2800
+OK	secondo	uova_purgatorio_v47_4	Uova in purgatorio	6.8700
+OK	secondo	uova_sode_v47_4	Uova sode	1.7900
 --- UNRESOLVED_FREQUENCY ---
 MISS	45	sale	Prodotto non trovato con sufficiente sicurezza=44 | Nessun prodotto sicuro trovato=1	Cracker Salati Senza Granelli di Sale in Superficie 20 x 25 g Conad [Panetteria e snack salati] 0.5KG €1.29 || Primo Sale 200 g Conad [Formaggi, latte e uova] 0.2KG €2.29 || FARINA MIX IT UNIVERSALE SCHÄR senza glutine 1Kg [Pasta e riso] 1.0KG €2.99	Pasta alla genovese ; Ragù ; Gattò di patate ; Spigola all'acqua pazza ; Polpo all'ischitana ; Crocchè di patate ; Friarielli in padella ; Zucchine trifolate
-MISS	24	cipolla	Prezzo unitario del prodotto a peso variabile non utilizzabile=16 | Nessun prodotto sicuro trovato=8	Cipolla - prezzo medio di mercato [Frutta e verdura] 0.25KG €0.45	Pasta e patate con provola ; Pasta e piselli ; Pasta alla genovese ; Ragù ; Linguine con sparnocchie ; Paccheri gratinati ripieni di sgombro ; Agnello al forno con patate ; Insalata di pomodori e cipolla
 MISS	22	pepe	Nessun prodotto sicuro trovato=2 | Prodotto non trovato con sufficiente sicurezza=20	Patatine gusto pepe rosa e lime g 150 Conad [Panetteria e snack salati] 0.15KG €1.49 || PEPERONI OLIVE E CAPPERI all'etto [Frutta e verdura] 0.1KG €1.05	Impepata di cozze ; Pasta alla genovese ; Ragù ; Gattò di patate ; Crocchè di patate ; Zucchine trifolate ; Paccheri allo scoglio ; Paccheri al ragù di pesce spada
 MISS	18	pomodorini	Nessun prodotto sicuro trovato=16 | Prodotto non trovato con sufficiente sicurezza=2	CONAD Pomodorini 400 g [Condimenti e conserve] 0.4KG €0.85 || CONAD Pomodorini 3 x 400 g [Condimenti e conserve] 1.2KG €2.29 || Patatine gusto pomodorini g 150 Conad [Panetteria e snack salati] 0.15KG €1.49	Paccheri allo scarpariello ; Melanzane a funghetto ; Coniglio all'ischitana ; Polpo alla luciana ; Scialatielli ai frutti di mare ; Paccheri con vongole e seppie ; Paccheri allo scoglio ; Pasta e fagioli con le cozze
-MISS	17	prezzemolo	Prezzo unitario del prodotto a peso variabile non utilizzabile=17	Prezzemolo fresco - prezzo medio di mercato [Frutta e verdura] 0.03KG €0.36	Spaghetti alle vongole ; Pasta e zucca ; Impepata di cozze ; Spaghetti con colatura di alici di Cetara ; Spaghetti aglio, olio e peperoncino ; Spigola all'acqua pazza ; Patate prezzemolate ; Fagioli all’insalata
-MISS	17	aglio	Prezzo unitario del prodotto a peso variabile non utilizzabile=7 | Nessun prodotto sicuro trovato=10	Tagliolini all'Uovo 250 g Conad [Pasta e riso] 0.25KG €0.95 || Tagliolini freschi all'uovo sfoglia rustica g.  250 Conad [Pasta e riso] 0.25KG €1.09 || MORTADELLA BOLOGNA IGP CONAD al taglio all'etto [Carne e salumi] 0.1KG €0.85 || PETTO DI TACCHINO ARROSTO all'etto CONAD PERCORSO QUALITÀ al taglio [Carne e salumi] 0.1KG €1.89 || PROSCIUTTO DI PARMA DOP all'etto CONAD stagionatura minima 16 mesi al taglio [Carne e salumi] 0.1KG €2.49	Spigola all'acqua pazza ; Pasta e lenticchie ; Pasta e cavolfiore ; Spaghetti alla vesuviana ; Spaghetti con fagiolini ; Alici in tortiera ; Provola alla pizzaiola ; Trippa
-MISS	16	uova	Nessun prodotto sicuro trovato=16	6 Uova Fresche da Galline Allevate a Terra Grandi Percorso Qualità Conad [Preparazioni dolci e salate] 0.381KG €1.99 || 6 Uova Fresche da Galline Allevate a Terra Medie Percorso Qualità Conad [Preparazioni dolci e salate] 0.381KG €1.79 || Frollini con uova g.  800 Conad [Biscotti, cereali e dolci] 0.8KG €2.09 || Frollini con uova g.  400 Conad [Biscotti, cereali e dolci] 0.4KG €1.39 || Uova medie x 10 da allevamento a terra Conad [Preparazioni dolci e salate] 0.53KG €2.79	Polpette al sugo ; Alici indorate e fritte ; Mozzarella in carrozza ; Gattò di patate ; Torta caprese ; Sartù di riso ; Polpette di melanzane ; Polpettone di tonno
 MISS	14	limone	Nessun prodotto sicuro trovato=14	Mela Carota Zenzero e Limone 250 ml Conad [Bevande e preparati] 0.25LT €1.99 || Thè al Limone 3 x 200 ml Conad [Bevande e preparati] 0.6LT €0.79 || Thè al Limone 1,5 l Conad [Bevande e preparati] 1.5LT €0.89 || I Classici Fragola e Limone 500 g Conad [Surgelati e gelati] 0.5KG €2.99 || Thè al Limone Zero Zuccheri 1,5 l Conad [Bevande e preparati] 1.5LT €0.89	Carciofi con olive e capperi ; Mezzi paccheri al tonno e limone ; Scialatielli limone e colatura di alici ; Agnello al forno con patate ; Fettine di lonza al limone ; Trippa ; Insalata di carciofi crudi ; Petto di pollo alla piastra
 MISS	13	peperoncino	Prodotto non trovato con sufficiente sicurezza=7 | Nessun prodotto sicuro trovato=6		Paccheri allo scarpariello ; Spaghetti alla puttanesca ; Pizza di scarola ; Spaghetti aglio, olio e peperoncino ; Ragù ; Friarielli in padella ; Carciofi con olive e capperi ; Linguine con sparnocchie
-MISS	11	capperi	Prezzo unitario del prodotto a peso variabile non utilizzabile=11	PEPERONI OLIVE E CAPPERI all'etto [Frutta e verdura] 0.1KG €1.05	Spaghetti alla puttanesca ; Peperoni imbottiti ; Scarola imbottita ; Polpo alla luciana ; Pizza di scarola ; Carciofi con olive e capperi ; Pasta al ragù di tonno ; Braciole di maiale
-MISS	10	gamberi	Nessun prodotto sicuro trovato=10		Paccheri ai gamberi e pomodori ; Spaghetti allo scoglio ; Lasagna di mare ; Linguine con calamari e gamberi ; Spaghetti ai frutti di mare al cartoccio ; Linguine ai gamberi e pomodorini ; Risotto ai gamberi e limone ; Risotto di mare con gamberi, cozze e seppioline
 MISS	9	basilico	Nessun prodotto sicuro trovato=5 | Prodotto non trovato con sufficiente sicurezza=4	PESTO DI BASILICO, RICOTTA E MANDORLE ROSSO DI SICILIA 180g [Formaggi, latte e uova] 0.18KG €2.19	Pasta alla Nerano ; Paccheri allo scarpariello ; Parmigiana di melanzane ; Melanzane a funghetto ; Peperoni in padella ; Spaghetti ai frutti di mare al cartoccio ; Insalata di pomodori e cipolla ; Insalata caprese
 MISS	9	pangrattato	Nessun prodotto sicuro trovato=3 | Prodotto non trovato con sufficiente sicurezza=6		Scarola imbottita ; Gattò di patate ; Crocchè di patate ; Maccheroni alla puveriello con alici ; Braciole di maiale ; Sartù di riso ; Alici in tortiera ; Polpette di melanzane
 MISS	9	origano	Prodotto non trovato con sufficiente sicurezza=4 | Nessun prodotto sicuro trovato=5		Paccheri ai gamberi e pomodori ; Paccheri gratinati ripieni di sgombro ; Bistecche alla pizzaiola ; Fettine di vitello e olive alla pizzaiola ; Patate alla marinara ; Pesce spada alla pizzaiola ; Bistecca di bovino alla pizzaiola ; Provola alla piastra
@@ -45,13 +60,9 @@ MISS	6	cozze	Nessun prodotto sicuro trovato=6		Impepata di cozze ; Spaghetti all
 MISS	6	burro	Prodotto non trovato con sufficiente sicurezza=2 | Nessun prodotto sicuro trovato=4		Gattò di patate ; Finocchi gratinati ; Lasagna di mare ; Fettine di lonza al limone ; Torta caprese ; Sartù di riso
 MISS	5	zucchine	Nessun prodotto sicuro trovato=5	Risotto alle Zucchine e Gamberetti 175 g Conad [Piatti pronti] 0.175KG €1.29	Pasta alla Nerano ; Zucchine alla scapece ; Verdure grigliate miste ; Frittata di zucchine ; Zucchine al pomodoro
 MISS	5	sedano	Nessun prodotto sicuro trovato=5		Pasta e patate con provola ; Pasta alla genovese ; Spigola all'acqua pazza ; Pasta e lenticchie ; Fagioli alla maruzzara
-MISS	5	olive	Prezzo unitario del prodotto a peso variabile non utilizzabile=5	Mix & Gusta Feta DOP Olive Nere Crostini 140 g Conad [Frutta e verdura] 0.14KG €2.79 || Mix & Gusta Olive Verdi Grana Padano DOP Crostini 120 g Conad [Frutta e verdura] 0.12KG €2.79 || CARTA DELLE INSALATE BONDUELLE ricetta con Olive 140g [Condimenti e conserve] 0.14KG €1.49 || OLIVE TAGGIASCHE LIGURE IGP DENOCCIOLATE ALBERTI 170g [Condimenti e conserve] 0.17KG €3.75 || PEPERONI OLIVE E CAPPERI all'etto [Frutta e verdura] 0.1KG €1.05	Peperoni imbottiti ; Scarola imbottita ; Polpo alla luciana ; Pizza di scarola ; Mezzi paccheri al tonno e limone
 MISS	4	vongole	Nessun prodotto sicuro trovato=4		Spaghetti alle vongole ; Paccheri con vongole e seppie ; Spaghetti allo scoglio ; Spaghetti ai frutti di mare al cartoccio
 MISS	4	calamari	Nessun prodotto sicuro trovato=4		Spaghetti allo scoglio ; Lasagna di mare ; Linguine con calamari e gamberi ; Paccheri con calamari e pomodori del Piennolo
 MISS	3	provola	Nessun prodotto sicuro trovato=3		Pasta e patate con provola ; Provola alla pizzaiola ; Provola alla piastra
-MISS	3	peperoni	Prezzo unitario del prodotto a peso variabile non utilizzabile=3	PEPERONI OLIVE E CAPPERI all'etto [Frutta e verdura] 0.1KG €1.05	Peperoni imbottiti ; Verdure grigliate miste ; Cianfotta
-MISS	3	salsiccia	Prezzo unitario del prodotto a peso variabile non utilizzabile=3	SALSICCIA all'etto SCHETTINO dolce/piccante 400g circa [Carne e salumi] 0.1KG €1.19	Salsiccia e friarielli ; Salsiccia con patate al forno ; Salsiccia alla piastra
-MISS	3	farina	Nessun prodotto sicuro trovato=3	Farina di grano tenero Tipo 00 1 kg Conad [Preparazioni dolci e salate] 1.0KG €0.65 || Farina di grano tenero Tipo 0 1 kg Conad [Preparazioni dolci e salate] 1.0KG €0.65 || Farina di grano tenero tipo ''00'' Kg.  5 Conad [Preparazioni dolci e salate] 5.0KG €2.99 || Frollini con farina integrale di Grano Saraceno 400 g Conad [Biscotti, cereali e dolci] 0.4KG €1.49 || Pane Soffice con Farina Integrale 400 g Conad [Panetteria e snack salati] 0.4KG €1.99	Alici indorate e fritte ; Finocchi gratinati ; Lasagna di mare
 MISS	3	vino bianco secco	Nessun prodotto sicuro trovato=3		Pasta alla genovese ; Spigola all'acqua pazza ; Polpo all'ischitana
 MISS	3	aceto di vino bianco	Prodotto non trovato con sufficiente sicurezza=1 | Nessun prodotto sicuro trovato=2		Melanzane alla scapece ; Insalata di riso ; Uova in camicia
 MISS	2	friarielli	Nessun prodotto sicuro trovato=2		Salsiccia e friarielli ; Friarielli in padella
@@ -75,7 +86,6 @@ MISS	2	anelli di totano	Nessun prodotto sicuro trovato=2		Paccheri con totani e 
 MISS	1	menta	Nessun prodotto sicuro trovato=1	Emmental Francese 220 g Conad [Formaggi, latte e uova] 0.22KG €2.79 || Emmental a Fette 150 g Freschi e Convenienti Conad [Formaggi, latte e uova] 0.15KG €1.79 || Finette con Emmental 8 fette 150 g Conad [Formaggi, latte e uova] 0.15KG €1.29 || CONAD Lemon Lime con estratto di Menta Zero Zuccheri Aggiunti* 1 l [Bevande e preparati] 1.0LT €1.19 || CONAD Lemon Lime con estratto di Menta Zero Zuccheri Aggiunti* 33 cl [Bevande e preparati] 0.33LT €0.59	Zucchine alla scapece
 MISS	1	carne macinata	Nessun prodotto sicuro trovato=1		Polpette al sugo
 MISS	1	coniglio	Nessun prodotto sicuro trovato=1		Coniglio all'ischitana
-MISS	1	polpo	Prezzo unitario del prodotto a peso variabile non utilizzabile=1	€ al kg TENTACOLI DI POLPO SAPORI&IDEE CONAD 200g [Pesce] 0.2KG €8.9 || € al kg POLPO FRESCO ARRICCIATO [Pesce] 1.0KG €19.9	Polpo alla luciana
 MISS	1	impasto pizza	Nessun prodotto sicuro trovato=1		Pizza di scarola
 MISS	1	scialatielli	Nessun prodotto sicuro trovato=1		Scialatielli ai frutti di mare
 MISS	1	polpa di manzo	Nessun prodotto sicuro trovato=1		Pasta alla genovese
@@ -93,7 +103,6 @@ MISS	1	zucchine medie	Nessun prodotto sicuro trovato=1		Zucchine trifolate
 MISS	1	burro per besciamella	Nessun prodotto sicuro trovato=1		Finocchi gratinati
 MISS	1	finocchi	Nessun prodotto sicuro trovato=1		Finocchi gratinati
 MISS	1	noce moscata	Prodotto non trovato con sufficiente sicurezza=1		Finocchi gratinati
-MISS	1	peperoni di colori diversi	Nessun prodotto sicuro trovato=1		Peperoni in padella
 MISS	1	olive nere di gaeta	Nessun prodotto sicuro trovato=1		Carciofi con olive e capperi
 MISS	1	acciughe sott olio	Prodotto non trovato con sufficiente sicurezza=1		Scarola in padella
 MISS	1	olive di gaeta	Prodotto non trovato con sufficiente sicurezza=1		Scarola in padella
@@ -129,8 +138,6 @@ MISS	1	brodo vegetale	Nessun prodotto sicuro trovato=1		Sartù di riso
 MISS	1	carne trita di manzo	Nessun prodotto sicuro trovato=1		Sartù di riso
 MISS	1	mozzarella di bufala	Nessun prodotto sicuro trovato=1		Sartù di riso
 MISS	1	passata di pomodoro	Nessun prodotto sicuro trovato=1	Passata di Pomodoro Classica 500 g Conad [Condimenti e conserve] 0.5KG €0.59 || Passata di Pomodoro Classica 700 g Conad [Condimenti e conserve] 0.7KG €0.85 || Passata di Pomodoro Classica 3 x 350 g Conad [Condimenti e conserve] 1.05KG €2.35 || Passata di Pomodoro Rustica 690 g Conad [Condimenti e conserve] 0.69KG €0.99 || Passata di Pomodoro Classica 3 x 200 g Conad [Condimenti e conserve] 0.6KG €0.99	Sartù di riso
-MISS	1	prosciutto cotto	Prezzo unitario del prodotto a peso variabile non utilizzabile=1	Prosciutto Cotto 100 g Conad [Carne e salumi] 0.1KG €1.49 || Hamburger a base di prosciutto cotto 2 x 75 g Conad [Carne e salumi] 0.15KG €1.89 || Freschi & Convenienti Prosciutto Cotto di Alta Qualità 120 g Conad [Carne e salumi] 0.12KG €1.69 || Freschi & Soffici Prosciutto Cotto di Alta Qualità 80 g Conad [Carne e salumi] 0.08KG €1.39 || Hamburger a base di prosciutto cotto e mozzarella 2 x 75 g Conad [Carne e salumi] 0.15KG €1.89	Sartù di riso
-MISS	1	salsicce	Nessun prodotto sicuro trovato=1		Sartù di riso
 MISS	1	fagiolini	Nessun prodotto sicuro trovato=1	CONAD Percorso Qualità Fagiolini Finissimi Surgelati 600 g [Surgelati e gelati] 0.6KG €1.79	Spaghetti con fagiolini
 MISS	1	trippa	Nessun prodotto sicuro trovato=1		Trippa
 MISS	1	friggitelli	Nessun prodotto sicuro trovato=1		Friggitelli al pomodoro
@@ -142,132 +149,111 @@ MISS	1	tonno al naturale	Nessun prodotto sicuro trovato=1	Tonno al Naturale 3 x 
 MISS	1	sgombro al naturale	Nessun prodotto sicuro trovato=1		Sgombro al naturale con limone
 --- FAILED_RECIPES ---
 FAIL	contorno	broccoli_aglio_olio_v30	Broccoli saltati con aglio e olio	Broccoli:Nessun prodotto sicuro trovato | Peperoncino:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
-FAIL	contorno	carciofi_napoletana_v29	Carciofi con olive e capperi	Capperi:Prezzo unitario del prodotto a peso variabile non utilizzabile | Carciofi:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato | Olive nere di gaeta:Nessun prodotto sicuro trovato | Peperoncino:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
-FAIL	contorno	ceci_prezzemolo_v60	Ceci al prezzemolo	Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	contorno	cianfotta_napoletana_v57	Cianfotta	Aglio:Nessun prodotto sicuro trovato | Cipolla:Nessun prodotto sicuro trovato | Melanzane:Nessun prodotto sicuro trovato | Peperoni:Prezzo unitario del prodotto a peso variabile non utilizzabile
+FAIL	contorno	carciofi_napoletana_v29	Carciofi con olive e capperi	Carciofi:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato | Olive nere di gaeta:Nessun prodotto sicuro trovato | Peperoncino:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
+FAIL	contorno	cianfotta_napoletana_v57	Cianfotta	Melanzane:Nessun prodotto sicuro trovato
 FAIL	contorno	cicoria_ripassata_v30	Cicoria ripassata in padella	Cicoria:Nessun prodotto sicuro trovato | Peperoncino:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
 FAIL	contorno	crocche_patate_napoletani_v29	Crocchè di patate	Albumi:Nessun prodotto sicuro trovato | Olio di semi di arachidi:Prodotto non trovato con sufficiente sicurezza | Pangrattato:Prodotto non trovato con sufficiente sicurezza | Pepe:Prodotto non trovato con sufficiente sicurezza | Provola affumicata:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Tuorli d uovo:Nessun prodotto sicuro trovato
-FAIL	contorno	fagioli_insalata_v60	Fagioli all’insalata	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile
 FAIL	contorno	fagioli_scarole_v30	Fagioli e scarole	Peperoncino:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza | Scarola:Nessun prodotto sicuro trovato
-FAIL	contorno	finocchi_gratinati_v29	Finocchi gratinati	Burro:Nessun prodotto sicuro trovato | Burro per besciamella:Nessun prodotto sicuro trovato | Farina:Nessun prodotto sicuro trovato | Finocchi:Nessun prodotto sicuro trovato | Noce moscata:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
+FAIL	contorno	finocchi_gratinati_v29	Finocchi gratinati	Burro:Nessun prodotto sicuro trovato | Burro per besciamella:Nessun prodotto sicuro trovato | Finocchi:Nessun prodotto sicuro trovato | Noce moscata:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
 FAIL	contorno	friarielli_padella_v29	Friarielli in padella	Friarielli:Nessun prodotto sicuro trovato | Peperoncino:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
-FAIL	contorno	friggitelli_pomodoro_v57	Friggitelli al pomodoro	Aglio:Nessun prodotto sicuro trovato | Friggitelli:Nessun prodotto sicuro trovato | Pomodorini:Prodotto non trovato con sufficiente sicurezza
+FAIL	contorno	friggitelli_pomodoro_v57	Friggitelli al pomodoro	Friggitelli:Nessun prodotto sicuro trovato | Pomodorini:Prodotto non trovato con sufficiente sicurezza
 FAIL	contorno	insalata_carciofi_casertana_v57	Insalata di carciofi crudi	Carciofi:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato
-FAIL	contorno	insalata_pomodoro_cipolla_v30	Insalata di pomodori e cipolla	Basilico:Prodotto non trovato con sufficiente sicurezza | Cipolla:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
+FAIL	contorno	insalata_pomodoro_cipolla_v30	Insalata di pomodori e cipolla	Basilico:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
 FAIL	contorno	melanzane_funghetto	Melanzane a funghetto	Basilico:Nessun prodotto sicuro trovato | Melanzane:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato
 FAIL	contorno	melanzane_scapece_v29	Melanzane alla scapece	Aceto di vino bianco:Prodotto non trovato con sufficiente sicurezza | Melanzane:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
 FAIL	contorno	patate_forno_rosmarino_v30	Patate al forno al rosmarino	Rosmarino:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
 FAIL	contorno	patate_rosmarino_padella_v60	Patate al rosmarino in padella	Rosmarino:Nessun prodotto sicuro trovato
-FAIL	contorno	patate_marinara_v60	Patate alla marinara	Aglio:Prezzo unitario del prodotto a peso variabile non utilizzabile | Origano:Nessun prodotto sicuro trovato
-FAIL	contorno	patate_prezzemolate_v60	Patate prezzemolate	Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	contorno	peperoni_padella_napoletana_v29	Peperoni in padella	Basilico:Prodotto non trovato con sufficiente sicurezza | Filetti di acciuga:Nessun prodotto sicuro trovato | Peperoni di colori diversi:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
+FAIL	contorno	patate_marinara_v60	Patate alla marinara	Origano:Nessun prodotto sicuro trovato
+FAIL	contorno	peperoni_padella_napoletana_v29	Peperoni in padella	Basilico:Prodotto non trovato con sufficiente sicurezza | Filetti di acciuga:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
 FAIL	contorno	scarola_padella_napoletana_v29	Scarola in padella	Acciughe sott olio:Prodotto non trovato con sufficiente sicurezza | Olive di gaeta:Prodotto non trovato con sufficiente sicurezza | Pinoli:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Scarola:Prodotto non trovato con sufficiente sicurezza | Uva passa:Prodotto non trovato con sufficiente sicurezza
-FAIL	contorno	verdure_grigliate_v30	Verdure grigliate miste	Melanzane:Nessun prodotto sicuro trovato | Peperoni:Prezzo unitario del prodotto a peso variabile non utilizzabile | Sale:Prodotto non trovato con sufficiente sicurezza | Zucchine:Nessun prodotto sicuro trovato
+FAIL	contorno	verdure_grigliate_v30	Verdure grigliate miste	Melanzane:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Zucchine:Nessun prodotto sicuro trovato
 FAIL	contorno	zucchine_scapece	Zucchine alla scapece	Menta:Nessun prodotto sicuro trovato | Zucchine:Nessun prodotto sicuro trovato
 FAIL	contorno	zucchine_trifolate_v29	Zucchine trifolate	Pepe:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza | Zucchine medie:Nessun prodotto sicuro trovato
-FAIL	dolce	torta_caprese_v31	Torta caprese	Burro:Nessun prodotto sicuro trovato | Uova:Nessun prodotto sicuro trovato | Zucchero a velo:Prodotto non trovato con sufficiente sicurezza
-FAIL	piatto_unico	gatto_patate_napoletano_v29	Gattò di patate	Burro:Prodotto non trovato con sufficiente sicurezza | Pangrattato:Prodotto non trovato con sufficiente sicurezza | Pepe:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza | Uova:Nessun prodotto sicuro trovato
+FAIL	dolce	torta_caprese_v31	Torta caprese	Burro:Nessun prodotto sicuro trovato | Zucchero a velo:Prodotto non trovato con sufficiente sicurezza
+FAIL	piatto_unico	gatto_patate_napoletano_v29	Gattò di patate	Burro:Prodotto non trovato con sufficiente sicurezza | Pangrattato:Prodotto non trovato con sufficiente sicurezza | Pepe:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
 FAIL	piatto_unico	insalata_caprese	Insalata caprese	Basilico:Nessun prodotto sicuro trovato
-FAIL	piatto_unico	mozzarella_carrozza	Mozzarella in carrozza	Uova:Nessun prodotto sicuro trovato
 FAIL	piatto_unico	parmigiana_melanzane	Parmigiana di melanzane	Basilico:Prodotto non trovato con sufficiente sicurezza | Melanzane:Nessun prodotto sicuro trovato
-FAIL	piatto_unico	peperoni_imbottiti	Peperoni imbottiti	Capperi:Prezzo unitario del prodotto a peso variabile non utilizzabile | Olive:Prezzo unitario del prodotto a peso variabile non utilizzabile | Peperoni:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	piatto_unico	pizza_scarola	Pizza di scarola	Capperi:Prezzo unitario del prodotto a peso variabile non utilizzabile | Impasto pizza:Nessun prodotto sicuro trovato | Olive:Prezzo unitario del prodotto a peso variabile non utilizzabile | Peperoncino:Prodotto non trovato con sufficiente sicurezza | Scarola:Nessun prodotto sicuro trovato
-FAIL	piatto_unico	scarola_imbottita	Scarola imbottita	Capperi:Prezzo unitario del prodotto a peso variabile non utilizzabile | Olive:Prezzo unitario del prodotto a peso variabile non utilizzabile | Pangrattato:Nessun prodotto sicuro trovato | Scarola:Nessun prodotto sicuro trovato
+FAIL	piatto_unico	pizza_scarola	Pizza di scarola	Impasto pizza:Nessun prodotto sicuro trovato | Peperoncino:Prodotto non trovato con sufficiente sicurezza | Scarola:Nessun prodotto sicuro trovato
+FAIL	piatto_unico	scarola_imbottita	Scarola imbottita	Pangrattato:Nessun prodotto sicuro trovato | Scarola:Nessun prodotto sicuro trovato
 FAIL	primo	insalata_riso_v58	Insalata di riso	Aceto di vino bianco:Nessun prodotto sicuro trovato | Peperone rosso:Nessun prodotto sicuro trovato
-FAIL	primo	lasagna_mare_v30	Lasagna di mare	Burro:Nessun prodotto sicuro trovato | Calamari:Nessun prodotto sicuro trovato | Farina:Nessun prodotto sicuro trovato | Frutti di mare misti:Nessun prodotto sicuro trovato | Gamberi:Nessun prodotto sicuro trovato | Lasagne:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Seppioline:Nessun prodotto sicuro trovato | Vino bianco falanghina:Prodotto non trovato con sufficiente sicurezza
-FAIL	primo	linguine_gamberi_pomodorini_v61	Linguine ai gamberi e pomodorini	Aglio:Prezzo unitario del prodotto a peso variabile non utilizzabile | Gamberi:Nessun prodotto sicuro trovato | Linguine:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	primo	pasta_calamari_gamberi_v30	Linguine con calamari e gamberi	Calamari:Nessun prodotto sicuro trovato | Gamberi:Nessun prodotto sicuro trovato | Linguine:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Pomodorini:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Vino bianco:Prodotto non trovato con sufficiente sicurezza
-FAIL	primo	linguine_sparnocchie_v30	Linguine con sparnocchie	Brandy:Prodotto non trovato con sufficiente sicurezza | Cipolla:Nessun prodotto sicuro trovato | Linguine fresche:Nessun prodotto sicuro trovato | Peperoncino:Prodotto non trovato con sufficiente sicurezza | Pomodorini del piennolo:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Sparnocchie:Nessun prodotto sicuro trovato | Vino bianco:Prodotto non trovato con sufficiente sicurezza
+FAIL	primo	lasagna_mare_v30	Lasagna di mare	Burro:Nessun prodotto sicuro trovato | Calamari:Nessun prodotto sicuro trovato | Frutti di mare misti:Nessun prodotto sicuro trovato | Lasagne:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Seppioline:Nessun prodotto sicuro trovato | Vino bianco falanghina:Prodotto non trovato con sufficiente sicurezza
+FAIL	primo	linguine_gamberi_pomodorini_v61	Linguine ai gamberi e pomodorini	Linguine:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato
+FAIL	primo	pasta_calamari_gamberi_v30	Linguine con calamari e gamberi	Calamari:Nessun prodotto sicuro trovato | Linguine:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Pomodorini:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Vino bianco:Prodotto non trovato con sufficiente sicurezza
+FAIL	primo	linguine_sparnocchie_v30	Linguine con sparnocchie	Brandy:Prodotto non trovato con sufficiente sicurezza | Linguine fresche:Nessun prodotto sicuro trovato | Peperoncino:Prodotto non trovato con sufficiente sicurezza | Pomodorini del piennolo:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Sparnocchie:Nessun prodotto sicuro trovato | Vino bianco:Prodotto non trovato con sufficiente sicurezza
 FAIL	primo	maccheroni_puveriello_alici_v30	Maccheroni alla puveriello con alici	Alici sotto sale:Nessun prodotto sicuro trovato | Limone amalfitano:Nessun prodotto sicuro trovato | Pangrattato:Nessun prodotto sicuro trovato | Peperoncino:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
-FAIL	primo	mezzi_paccheri_tonno_limone_v30	Mezzi paccheri al tonno e limone	Limone:Nessun prodotto sicuro trovato | Mezzi paccheri:Nessun prodotto sicuro trovato | Olio extravergine di oliva:Nessun prodotto sicuro trovato | Olive:Prezzo unitario del prodotto a peso variabile non utilizzabile | Sale:Prodotto non trovato con sufficiente sicurezza | Tonno sott olio sgocciolato:Nessun prodotto sicuro trovato
-FAIL	primo	paccheri_gamberi_v30	Paccheri ai gamberi e pomodori	Gamberi:Nessun prodotto sicuro trovato | Origano:Prodotto non trovato con sufficiente sicurezza | Paccheri:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Vino bianco:Nessun prodotto sicuro trovato
+FAIL	primo	mezzi_paccheri_tonno_limone_v30	Mezzi paccheri al tonno e limone	Limone:Nessun prodotto sicuro trovato | Mezzi paccheri:Nessun prodotto sicuro trovato | Olio extravergine di oliva:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Tonno sott olio sgocciolato:Nessun prodotto sicuro trovato
+FAIL	primo	paccheri_gamberi_v30	Paccheri ai gamberi e pomodori	Origano:Prodotto non trovato con sufficiente sicurezza | Paccheri:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Vino bianco:Nessun prodotto sicuro trovato
 FAIL	primo	paccheri_pesce_spada_v30	Paccheri al ragù di pesce spada	Paccheri:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Pomodorini pizzutelli:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
 FAIL	primo	scarpariello	Paccheri allo scarpariello	Basilico:Nessun prodotto sicuro trovato | Paccheri:Nessun prodotto sicuro trovato | Peperoncino:Prodotto non trovato con sufficiente sicurezza | Pomodorini:Nessun prodotto sicuro trovato
 FAIL	primo	paccheri_scoglio_v30	Paccheri allo scoglio	Cozze:Nessun prodotto sicuro trovato | Paccheri:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Pomodorini:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Totani:Nessun prodotto sicuro trovato | Vongole veraci:Nessun prodotto sicuro trovato
 FAIL	primo	paccheri_calamari_piennolo_v30	Paccheri con calamari e pomodori del Piennolo	Calamari:Nessun prodotto sicuro trovato | Paccheri:Nessun prodotto sicuro trovato | Peperoncino:Nessun prodotto sicuro trovato | Pomodori del piennolo:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
-FAIL	primo	paccheri_totani_gamberi_v61	Paccheri con totani e gamberi	Aglio:Prezzo unitario del prodotto a peso variabile non utilizzabile | Anelli di totano:Nessun prodotto sicuro trovato | Gamberi:Nessun prodotto sicuro trovato | Paccheri:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile
+FAIL	primo	paccheri_totani_gamberi_v61	Paccheri con totani e gamberi	Anelli di totano:Nessun prodotto sicuro trovato | Paccheri:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato
 FAIL	primo	paccheri_vongole_seppie_v30	Paccheri con vongole e seppie	Paccheri:Nessun prodotto sicuro trovato | Pomodorini:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza | Seppie pulite:Nessun prodotto sicuro trovato | Vongole:Nessun prodotto sicuro trovato
-FAIL	primo	paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	Cipolla:Nessun prodotto sicuro trovato | Origano:Prodotto non trovato con sufficiente sicurezza | Paccheri:Nessun prodotto sicuro trovato | Peperone rosso:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Sgombro pulito:Nessun prodotto sicuro trovato
-FAIL	primo	pasta_ragu_tonno_v30	Pasta al ragù di tonno	Capperi:Prezzo unitario del prodotto a peso variabile non utilizzabile | Pepe:Prodotto non trovato con sufficiente sicurezza | Pomodorini:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Tonno fresco:Nessun prodotto sicuro trovato
+FAIL	primo	paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	Origano:Prodotto non trovato con sufficiente sicurezza | Paccheri:Nessun prodotto sicuro trovato | Peperone rosso:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Sgombro pulito:Nessun prodotto sicuro trovato
+FAIL	primo	pasta_ragu_tonno_v30	Pasta al ragù di tonno	Pepe:Prodotto non trovato con sufficiente sicurezza | Pomodorini:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Tonno fresco:Nessun prodotto sicuro trovato
 FAIL	primo	pasta_nerano	Pasta alla Nerano	Basilico:Nessun prodotto sicuro trovato | Zucchine:Nessun prodotto sicuro trovato
-FAIL	primo	pasta_carbonara_v58	Pasta alla carbonara	Pepe:Nessun prodotto sicuro trovato | Uova:Nessun prodotto sicuro trovato
-FAIL	primo	pasta_genovese_napoletana_v29	Pasta alla genovese	Alloro:Prodotto non trovato con sufficiente sicurezza | Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile | Pepe:Prodotto non trovato con sufficiente sicurezza | Polpa di manzo:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Sedano:Nessun prodotto sicuro trovato | Vino bianco secco:Nessun prodotto sicuro trovato | Ziti:Nessun prodotto sicuro trovato
-FAIL	primo	pasta_cavolfiore_napoletana_v57	Pasta e cavolfiore	Aglio:Nessun prodotto sicuro trovato | Cavolfiore:Nessun prodotto sicuro trovato
+FAIL	primo	pasta_carbonara_v58	Pasta alla carbonara	Pepe:Nessun prodotto sicuro trovato
+FAIL	primo	pasta_genovese_napoletana_v29	Pasta alla genovese	Alloro:Prodotto non trovato con sufficiente sicurezza | Pepe:Prodotto non trovato con sufficiente sicurezza | Polpa di manzo:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Sedano:Nessun prodotto sicuro trovato | Vino bianco secco:Nessun prodotto sicuro trovato | Ziti:Nessun prodotto sicuro trovato
+FAIL	primo	pasta_cavolfiore_napoletana_v57	Pasta e cavolfiore	Cavolfiore:Nessun prodotto sicuro trovato
 FAIL	primo	pasta_ceci	Pasta e ceci	Rosmarino:Nessun prodotto sicuro trovato
 FAIL	primo	pasta_fagioli_cozze_v30	Pasta e fagioli con le cozze	Cozze:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Pomodorini:Nessun prodotto sicuro trovato
-FAIL	primo	pasta_lenticchie_napoletana_v57	Pasta e lenticchie	Aglio:Nessun prodotto sicuro trovato | Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile | Sedano:Nessun prodotto sicuro trovato
-FAIL	primo	pasta_patate_provola	Pasta e patate con provola	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile | Provola:Nessun prodotto sicuro trovato | Sedano:Nessun prodotto sicuro trovato
-FAIL	primo	pasta_piselli	Pasta e piselli	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	primo	pasta_zucca	Pasta e zucca	Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	primo	ragu_napoletano_v29	Ragù	Alloro:Prodotto non trovato con sufficiente sicurezza | Cipolla:Nessun prodotto sicuro trovato | Costine di maiale:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Peperoncino:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Vino rosso:Nessun prodotto sicuro trovato
+FAIL	primo	pasta_lenticchie_napoletana_v57	Pasta e lenticchie	Sedano:Nessun prodotto sicuro trovato
+FAIL	primo	pasta_patate_provola	Pasta e patate con provola	Provola:Nessun prodotto sicuro trovato | Sedano:Nessun prodotto sicuro trovato
+FAIL	primo	ragu_napoletano_v29	Ragù	Alloro:Prodotto non trovato con sufficiente sicurezza | Costine di maiale:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Peperoncino:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Vino rosso:Nessun prodotto sicuro trovato
 FAIL	primo	riso_limone_v61	Riso al limone	Limone:Nessun prodotto sicuro trovato
-FAIL	primo	riso_cavolfiore_v60	Riso e cavolfiore	Cavolfiore:Nessun prodotto sicuro trovato | Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	primo	riso_fagioli_v60	Riso e fagioli	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	primo	riso_lenticchie_v60	Riso e lenticchie	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	primo	riso_patate_v60	Riso e patate	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile | Rosmarino:Nessun prodotto sicuro trovato
-FAIL	primo	riso_piselli_v60	Riso e piselli	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	primo	riso_scarola_v60	Riso e scarola	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile | Scarola:Nessun prodotto sicuro trovato
-FAIL	primo	riso_verza_v60	Riso e verza	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile | Verza:Nessun prodotto sicuro trovato
-FAIL	primo	riso_zucca_v60	Riso e zucca	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	primo	risotto_gamberi_limone_v61	Risotto ai gamberi e limone	Gamberi:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	primo	risotto_mare_v61	Risotto di mare con gamberi, cozze e seppioline	Aglio:Prezzo unitario del prodotto a peso variabile non utilizzabile | Cozze:Nessun prodotto sicuro trovato | Gamberi:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile | Seppioline:Nessun prodotto sicuro trovato
-FAIL	primo	sartu_riso_v29	Sartù di riso	Brodo vegetale:Nessun prodotto sicuro trovato | Burro:Prodotto non trovato con sufficiente sicurezza | Carne trita di manzo:Nessun prodotto sicuro trovato | Cipolla:Nessun prodotto sicuro trovato | Mozzarella di bufala:Nessun prodotto sicuro trovato | Pangrattato:Prodotto non trovato con sufficiente sicurezza | Passata di pomodoro:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Prosciutto cotto:Prezzo unitario del prodotto a peso variabile non utilizzabile | Sale:Prodotto non trovato con sufficiente sicurezza | Salsicce:Nessun prodotto sicuro trovato | Uova:Nessun prodotto sicuro trovato | Vino bianco:Prodotto non trovato con sufficiente sicurezza
+FAIL	primo	riso_cavolfiore_v60	Riso e cavolfiore	Cavolfiore:Nessun prodotto sicuro trovato
+FAIL	primo	riso_patate_v60	Riso e patate	Rosmarino:Nessun prodotto sicuro trovato
+FAIL	primo	riso_scarola_v60	Riso e scarola	Scarola:Nessun prodotto sicuro trovato
+FAIL	primo	riso_verza_v60	Riso e verza	Verza:Nessun prodotto sicuro trovato
+FAIL	primo	risotto_gamberi_limone_v61	Risotto ai gamberi e limone	Limone:Nessun prodotto sicuro trovato
+FAIL	primo	risotto_mare_v61	Risotto di mare con gamberi, cozze e seppioline	Cozze:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato | Seppioline:Nessun prodotto sicuro trovato
+FAIL	primo	sartu_riso_v29	Sartù di riso	Brodo vegetale:Nessun prodotto sicuro trovato | Burro:Prodotto non trovato con sufficiente sicurezza | Carne trita di manzo:Nessun prodotto sicuro trovato | Mozzarella di bufala:Nessun prodotto sicuro trovato | Pangrattato:Prodotto non trovato con sufficiente sicurezza | Passata di pomodoro:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza | Vino bianco:Prodotto non trovato con sufficiente sicurezza
 FAIL	primo	scialatielli_frutti_mare	Scialatielli ai frutti di mare	Frutti di mare misti:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato | Scialatielli:Nessun prodotto sicuro trovato
 FAIL	primo	scialatielli_limone_colatura_v30	Scialatielli limone e colatura di alici	Colatura di alici:Prodotto non trovato con sufficiente sicurezza | Cozze:Nessun prodotto sicuro trovato | Gamberi o calamaretti:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Scialatielli freschi:Nessun prodotto sicuro trovato | Vongole veraci:Nessun prodotto sicuro trovato
-FAIL	primo	spaghetti_aglio_olio	Spaghetti aglio, olio e peperoncino	Peperoncino:Nessun prodotto sicuro trovato | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	primo	spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	Basilico:Prodotto non trovato con sufficiente sicurezza | Calamaretti:Nessun prodotto sicuro trovato | Gamberi:Nessun prodotto sicuro trovato | Moscardini:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Vongole:Nessun prodotto sicuro trovato
+FAIL	primo	spaghetti_aglio_olio	Spaghetti aglio, olio e peperoncino	Peperoncino:Nessun prodotto sicuro trovato
+FAIL	primo	spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	Basilico:Prodotto non trovato con sufficiente sicurezza | Calamaretti:Nessun prodotto sicuro trovato | Moscardini:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Vongole:Nessun prodotto sicuro trovato
 FAIL	primo	spaghetti_pomodoro_v60	Spaghetti al pomodoro	Basilico:Nessun prodotto sicuro trovato
-FAIL	primo	puttanesca	Spaghetti alla puttanesca	Capperi:Prezzo unitario del prodotto a peso variabile non utilizzabile | Peperoncino:Prodotto non trovato con sufficiente sicurezza
-FAIL	primo	vermicelli_vesuviana_v57	Spaghetti alla vesuviana	Aglio:Nessun prodotto sicuro trovato | Capperi:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	primo	spaghetti_vongole	Spaghetti alle vongole	Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile | Vongole:Nessun prodotto sicuro trovato
-FAIL	primo	spaghetti_scoglio_v30	Spaghetti allo scoglio	Calamari:Nessun prodotto sicuro trovato | Cozze:Nessun prodotto sicuro trovato | Gamberi:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Scampi:Nessun prodotto sicuro trovato | Vino bianco:Prodotto non trovato con sufficiente sicurezza | Vongole:Nessun prodotto sicuro trovato
+FAIL	primo	puttanesca	Spaghetti alla puttanesca	Peperoncino:Prodotto non trovato con sufficiente sicurezza
+FAIL	primo	spaghetti_vongole	Spaghetti alle vongole	Vongole:Nessun prodotto sicuro trovato
+FAIL	primo	spaghetti_scoglio_v30	Spaghetti allo scoglio	Calamari:Nessun prodotto sicuro trovato | Cozze:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Scampi:Nessun prodotto sicuro trovato | Vino bianco:Prodotto non trovato con sufficiente sicurezza | Vongole:Nessun prodotto sicuro trovato
 FAIL	primo	spaghetti_baccala_olive_v30	Spaghetti con baccalà e olive nere	Baccala ammollato:Nessun prodotto sicuro trovato | Broccoli:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
-FAIL	primo	spaghetti_colatura	Spaghetti con colatura di alici di Cetara	Colatura di alici:Nessun prodotto sicuro trovato | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	primo	spaghetti_fagiolini_casertana_v57	Spaghetti con fagiolini	Aglio:Nessun prodotto sicuro trovato | Fagiolini:Nessun prodotto sicuro trovato
-FAIL	secondo	agnello_forno_patate_v30	Agnello al forno con patate	Agnello:Nessun prodotto sicuro trovato | Cipolla:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Rosmarino:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza | Vino bianco:Prodotto non trovato con sufficiente sicurezza
-FAIL	secondo	alici_tortiera_v57	Alici in tortiera	Aglio:Nessun prodotto sicuro trovato | Pangrattato:Prodotto non trovato con sufficiente sicurezza
-FAIL	secondo	alici_indorate	Alici indorate e fritte	Farina:Nessun prodotto sicuro trovato | Uova:Nessun prodotto sicuro trovato
-FAIL	secondo	bistecca_bovino_pizzaiola_v61	Bistecca di bovino alla pizzaiola	Aglio:Prezzo unitario del prodotto a peso variabile non utilizzabile | Bistecca di bovino:Nessun prodotto sicuro trovato | Origano:Nessun prodotto sicuro trovato
+FAIL	primo	spaghetti_colatura	Spaghetti con colatura di alici di Cetara	Colatura di alici:Nessun prodotto sicuro trovato
+FAIL	primo	spaghetti_fagiolini_casertana_v57	Spaghetti con fagiolini	Fagiolini:Nessun prodotto sicuro trovato
+FAIL	secondo	agnello_forno_patate_v30	Agnello al forno con patate	Agnello:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Rosmarino:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza | Vino bianco:Prodotto non trovato con sufficiente sicurezza
+FAIL	secondo	alici_tortiera_v57	Alici in tortiera	Pangrattato:Prodotto non trovato con sufficiente sicurezza
+FAIL	secondo	bistecca_bovino_pizzaiola_v61	Bistecca di bovino alla pizzaiola	Bistecca di bovino:Nessun prodotto sicuro trovato | Origano:Nessun prodotto sicuro trovato
 FAIL	secondo	bistecche_pizzaiola_v30	Bistecche alla pizzaiola	Fettine di scamone di manzo:Nessun prodotto sicuro trovato | Origano:Prodotto non trovato con sufficiente sicurezza | Pepe:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
-FAIL	secondo	braciole_maiale_napoletane_v30	Braciole di maiale	Capperi:Prezzo unitario del prodotto a peso variabile non utilizzabile | Pangrattato:Prodotto non trovato con sufficiente sicurezza | Pinoli:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Uvetta:Nessun prodotto sicuro trovato
-FAIL	secondo	branzino_limone_v61	Branzino al limone	Filetto di branzino:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile
+FAIL	secondo	braciole_maiale_napoletane_v30	Braciole di maiale	Pangrattato:Prodotto non trovato con sufficiente sicurezza | Pinoli:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Uvetta:Nessun prodotto sicuro trovato
+FAIL	secondo	branzino_limone_v61	Branzino al limone	Filetto di branzino:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato
 FAIL	secondo	ceci_pomodoro_v60	Ceci al pomodoro	Rosmarino:Nessun prodotto sicuro trovato
 FAIL	secondo	coniglio_ischitana	Coniglio all'ischitana	Coniglio:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato | Vino bianco:Nessun prodotto sicuro trovato
 FAIL	secondo	costoletta_maiale_piastra_v30	Costoletta di maiale alla piastra	Costoletta di maiale:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Rosmarino:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
-FAIL	secondo	fagioli_pomodoro_v60	Fagioli al pomodoro	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	secondo	fagioli_maruzzara_v57	Fagioli alla maruzzara	Aglio:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato | Sedano:Nessun prodotto sicuro trovato
+FAIL	secondo	fagioli_maruzzara_v57	Fagioli alla maruzzara	Pomodorini:Nessun prodotto sicuro trovato | Sedano:Nessun prodotto sicuro trovato
 FAIL	secondo	fettina_manzo_piastra_v30	Fettina di manzo alla piastra	Fettina di manzo:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
 FAIL	secondo	fettine_lonza_limone_v30	Fettine di lonza al limone	Burro:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
 FAIL	secondo	fettine_vitello_olive_pizzaiola_v30	Fettine di vitello e olive alla pizzaiola	Fettine di vitello:Nessun prodotto sicuro trovato | Olio extravergine di oliva:Nessun prodotto sicuro trovato | Origano:Prodotto non trovato con sufficiente sicurezza | Pepe:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
-FAIL	secondo	tonno_mediterranea_v61	Filetto di tonno alla mediterranea	Capperi:Prezzo unitario del prodotto a peso variabile non utilizzabile | Filetto di tonno:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato
-FAIL	secondo	frittata_cipolle_v47_4	Frittata di cipolle	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile | Uova:Nessun prodotto sicuro trovato
-FAIL	secondo	frittata_zucchine_v47_4	Frittata di zucchine	Uova:Nessun prodotto sicuro trovato | Zucchine:Nessun prodotto sicuro trovato
-FAIL	secondo	frittata_semplice_v47_4	Frittata semplice	Uova:Nessun prodotto sicuro trovato
-FAIL	secondo	frittura_gamberi_totani_v61	Frittura di gamberi e totani	Anelli di totano:Nessun prodotto sicuro trovato | Gamberi:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato
-FAIL	secondo	impepata_cozze	Impepata di cozze	Cozze:Nessun prodotto sicuro trovato | Pepe:Nessun prodotto sicuro trovato | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile
+FAIL	secondo	tonno_mediterranea_v61	Filetto di tonno alla mediterranea	Filetto di tonno:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato
+FAIL	secondo	frittata_zucchine_v47_4	Frittata di zucchine	Zucchine:Nessun prodotto sicuro trovato
+FAIL	secondo	frittura_gamberi_totani_v61	Frittura di gamberi e totani	Anelli di totano:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato
+FAIL	secondo	impepata_cozze	Impepata di cozze	Cozze:Nessun prodotto sicuro trovato | Pepe:Nessun prodotto sicuro trovato
 FAIL	secondo	involtini_vitello_napoletani_v30	Involtini di vitello	Fettine di vitello:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
-FAIL	secondo	lenticchie_umido_v60	Lenticchie in umido	Cipolla:Prezzo unitario del prodotto a peso variabile non utilizzabile
 FAIL	secondo	melanzane_pomodoro_v60	Melanzane al pomodoro	Melanzane:Nessun prodotto sicuro trovato
 FAIL	secondo	mozzarella_origano_v61	Mozzarella con origano	Origano:Nessun prodotto sicuro trovato
-FAIL	secondo	orata_acqua_pazza_v61	Orata all’acqua pazza	Aglio:Prezzo unitario del prodotto a peso variabile non utilizzabile | Pomodorini:Nessun prodotto sicuro trovato | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	secondo	spada_pizzaiola_v61	Pesce spada alla pizzaiola	Capperi:Prezzo unitario del prodotto a peso variabile non utilizzabile | Origano:Nessun prodotto sicuro trovato
+FAIL	secondo	orata_acqua_pazza_v61	Orata all’acqua pazza	Pomodorini:Nessun prodotto sicuro trovato
+FAIL	secondo	spada_pizzaiola_v61	Pesce spada alla pizzaiola	Origano:Nessun prodotto sicuro trovato
 FAIL	secondo	petto_pollo_piastra_v48	Petto di pollo alla piastra	Limone:Nessun prodotto sicuro trovato | Sale:Nessun prodotto sicuro trovato
-FAIL	secondo	polpette_sugo	Polpette al sugo	Carne macinata:Nessun prodotto sicuro trovato | Uova:Nessun prodotto sicuro trovato
-FAIL	secondo	polpette_melanzane_napoletane_v57	Polpette di melanzane	Melanzane:Nessun prodotto sicuro trovato | Pangrattato:Nessun prodotto sicuro trovato | Uova:Nessun prodotto sicuro trovato
-FAIL	secondo	polpettone_tonno_casertano_v57	Polpettone di tonno	Pangrattato:Prodotto non trovato con sufficiente sicurezza | Tonno sott olio sgocciolato:Nessun prodotto sicuro trovato | Uova:Nessun prodotto sicuro trovato
+FAIL	secondo	polpette_sugo	Polpette al sugo	Carne macinata:Nessun prodotto sicuro trovato
+FAIL	secondo	polpette_melanzane_napoletane_v57	Polpette di melanzane	Melanzane:Nessun prodotto sicuro trovato | Pangrattato:Nessun prodotto sicuro trovato
+FAIL	secondo	polpettone_tonno_casertano_v57	Polpettone di tonno	Pangrattato:Prodotto non trovato con sufficiente sicurezza | Tonno sott olio sgocciolato:Nessun prodotto sicuro trovato
 FAIL	secondo	polpo_ischitana_v29	Polpo all'ischitana	Peperoncino essiccato:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza | Vino bianco secco:Nessun prodotto sicuro trovato
-FAIL	secondo	polpo_luciana	Polpo alla luciana	Capperi:Prezzo unitario del prodotto a peso variabile non utilizzabile | Olive:Prezzo unitario del prodotto a peso variabile non utilizzabile | Polpo:Prezzo unitario del prodotto a peso variabile non utilizzabile | Pomodorini:Nessun prodotto sicuro trovato
+FAIL	secondo	polpo_luciana	Polpo alla luciana	Pomodorini:Nessun prodotto sicuro trovato
 FAIL	secondo	provola_piastra_v61	Provola alla piastra	Origano:Nessun prodotto sicuro trovato | Provola:Nessun prodotto sicuro trovato
-FAIL	secondo	provola_pizzaiola_v57	Provola alla pizzaiola	Aglio:Nessun prodotto sicuro trovato | Pomodorini:Nessun prodotto sicuro trovato | Provola:Nessun prodotto sicuro trovato
-FAIL	secondo	salsiccia_piastra_v60	Salsiccia alla piastra	Salsiccia:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	secondo	salsiccia_patate_v30	Salsiccia con patate al forno	Rosmarino:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza | Salsiccia:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	secondo	salsiccia_friarielli	Salsiccia e friarielli	Friarielli:Nessun prodotto sicuro trovato | Salsiccia:Prezzo unitario del prodotto a peso variabile non utilizzabile
-FAIL	secondo	sgombro_naturale_limone_v61	Sgombro al naturale con limone	Limone:Nessun prodotto sicuro trovato | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile | Sgombro al naturale:Nessun prodotto sicuro trovato
-FAIL	secondo	spigola_acqua_pazza_v29	Spigola all'acqua pazza	Aglio:Prezzo unitario del prodotto a peso variabile non utilizzabile | Filetti di acciuga:Nessun prodotto sicuro trovato | Finocchio:Nessun prodotto sicuro trovato | Pomodorini del piennolo:Nessun prodotto sicuro trovato | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile | Sale:Prodotto non trovato con sufficiente sicurezza | Scarola:Nessun prodotto sicuro trovato | Sedano:Nessun prodotto sicuro trovato | Tranci di spigola:Nessun prodotto sicuro trovato | Vino bianco secco:Nessun prodotto sicuro trovato
-FAIL	secondo	tonno_naturale_limone_v61	Tonno al naturale con limone	Limone:Nessun prodotto sicuro trovato | Prezzemolo:Prezzo unitario del prodotto a peso variabile non utilizzabile | Tonno al naturale:Nessun prodotto sicuro trovato
-FAIL	secondo	trippa_napoletana_v57	Trippa	Aglio:Nessun prodotto sicuro trovato | Cipolla:Nessun prodotto sicuro trovato | Limone:Nessun prodotto sicuro trovato | Trippa:Nessun prodotto sicuro trovato
-FAIL	secondo	uova_occhio_bue_v47_4	Uova all'occhio di bue	Uova:Nessun prodotto sicuro trovato
-FAIL	secondo	uova_camicia_v47_4	Uova in camicia	Aceto di vino bianco:Nessun prodotto sicuro trovato | Uova:Nessun prodotto sicuro trovato
-FAIL	secondo	uova_purgatorio_v47_4	Uova in purgatorio	Uova:Nessun prodotto sicuro trovato
-FAIL	secondo	uova_sode_v47_4	Uova sode	Uova:Nessun prodotto sicuro trovato
+FAIL	secondo	provola_pizzaiola_v57	Provola alla pizzaiola	Pomodorini:Nessun prodotto sicuro trovato | Provola:Nessun prodotto sicuro trovato
+FAIL	secondo	salsiccia_patate_v30	Salsiccia con patate al forno	Rosmarino:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza
+FAIL	secondo	salsiccia_friarielli	Salsiccia e friarielli	Friarielli:Nessun prodotto sicuro trovato
+FAIL	secondo	sgombro_naturale_limone_v61	Sgombro al naturale con limone	Limone:Nessun prodotto sicuro trovato | Sgombro al naturale:Nessun prodotto sicuro trovato
+FAIL	secondo	spigola_acqua_pazza_v29	Spigola all'acqua pazza	Filetti di acciuga:Nessun prodotto sicuro trovato | Finocchio:Nessun prodotto sicuro trovato | Pomodorini del piennolo:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Scarola:Nessun prodotto sicuro trovato | Sedano:Nessun prodotto sicuro trovato | Tranci di spigola:Nessun prodotto sicuro trovato | Vino bianco secco:Nessun prodotto sicuro trovato
+FAIL	secondo	tonno_naturale_limone_v61	Tonno al naturale con limone	Limone:Nessun prodotto sicuro trovato | Tonno al naturale:Nessun prodotto sicuro trovato
+FAIL	secondo	trippa_napoletana_v57	Trippa	Limone:Nessun prodotto sicuro trovato | Trippa:Nessun prodotto sicuro trovato
+FAIL	secondo	uova_camicia_v47_4	Uova in camicia	Aceto di vino bianco:Nessun prodotto sicuro trovato
 FAIL	secondo	zucchine_pomodoro_v60	Zucchine al pomodoro	Zucchine:Nessun prodotto sicuro trovato
