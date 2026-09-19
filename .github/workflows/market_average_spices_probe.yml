@@ -1,0 +1,22 @@
+name: Market Average Spices Probe
+on:
+  push:
+    paths:
+      - 'market_average_spices_probe.py'
+      - '.github/workflows/market_average_spices_probe.yml'
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read validated market DBs
+        run: python market_average_spices_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: market-average-spices-probe
+          path: market_average_spices_probe.json
