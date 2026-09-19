@@ -1,0 +1,22 @@
+{
+  "piccolo": {
+    "rows": 3895,
+    "b64_chars": 145980
+  },
+  "deco": {
+    "rows": 7726,
+    "b64_chars": 438428
+  },
+  "famila": {
+    "rows": 7162,
+    "b64_chars": 270808
+  },
+  "sole365": {
+    "rows": 6864,
+    "b64_chars": 248968
+  },
+  "conad": {
+    "rows": 733,
+    "b64_chars": 27704
+  }
+}
