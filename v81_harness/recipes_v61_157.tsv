@@ -1,0 +1,782 @@
+recipe_id	recipe_name	category	menu_roles	pricing_status	ingredient	qty_per_person	unit
+pasta_nerano	Pasta alla Nerano	primo	primo	ALLOWED	pasta	90	g
+pasta_nerano	Pasta alla Nerano	primo	primo	ALLOWED	zucchine	180	g
+pasta_nerano	Pasta alla Nerano	primo	primo	ALLOWED	provolone del Monaco o provolone	35	g
+pasta_nerano	Pasta alla Nerano	primo	primo	ALLOWED	olio extravergine di oliva	15	ml
+pasta_nerano	Pasta alla Nerano	primo	primo	ALLOWED	basilico	3	g
+spaghetti_vongole	Spaghetti alle vongole	primo	primo	ALLOWED	spaghetti	90	g
+spaghetti_vongole	Spaghetti alle vongole	primo	primo	ALLOWED	vongole	250	g
+spaghetti_vongole	Spaghetti alle vongole	primo	primo	ALLOWED	aglio	0.5	spicchio
+spaghetti_vongole	Spaghetti alle vongole	primo	primo	ALLOWED	olio extravergine di oliva	12	ml
+spaghetti_vongole	Spaghetti alle vongole	primo	primo	ALLOWED	prezzemolo	3	g
+scarpariello	Paccheri allo scarpariello	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	paccheri	90	g
+scarpariello	Paccheri allo scarpariello	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	pomodorini	180	g
+scarpariello	Paccheri allo scarpariello	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	pecorino o parmigiano	25	g
+scarpariello	Paccheri allo scarpariello	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	aglio	0.5	spicchio
+scarpariello	Paccheri allo scarpariello	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	olio extravergine di oliva	12	ml
+scarpariello	Paccheri allo scarpariello	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	basilico	3	g
+scarpariello	Paccheri allo scarpariello	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	peperoncino		g
+puttanesca	Spaghetti alla puttanesca	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	spaghetti	90	g
+puttanesca	Spaghetti alla puttanesca	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	pomodori pelati	180	g
+puttanesca	Spaghetti alla puttanesca	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	olive nere	25	g
+puttanesca	Spaghetti alla puttanesca	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	capperi	8	g
+puttanesca	Spaghetti alla puttanesca	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	acciughe	12	g
+puttanesca	Spaghetti alla puttanesca	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	aglio	0.5	spicchio
+puttanesca	Spaghetti alla puttanesca	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	olio extravergine di oliva	10	ml
+puttanesca	Spaghetti alla puttanesca	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	peperoncino		g
+puttanesca	Spaghetti alla puttanesca	primo	primo	BLOCKED_UNTIL_QUANTITIES_VERIFIED	prezzemolo		g
+pasta_patate_provola	Pasta e patate con provola	primo	primo	ALLOWED	pasta mista	85	g
+pasta_patate_provola	Pasta e patate con provola	primo	primo	ALLOWED	patate	220	g
+pasta_patate_provola	Pasta e patate con provola	primo	primo	ALLOWED	provola	45	g
+pasta_patate_provola	Pasta e patate con provola	primo	primo	ALLOWED	cipolla	25	g
+pasta_patate_provola	Pasta e patate con provola	primo	primo	ALLOWED	sedano	15	g
+pasta_patate_provola	Pasta e patate con provola	primo	primo	ALLOWED	olio extravergine di oliva	12	ml
+pasta_fagioli	Pasta e fagioli	primo	primo	ALLOWED	pasta mista	85	g
+pasta_fagioli	Pasta e fagioli	primo	primo	ALLOWED	fagioli cotti	180	g
+pasta_fagioli	Pasta e fagioli	primo	primo	ALLOWED	pomodoro	60	g
+pasta_fagioli	Pasta e fagioli	primo	primo	ALLOWED	aglio	0.5	spicchio
+pasta_fagioli	Pasta e fagioli	primo	primo	ALLOWED	olio extravergine di oliva	12	ml
+pasta_ceci	Pasta e ceci	primo	primo	ALLOWED	pasta mista	85	g
+pasta_ceci	Pasta e ceci	primo	primo	ALLOWED	ceci cotti	180	g
+pasta_ceci	Pasta e ceci	primo	primo	ALLOWED	aglio	0.5	spicchio
+pasta_ceci	Pasta e ceci	primo	primo	ALLOWED	olio extravergine di oliva	12	ml
+pasta_ceci	Pasta e ceci	primo	primo	ALLOWED	rosmarino	1	g
+pasta_piselli	Pasta e piselli	primo	primo	ALLOWED	pasta corta	85	g
+pasta_piselli	Pasta e piselli	primo	primo	ALLOWED	piselli	180	g
+pasta_piselli	Pasta e piselli	primo	primo	ALLOWED	cipolla	30	g
+pasta_piselli	Pasta e piselli	primo	primo	ALLOWED	olio extravergine di oliva	12	ml
+pasta_zucca	Pasta e zucca	primo	primo	ALLOWED	pasta mista	85	g
+pasta_zucca	Pasta e zucca	primo	primo	ALLOWED	zucca	250	g
+pasta_zucca	Pasta e zucca	primo	primo	ALLOWED	aglio	0.5	spicchio
+pasta_zucca	Pasta e zucca	primo	primo	ALLOWED	olio extravergine di oliva	12	ml
+pasta_zucca	Pasta e zucca	primo	primo	ALLOWED	prezzemolo	3	g
+parmigiana_melanzane	Parmigiana di melanzane	piatto_unico	piatto_unico,secondo,contorno	BLOCKED_UNTIL_QUANTITIES_VERIFIED	melanzane	300	g
+parmigiana_melanzane	Parmigiana di melanzane	piatto_unico	piatto_unico,secondo,contorno	BLOCKED_UNTIL_QUANTITIES_VERIFIED	passata di pomodoro	180	g
+parmigiana_melanzane	Parmigiana di melanzane	piatto_unico	piatto_unico,secondo,contorno	BLOCKED_UNTIL_QUANTITIES_VERIFIED	provola o mozzarella	70	g
+parmigiana_melanzane	Parmigiana di melanzane	piatto_unico	piatto_unico,secondo,contorno	BLOCKED_UNTIL_QUANTITIES_VERIFIED	formaggio grattugiato	20	g
+parmigiana_melanzane	Parmigiana di melanzane	piatto_unico	piatto_unico,secondo,contorno	BLOCKED_UNTIL_QUANTITIES_VERIFIED	olio	20	ml
+parmigiana_melanzane	Parmigiana di melanzane	piatto_unico	piatto_unico,secondo,contorno	BLOCKED_UNTIL_QUANTITIES_VERIFIED	basilico		g
+zucchine_scapece	Zucchine alla scapece	contorno	contorno	ALLOWED	zucchine	250	g
+zucchine_scapece	Zucchine alla scapece	contorno	contorno	ALLOWED	olio	20	ml
+zucchine_scapece	Zucchine alla scapece	contorno	contorno	ALLOWED	aceto	10	ml
+zucchine_scapece	Zucchine alla scapece	contorno	contorno	ALLOWED	aglio	0.5	spicchio
+zucchine_scapece	Zucchine alla scapece	contorno	contorno	ALLOWED	menta	2	g
+melanzane_funghetto	Melanzane a funghetto	contorno	contorno	ALLOWED	melanzane	250	g
+melanzane_funghetto	Melanzane a funghetto	contorno	contorno	ALLOWED	pomodorini	120	g
+melanzane_funghetto	Melanzane a funghetto	contorno	contorno	ALLOWED	olio	18	ml
+melanzane_funghetto	Melanzane a funghetto	contorno	contorno	ALLOWED	aglio	0.5	spicchio
+melanzane_funghetto	Melanzane a funghetto	contorno	contorno	ALLOWED	basilico	2	g
+peperoni_imbottiti	Peperoni imbottiti	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	peperoni	300	g
+peperoni_imbottiti	Peperoni imbottiti	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	pane raffermo	70	g
+peperoni_imbottiti	Peperoni imbottiti	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	olive	20	g
+peperoni_imbottiti	Peperoni imbottiti	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	capperi	8	g
+peperoni_imbottiti	Peperoni imbottiti	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	acciughe	12	g
+peperoni_imbottiti	Peperoni imbottiti	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	olio	12	ml
+scarola_imbottita	Scarola imbottita	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	scarola	250	g
+scarola_imbottita	Scarola imbottita	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	olive	20	g
+scarola_imbottita	Scarola imbottita	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	capperi	8	g
+scarola_imbottita	Scarola imbottita	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	acciughe	12	g
+scarola_imbottita	Scarola imbottita	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	pangrattato	35	g
+salsiccia_friarielli	Salsiccia e friarielli	secondo	secondo	ALLOWED	salsiccia	180	g
+salsiccia_friarielli	Salsiccia e friarielli	secondo	secondo	ALLOWED	friarielli	250	g
+salsiccia_friarielli	Salsiccia e friarielli	secondo	secondo	ALLOWED	aglio	0.5	spicchio
+salsiccia_friarielli	Salsiccia e friarielli	secondo	secondo	ALLOWED	olio	12	ml
+polpette_sugo	Polpette al sugo	secondo	secondo	ALLOWED	carne macinata	170	g
+polpette_sugo	Polpette al sugo	secondo	secondo	ALLOWED	pane	50	g
+polpette_sugo	Polpette al sugo	secondo	secondo	ALLOWED	uova	0.5	pz
+polpette_sugo	Polpette al sugo	secondo	secondo	ALLOWED	formaggio grattugiato	15	g
+polpette_sugo	Polpette al sugo	secondo	secondo	ALLOWED	passata di pomodoro	200	g
+coniglio_ischitana	Coniglio all'ischitana	secondo	secondo	ALLOWED	coniglio	250	g
+coniglio_ischitana	Coniglio all'ischitana	secondo	secondo	ALLOWED	pomodorini	120	g
+coniglio_ischitana	Coniglio all'ischitana	secondo	secondo	ALLOWED	aglio	0.5	spicchio
+coniglio_ischitana	Coniglio all'ischitana	secondo	secondo	ALLOWED	vino bianco	30	ml
+coniglio_ischitana	Coniglio all'ischitana	secondo	secondo	ALLOWED	olio	15	ml
+alici_indorate	Alici indorate e fritte	secondo	secondo	ALLOWED	alici fresche	220	g
+alici_indorate	Alici indorate e fritte	secondo	secondo	ALLOWED	uova	0.5	pz
+alici_indorate	Alici indorate e fritte	secondo	secondo	ALLOWED	farina	30	g
+alici_indorate	Alici indorate e fritte	secondo	secondo	ALLOWED	olio per friggere	30	ml
+polpo_luciana	Polpo alla luciana	secondo	secondo	ALLOWED	polpo	250	g
+polpo_luciana	Polpo alla luciana	secondo	secondo	ALLOWED	pomodorini	150	g
+polpo_luciana	Polpo alla luciana	secondo	secondo	ALLOWED	olive	20	g
+polpo_luciana	Polpo alla luciana	secondo	secondo	ALLOWED	capperi	8	g
+polpo_luciana	Polpo alla luciana	secondo	secondo	ALLOWED	olio	12	ml
+impepata_cozze	Impepata di cozze	secondo	secondo	ALLOWED	cozze	500	g
+impepata_cozze	Impepata di cozze	secondo	secondo	ALLOWED	pepe nero	1	g
+impepata_cozze	Impepata di cozze	secondo	secondo	ALLOWED	prezzemolo	3	g
+mozzarella_carrozza	Mozzarella in carrozza	piatto_unico	piatto_unico,secondo	BLOCKED_UNTIL_VARIANT_SELECTED	pane	100	g
+mozzarella_carrozza	Mozzarella in carrozza	piatto_unico	piatto_unico,secondo	BLOCKED_UNTIL_VARIANT_SELECTED	mozzarella	100	g
+mozzarella_carrozza	Mozzarella in carrozza	piatto_unico	piatto_unico,secondo	BLOCKED_UNTIL_VARIANT_SELECTED	uova	0.5	pz
+mozzarella_carrozza	Mozzarella in carrozza	piatto_unico	piatto_unico,secondo	BLOCKED_UNTIL_VARIANT_SELECTED	farina	20	g
+mozzarella_carrozza	Mozzarella in carrozza	piatto_unico	piatto_unico,secondo	BLOCKED_UNTIL_VARIANT_SELECTED	olio per friggere	25	ml
+pizza_scarola	Pizza di scarola	piatto_unico	piatto_unico	BLOCKED_UNTIL_QUANTITIES_VERIFIED	impasto pizza	180	g
+pizza_scarola	Pizza di scarola	piatto_unico	piatto_unico	BLOCKED_UNTIL_QUANTITIES_VERIFIED	scarola	180	g
+pizza_scarola	Pizza di scarola	piatto_unico	piatto_unico	BLOCKED_UNTIL_QUANTITIES_VERIFIED	olive	20	g
+pizza_scarola	Pizza di scarola	piatto_unico	piatto_unico	BLOCKED_UNTIL_QUANTITIES_VERIFIED	capperi	8	g
+pizza_scarola	Pizza di scarola	piatto_unico	piatto_unico	BLOCKED_UNTIL_QUANTITIES_VERIFIED	acciughe	10	g
+pizza_scarola	Pizza di scarola	piatto_unico	piatto_unico	BLOCKED_UNTIL_QUANTITIES_VERIFIED	aglio		g
+pizza_scarola	Pizza di scarola	piatto_unico	piatto_unico	BLOCKED_UNTIL_QUANTITIES_VERIFIED	peperoncino		g
+spaghetti_colatura	Spaghetti con colatura di alici di Cetara	primo	primo	ALLOWED	spaghetti	90	g
+spaghetti_colatura	Spaghetti con colatura di alici di Cetara	primo	primo	ALLOWED	colatura di alici	10	ml
+spaghetti_colatura	Spaghetti con colatura di alici di Cetara	primo	primo	ALLOWED	olio extravergine di oliva	12	ml
+spaghetti_colatura	Spaghetti con colatura di alici di Cetara	primo	primo	ALLOWED	aglio	0.5	spicchio
+spaghetti_colatura	Spaghetti con colatura di alici di Cetara	primo	primo	ALLOWED	prezzemolo	3	g
+scialatielli_frutti_mare	Scialatielli ai frutti di mare	primo	primo	ALLOWED	scialatielli	110	g
+scialatielli_frutti_mare	Scialatielli ai frutti di mare	primo	primo	ALLOWED	frutti di mare misti	250	g
+scialatielli_frutti_mare	Scialatielli ai frutti di mare	primo	primo	ALLOWED	pomodorini	120	g
+scialatielli_frutti_mare	Scialatielli ai frutti di mare	primo	primo	ALLOWED	aglio	0.5	spicchio
+scialatielli_frutti_mare	Scialatielli ai frutti di mare	primo	primo	ALLOWED	olio	12	ml
+spaghetti_aglio_olio	Spaghetti aglio, olio e peperoncino	primo	primo	ALLOWED	spaghetti	90	g
+spaghetti_aglio_olio	Spaghetti aglio, olio e peperoncino	primo	primo	ALLOWED	aglio	0.7	spicchio
+spaghetti_aglio_olio	Spaghetti aglio, olio e peperoncino	primo	primo	ALLOWED	olio extravergine di oliva	15	ml
+spaghetti_aglio_olio	Spaghetti aglio, olio e peperoncino	primo	primo	ALLOWED	peperoncino	0.5	g
+spaghetti_aglio_olio	Spaghetti aglio, olio e peperoncino	primo	primo	ALLOWED	prezzemolo	3	g
+pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		ziti	80.0	g
+pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		cipolle dorate	250.0	g
+pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		polpa di manzo	200.0	g
+pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		vino bianco secco	25.0	g
+pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		sedano	15.0	g
+pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		carota	15.0	g
+pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		alloro		
+pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		prezzemolo		
+pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		parmigiano o caciocavallo		
+pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		olio extravergine di oliva		
+pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		sale		
+pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		pepe nero		
+ragu_napoletano_v29	Ragù	primo	primo		costine di maiale	125.0	g
+ragu_napoletano_v29	Ragù	primo	primo		cipolla bianca	0.25	pz
+ragu_napoletano_v29	Ragù	primo	primo		pomodori San Marzano pelati	250.0	g
+ragu_napoletano_v29	Ragù	primo	primo		peperoncino	0.25	pz
+ragu_napoletano_v29	Ragù	primo	primo		alloro	0.25	foglia
+ragu_napoletano_v29	Ragù	primo	primo		vino rosso	25.0	ml
+ragu_napoletano_v29	Ragù	primo	primo		olio extravergine di oliva		
+ragu_napoletano_v29	Ragù	primo	primo		sale		
+ragu_napoletano_v29	Ragù	primo	primo		pepe		
+gatto_patate_napoletano_v29	Gattò di patate	piatto_unico	secondo,contorno		patate a pasta gialla	375.0	g
+gatto_patate_napoletano_v29	Gattò di patate	piatto_unico	secondo,contorno		uova	0.75	pz
+gatto_patate_napoletano_v29	Gattò di patate	piatto_unico	secondo,contorno		provola fresca o fiordilatte	50.0	g
+gatto_patate_napoletano_v29	Gattò di patate	piatto_unico	secondo,contorno		salame napoletano	62.5	g
+gatto_patate_napoletano_v29	Gattò di patate	piatto_unico	secondo,contorno		pecorino	12.5	g
+gatto_patate_napoletano_v29	Gattò di patate	piatto_unico	secondo,contorno		parmigiano reggiano	25.0	g
+gatto_patate_napoletano_v29	Gattò di patate	piatto_unico	secondo,contorno		latte intero	25.0	g
+gatto_patate_napoletano_v29	Gattò di patate	piatto_unico	secondo,contorno		pangrattato		
+gatto_patate_napoletano_v29	Gattò di patate	piatto_unico	secondo,contorno		burro		
+gatto_patate_napoletano_v29	Gattò di patate	piatto_unico	secondo,contorno		sale		
+gatto_patate_napoletano_v29	Gattò di patate	piatto_unico	secondo,contorno		pepe		
+spigola_acqua_pazza_v29	Spigola all'acqua pazza	secondo	secondo		tranci di spigola	120.0	g
+spigola_acqua_pazza_v29	Spigola all'acqua pazza	secondo	secondo		pomodorini del Piennolo	50.0	g
+spigola_acqua_pazza_v29	Spigola all'acqua pazza	secondo	secondo		vino bianco secco	50.0	g
+spigola_acqua_pazza_v29	Spigola all'acqua pazza	secondo	secondo		aglio	25.0	g
+spigola_acqua_pazza_v29	Spigola all'acqua pazza	secondo	secondo		finocchio	25.0	g
+spigola_acqua_pazza_v29	Spigola all'acqua pazza	secondo	secondo		sedano	25.0	g
+spigola_acqua_pazza_v29	Spigola all'acqua pazza	secondo	secondo		prezzemolo	25.0	g
+spigola_acqua_pazza_v29	Spigola all'acqua pazza	secondo	secondo		scarola	60.0	g
+spigola_acqua_pazza_v29	Spigola all'acqua pazza	secondo	secondo		filetti di acciuga	0.375	pz
+spigola_acqua_pazza_v29	Spigola all'acqua pazza	secondo	secondo		olio extravergine di oliva		
+spigola_acqua_pazza_v29	Spigola all'acqua pazza	secondo	secondo		sale		
+polpo_ischitana_v29	Polpo all'ischitana	secondo	secondo		polpo verace	200.0	g
+polpo_ischitana_v29	Polpo all'ischitana	secondo	secondo		vino bianco secco	75.0	ml
+polpo_ischitana_v29	Polpo all'ischitana	secondo	secondo		aglio	0.25	spicchio
+polpo_ischitana_v29	Polpo all'ischitana	secondo	secondo		olio extravergine di oliva		
+polpo_ischitana_v29	Polpo all'ischitana	secondo	secondo		prezzemolo fresco		
+polpo_ischitana_v29	Polpo all'ischitana	secondo	secondo		peperoncino essiccato		
+polpo_ischitana_v29	Polpo all'ischitana	secondo	secondo		sale		
+crocche_patate_napoletani_v29	Crocchè di patate	contorno	contorno		patate a pasta gialla	250.0	g
+crocche_patate_napoletani_v29	Crocchè di patate	contorno	contorno		tuorli d'uovo	0.75	pz
+crocche_patate_napoletani_v29	Crocchè di patate	contorno	contorno		pecorino romano	25.0	g
+crocche_patate_napoletani_v29	Crocchè di patate	contorno	contorno		parmigiano reggiano	12.5	g
+crocche_patate_napoletani_v29	Crocchè di patate	contorno	contorno		provola affumicata	37.5	g
+crocche_patate_napoletani_v29	Crocchè di patate	contorno	contorno		prezzemolo fresco		
+crocche_patate_napoletani_v29	Crocchè di patate	contorno	contorno		sale		
+crocche_patate_napoletani_v29	Crocchè di patate	contorno	contorno		pepe nero		
+crocche_patate_napoletani_v29	Crocchè di patate	contorno	contorno		pangrattato		
+crocche_patate_napoletani_v29	Crocchè di patate	contorno	contorno		albumi	0.5	pz
+crocche_patate_napoletani_v29	Crocchè di patate	contorno	contorno		olio di semi di arachidi		
+friarielli_padella_v29	Friarielli in padella	contorno	contorno		friarielli	200.0	g
+friarielli_padella_v29	Friarielli in padella	contorno	contorno		aglio	0.5	spicchio
+friarielli_padella_v29	Friarielli in padella	contorno	contorno		peperoncino	0.25	pz
+friarielli_padella_v29	Friarielli in padella	contorno	contorno		olio extravergine di oliva		
+friarielli_padella_v29	Friarielli in padella	contorno	contorno		sale		
+zucchine_trifolate_v29	Zucchine trifolate	contorno	contorno		zucchine medie	1.0	pz
+zucchine_trifolate_v29	Zucchine trifolate	contorno	contorno		aglio	0.25	spicchio
+zucchine_trifolate_v29	Zucchine trifolate	contorno	contorno		olio extravergine di oliva		
+zucchine_trifolate_v29	Zucchine trifolate	contorno	contorno		sale		
+zucchine_trifolate_v29	Zucchine trifolate	contorno	contorno		pepe		
+zucchine_trifolate_v29	Zucchine trifolate	contorno	contorno		prezzemolo fresco		
+finocchi_gratinati_v29	Finocchi gratinati	contorno	contorno		finocchi	250.0	g
+finocchi_gratinati_v29	Finocchi gratinati	contorno	contorno		burro	8.75	g
+finocchi_gratinati_v29	Finocchi gratinati	contorno	contorno		parmigiano grattugiato	8.75	g
+finocchi_gratinati_v29	Finocchi gratinati	contorno	contorno		latte	75.0	g
+finocchi_gratinati_v29	Finocchi gratinati	contorno	contorno		burro per besciamella	7.5	g
+finocchi_gratinati_v29	Finocchi gratinati	contorno	contorno		farina 00	7.5	g
+finocchi_gratinati_v29	Finocchi gratinati	contorno	contorno		sale		
+finocchi_gratinati_v29	Finocchi gratinati	contorno	contorno		noce moscata		
+peperoni_padella_napoletana_v29	Peperoni in padella	contorno	contorno		peperoni di colori diversi	1.5	pz
+peperoni_padella_napoletana_v29	Peperoni in padella	contorno	contorno		filetti di acciuga	0.75	pz
+peperoni_padella_napoletana_v29	Peperoni in padella	contorno	contorno		aglio	0.25	spicchio
+peperoni_padella_napoletana_v29	Peperoni in padella	contorno	contorno		capperi	0.5	cucchiaio
+peperoni_padella_napoletana_v29	Peperoni in padella	contorno	contorno		olive nere	25.0	g
+peperoni_padella_napoletana_v29	Peperoni in padella	contorno	contorno		olio extravergine di oliva	0.75	cucchiaio
+peperoni_padella_napoletana_v29	Peperoni in padella	contorno	contorno		sale		
+peperoni_padella_napoletana_v29	Peperoni in padella	contorno	contorno		basilico		
+melanzane_scapece_v29	Melanzane alla scapece	contorno	contorno		melanzane	0.5	pz
+melanzane_scapece_v29	Melanzane alla scapece	contorno	contorno		aceto di vino bianco	0.75	cucchiaio
+melanzane_scapece_v29	Melanzane alla scapece	contorno	contorno		aglio	0.5	spicchio
+melanzane_scapece_v29	Melanzane alla scapece	contorno	contorno		olio extravergine di oliva		
+melanzane_scapece_v29	Melanzane alla scapece	contorno	contorno		menta fresca		
+melanzane_scapece_v29	Melanzane alla scapece	contorno	contorno		sale		
+melanzane_scapece_v29	Melanzane alla scapece	contorno	contorno		olio di semi per frittura		
+carciofi_napoletana_v29	Carciofi con olive e capperi	contorno	contorno		carciofi	1.25	pz
+carciofi_napoletana_v29	Carciofi con olive e capperi	contorno	contorno		olive nere di Gaeta	30.0	g
+carciofi_napoletana_v29	Carciofi con olive e capperi	contorno	contorno		capperi sotto sale	7.5	g
+carciofi_napoletana_v29	Carciofi con olive e capperi	contorno	contorno		aglio	0.25	spicchio
+carciofi_napoletana_v29	Carciofi con olive e capperi	contorno	contorno		peperoncino	0.25	pz
+carciofi_napoletana_v29	Carciofi con olive e capperi	contorno	contorno		prezzemolo		
+carciofi_napoletana_v29	Carciofi con olive e capperi	contorno	contorno		limone	0.25	pz
+carciofi_napoletana_v29	Carciofi con olive e capperi	contorno	contorno		olio extravergine di oliva	1.5	cucchiaio
+carciofi_napoletana_v29	Carciofi con olive e capperi	contorno	contorno		sale		
+scarola_padella_napoletana_v29	Scarola in padella	contorno	contorno		scarola	0.5	cespo
+scarola_padella_napoletana_v29	Scarola in padella	contorno	contorno		aglio	0.375	spicchio
+scarola_padella_napoletana_v29	Scarola in padella	contorno	contorno		pinoli	7.5	g
+scarola_padella_napoletana_v29	Scarola in padella	contorno	contorno		olive di Gaeta		
+scarola_padella_napoletana_v29	Scarola in padella	contorno	contorno		uva passa		
+scarola_padella_napoletana_v29	Scarola in padella	contorno	contorno		acciughe sott'olio	0.375	filetto
+scarola_padella_napoletana_v29	Scarola in padella	contorno	contorno		olio extravergine di oliva		
+scarola_padella_napoletana_v29	Scarola in padella	contorno	contorno		sale		
+paccheri_gamberi_v30	Paccheri ai gamberi e pomodori	primo	primo	READY_FOR_PRODUCT_MAPPING	paccheri	87.5	g
+paccheri_gamberi_v30	Paccheri ai gamberi e pomodori	primo	primo	READY_FOR_PRODUCT_MAPPING	gamberi	100	g
+paccheri_gamberi_v30	Paccheri ai gamberi e pomodori	primo	primo	READY_FOR_PRODUCT_MAPPING	pomodori	125	g
+paccheri_gamberi_v30	Paccheri ai gamberi e pomodori	primo	primo	READY_FOR_PRODUCT_MAPPING	vino bianco	37.5	ml
+paccheri_gamberi_v30	Paccheri ai gamberi e pomodori	primo	primo	READY_FOR_PRODUCT_MAPPING	cipolla		
+paccheri_gamberi_v30	Paccheri ai gamberi e pomodori	primo	primo	READY_FOR_PRODUCT_MAPPING	origano		
+paccheri_gamberi_v30	Paccheri ai gamberi e pomodori	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+paccheri_gamberi_v30	Paccheri ai gamberi e pomodori	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+paccheri_gamberi_v30	Paccheri ai gamberi e pomodori	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+paccheri_vongole_seppie_v30	Paccheri con vongole e seppie	primo	primo	READY_FOR_PRODUCT_MAPPING	paccheri	87.5	g
+paccheri_vongole_seppie_v30	Paccheri con vongole e seppie	primo	primo	READY_FOR_PRODUCT_MAPPING	vongole	250	g
+paccheri_vongole_seppie_v30	Paccheri con vongole e seppie	primo	primo	READY_FOR_PRODUCT_MAPPING	seppie pulite	30	g
+paccheri_vongole_seppie_v30	Paccheri con vongole e seppie	primo	primo	READY_FOR_PRODUCT_MAPPING	pomodorini		
+paccheri_vongole_seppie_v30	Paccheri con vongole e seppie	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio		
+paccheri_vongole_seppie_v30	Paccheri con vongole e seppie	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+paccheri_vongole_seppie_v30	Paccheri con vongole e seppie	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+paccheri_vongole_seppie_v30	Paccheri con vongole e seppie	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+spaghetti_scoglio_v30	Spaghetti allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	spaghetti	80	g
+spaghetti_scoglio_v30	Spaghetti allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	gamberi	1	pz
+spaghetti_scoglio_v30	Spaghetti allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	scampi	1	pz
+spaghetti_scoglio_v30	Spaghetti allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	calamari	0.5	pz
+spaghetti_scoglio_v30	Spaghetti allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	vongole	50	g
+spaghetti_scoglio_v30	Spaghetti allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	cozze	50	g
+spaghetti_scoglio_v30	Spaghetti allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio	0.25	spicchio
+spaghetti_scoglio_v30	Spaghetti allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	vino bianco	0.25	bicchiere
+spaghetti_scoglio_v30	Spaghetti allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	salsa di pomodoro		
+spaghetti_scoglio_v30	Spaghetti allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+spaghetti_scoglio_v30	Spaghetti allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+spaghetti_scoglio_v30	Spaghetti allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+paccheri_scoglio_v30	Paccheri allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	paccheri	100	g
+paccheri_scoglio_v30	Paccheri allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	vongole veraci	37.5	g
+paccheri_scoglio_v30	Paccheri allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	cozze	37.5	g
+paccheri_scoglio_v30	Paccheri allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	totani	37.5	g
+paccheri_scoglio_v30	Paccheri allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	pomodorini	0.5	pz
+paccheri_scoglio_v30	Paccheri allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio	0.5	spicchio
+paccheri_scoglio_v30	Paccheri allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	0.5	cucchiaio
+paccheri_scoglio_v30	Paccheri allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+paccheri_scoglio_v30	Paccheri allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+paccheri_scoglio_v30	Paccheri allo scoglio	primo	primo	READY_FOR_PRODUCT_MAPPING	pepe		
+linguine_sparnocchie_v30	Linguine con sparnocchie	primo	primo	READY_FOR_PRODUCT_MAPPING	linguine fresche	100	g
+linguine_sparnocchie_v30	Linguine con sparnocchie	primo	primo	READY_FOR_PRODUCT_MAPPING	sparnocchie	250	g
+linguine_sparnocchie_v30	Linguine con sparnocchie	primo	primo	READY_FOR_PRODUCT_MAPPING	pomodori pelati San Marzano	125	g
+linguine_sparnocchie_v30	Linguine con sparnocchie	primo	primo	READY_FOR_PRODUCT_MAPPING	pomodorini del Piennolo	25	g
+linguine_sparnocchie_v30	Linguine con sparnocchie	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio	0.5	spicchio
+linguine_sparnocchie_v30	Linguine con sparnocchie	primo	primo	READY_FOR_PRODUCT_MAPPING	brandy	0.25	bicchiere
+linguine_sparnocchie_v30	Linguine con sparnocchie	primo	primo	READY_FOR_PRODUCT_MAPPING	vino bianco	0.25	bicchiere
+linguine_sparnocchie_v30	Linguine con sparnocchie	primo	primo	READY_FOR_PRODUCT_MAPPING	cipolla ramata	0.25	pz
+linguine_sparnocchie_v30	Linguine con sparnocchie	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	17.5	ml
+linguine_sparnocchie_v30	Linguine con sparnocchie	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+linguine_sparnocchie_v30	Linguine con sparnocchie	primo	primo	READY_FOR_PRODUCT_MAPPING	peperoncino		
+linguine_sparnocchie_v30	Linguine con sparnocchie	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+paccheri_pesce_spada_v30	Paccheri al ragù di pesce spada	primo	primo	READY_FOR_PRODUCT_MAPPING	paccheri	125	g
+paccheri_pesce_spada_v30	Paccheri al ragù di pesce spada	primo	primo	READY_FOR_PRODUCT_MAPPING	pesce spada	50	g
+paccheri_pesce_spada_v30	Paccheri al ragù di pesce spada	primo	primo	READY_FOR_PRODUCT_MAPPING	pomodorini pizzutelli	50	g
+paccheri_pesce_spada_v30	Paccheri al ragù di pesce spada	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	10	ml
+paccheri_pesce_spada_v30	Paccheri al ragù di pesce spada	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio	0.25	spicchio
+paccheri_pesce_spada_v30	Paccheri al ragù di pesce spada	primo	primo	READY_FOR_PRODUCT_MAPPING	farina 00	0.25	cucchiaio
+paccheri_pesce_spada_v30	Paccheri al ragù di pesce spada	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+paccheri_pesce_spada_v30	Paccheri al ragù di pesce spada	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+paccheri_pesce_spada_v30	Paccheri al ragù di pesce spada	primo	primo	READY_FOR_PRODUCT_MAPPING	pepe		
+spaghetti_baccala_olive_v30	Spaghetti con baccalà e olive nere	primo	primo	READY_FOR_PRODUCT_MAPPING	spaghetti	80	g
+spaghetti_baccala_olive_v30	Spaghetti con baccalà e olive nere	primo	primo	READY_FOR_PRODUCT_MAPPING	baccalà ammollato	75	g
+spaghetti_baccala_olive_v30	Spaghetti con baccalà e olive nere	primo	primo	READY_FOR_PRODUCT_MAPPING	broccoli	50	g
+spaghetti_baccala_olive_v30	Spaghetti con baccalà e olive nere	primo	primo	READY_FOR_PRODUCT_MAPPING	olive nere	62.5	g
+spaghetti_baccala_olive_v30	Spaghetti con baccalà e olive nere	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio	0.25	spicchio
+spaghetti_baccala_olive_v30	Spaghetti con baccalà e olive nere	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	1	cucchiaio
+spaghetti_baccala_olive_v30	Spaghetti con baccalà e olive nere	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+spaghetti_baccala_olive_v30	Spaghetti con baccalà e olive nere	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+spaghetti_baccala_olive_v30	Spaghetti con baccalà e olive nere	primo	primo	READY_FOR_PRODUCT_MAPPING	pepe nero		
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	lasagne	150	g
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	frutti di mare misti	125	g
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	gamberi	150	g
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	calamari	100	g
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	seppioline	100	g
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio	0.25	spicchio
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	1	cucchiaio
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	vino bianco Falanghina	0.25	bicchiere
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	latte	125	ml
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	burro	12.5	g
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	farina	12.5	g
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+lasagna_mare_v30	Lasagna di mare	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+pasta_fagioli_cozze_v30	Pasta e fagioli con le cozze	primo	primo	READY_FOR_PRODUCT_MAPPING	pasta mista	62.5	g
+pasta_fagioli_cozze_v30	Pasta e fagioli con le cozze	primo	primo	READY_FOR_PRODUCT_MAPPING	cozze	250	g
+pasta_fagioli_cozze_v30	Pasta e fagioli con le cozze	primo	primo	READY_FOR_PRODUCT_MAPPING	fagioli lessi	62.5	g
+pasta_fagioli_cozze_v30	Pasta e fagioli con le cozze	primo	primo	READY_FOR_PRODUCT_MAPPING	pomodorini	25	g
+pasta_fagioli_cozze_v30	Pasta e fagioli con le cozze	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio	0.5	spicchio
+pasta_fagioli_cozze_v30	Pasta e fagioli con le cozze	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+pasta_fagioli_cozze_v30	Pasta e fagioli con le cozze	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+pasta_fagioli_cozze_v30	Pasta e fagioli con le cozze	primo	primo	READY_FOR_PRODUCT_MAPPING	pepe		
+mezzi_paccheri_tonno_limone_v30	Mezzi paccheri al tonno e limone	primo	primo	READY_FOR_PRODUCT_MAPPING	mezzi paccheri	75	g
+mezzi_paccheri_tonno_limone_v30	Mezzi paccheri al tonno e limone	primo	primo	READY_FOR_PRODUCT_MAPPING	tonno sott'olio sgocciolato	50	g
+mezzi_paccheri_tonno_limone_v30	Mezzi paccheri al tonno e limone	primo	primo	READY_FOR_PRODUCT_MAPPING	olive	17.5	g
+mezzi_paccheri_tonno_limone_v30	Mezzi paccheri al tonno e limone	primo	primo	READY_FOR_PRODUCT_MAPPING	limone	0.25	pz
+mezzi_paccheri_tonno_limone_v30	Mezzi paccheri al tonno e limone	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+mezzi_paccheri_tonno_limone_v30	Mezzi paccheri al tonno e limone	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	20	g
+mezzi_paccheri_tonno_limone_v30	Mezzi paccheri al tonno e limone	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	primo	primo	READY_FOR_PRODUCT_MAPPING	paccheri	50	g
+paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	primo	primo	READY_FOR_PRODUCT_MAPPING	sgombro pulito	50	g
+paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	primo	primo	READY_FOR_PRODUCT_MAPPING	pancarré	12.5	g
+paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	primo	primo	READY_FOR_PRODUCT_MAPPING	peperone rosso	5	g
+paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	primo	primo	READY_FOR_PRODUCT_MAPPING	pomodoro ramato	0.75	pz
+paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	primo	primo	READY_FOR_PRODUCT_MAPPING	cipolla bianca	0.25	pz
+paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	primo	primo	READY_FOR_PRODUCT_MAPPING	grana		
+paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	primo	primo	READY_FOR_PRODUCT_MAPPING	origano		
+paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+paccheri_sgombro_v30	Paccheri gratinati ripieni di sgombro	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+pasta_calamari_gamberi_v30	Linguine con calamari e gamberi	primo	primo	READY_FOR_PRODUCT_MAPPING	linguine	80	g
+pasta_calamari_gamberi_v30	Linguine con calamari e gamberi	primo	primo	READY_FOR_PRODUCT_MAPPING	calamari	87.5	g
+pasta_calamari_gamberi_v30	Linguine con calamari e gamberi	primo	primo	READY_FOR_PRODUCT_MAPPING	gamberi	75	g
+pasta_calamari_gamberi_v30	Linguine con calamari e gamberi	primo	primo	READY_FOR_PRODUCT_MAPPING	pomodorini	125	g
+pasta_calamari_gamberi_v30	Linguine con calamari e gamberi	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio	0.25	spicchio
+pasta_calamari_gamberi_v30	Linguine con calamari e gamberi	primo	primo	READY_FOR_PRODUCT_MAPPING	vino bianco	0.125	bicchiere
+pasta_calamari_gamberi_v30	Linguine con calamari e gamberi	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+pasta_calamari_gamberi_v30	Linguine con calamari e gamberi	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+pasta_calamari_gamberi_v30	Linguine con calamari e gamberi	primo	primo	READY_FOR_PRODUCT_MAPPING	pepe		
+paccheri_calamari_piennolo_v30	Paccheri con calamari e pomodori del Piennolo	primo	primo	READY_FOR_PRODUCT_MAPPING	paccheri	60	g
+paccheri_calamari_piennolo_v30	Paccheri con calamari e pomodori del Piennolo	primo	primo	READY_FOR_PRODUCT_MAPPING	calamari	100	g
+paccheri_calamari_piennolo_v30	Paccheri con calamari e pomodori del Piennolo	primo	primo	READY_FOR_PRODUCT_MAPPING	pomodori del Piennolo	62.5	g
+paccheri_calamari_piennolo_v30	Paccheri con calamari e pomodori del Piennolo	primo	primo	READY_FOR_PRODUCT_MAPPING	peperoncino	0.125	pz
+paccheri_calamari_piennolo_v30	Paccheri con calamari e pomodori del Piennolo	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio		
+paccheri_calamari_piennolo_v30	Paccheri con calamari e pomodori del Piennolo	primo	primo	READY_FOR_PRODUCT_MAPPING	capperi		
+paccheri_calamari_piennolo_v30	Paccheri con calamari e pomodori del Piennolo	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+paccheri_calamari_piennolo_v30	Paccheri con calamari e pomodori del Piennolo	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+scialatielli_limone_colatura_v30	Scialatielli limone e colatura di alici	primo	primo	READY_FOR_PRODUCT_MAPPING	scialatielli freschi	80	g
+scialatielli_limone_colatura_v30	Scialatielli limone e colatura di alici	primo	primo	READY_FOR_PRODUCT_MAPPING	vongole veraci	125	g
+scialatielli_limone_colatura_v30	Scialatielli limone e colatura di alici	primo	primo	READY_FOR_PRODUCT_MAPPING	cozze	125	g
+scialatielli_limone_colatura_v30	Scialatielli limone e colatura di alici	primo	primo	READY_FOR_PRODUCT_MAPPING	gamberi o calamaretti	50	g
+scialatielli_limone_colatura_v30	Scialatielli limone e colatura di alici	primo	primo	READY_FOR_PRODUCT_MAPPING	limone	0.25	pz
+scialatielli_limone_colatura_v30	Scialatielli limone e colatura di alici	primo	primo	READY_FOR_PRODUCT_MAPPING	colatura di alici	0.25	cucchiaio
+scialatielli_limone_colatura_v30	Scialatielli limone e colatura di alici	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio	0.5	spicchio
+scialatielli_limone_colatura_v30	Scialatielli limone e colatura di alici	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+scialatielli_limone_colatura_v30	Scialatielli limone e colatura di alici	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+scialatielli_limone_colatura_v30	Scialatielli limone e colatura di alici	primo	primo	READY_FOR_PRODUCT_MAPPING	pepe		
+spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	primo	primo	READY_FOR_PRODUCT_MAPPING	spaghetti	80	g
+spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	primo	primo	READY_FOR_PRODUCT_MAPPING	moscardini	1	pz
+spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	primo	primo	READY_FOR_PRODUCT_MAPPING	calamaretti	2.5	pz
+spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	primo	primo	READY_FOR_PRODUCT_MAPPING	vongole	2.5	pz
+spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	primo	primo	READY_FOR_PRODUCT_MAPPING	gamberi	2	pz
+spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	primo	primo	READY_FOR_PRODUCT_MAPPING	pomodori maturi	1	pz
+spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio	0.5	spicchio
+spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	primo	primo	READY_FOR_PRODUCT_MAPPING	basilico		
+spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+spaghetti_frutti_cartoccio_v30	Spaghetti ai frutti di mare al cartoccio	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+maccheroni_puveriello_alici_v30	Maccheroni alla puveriello con alici	primo	primo	READY_FOR_PRODUCT_MAPPING	pasta	100	g
+maccheroni_puveriello_alici_v30	Maccheroni alla puveriello con alici	primo	primo	READY_FOR_PRODUCT_MAPPING	pangrattato	25	g
+maccheroni_puveriello_alici_v30	Maccheroni alla puveriello con alici	primo	primo	READY_FOR_PRODUCT_MAPPING	alici sotto sale	0.5	pz
+maccheroni_puveriello_alici_v30	Maccheroni alla puveriello con alici	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio	0.25	spicchio
+maccheroni_puveriello_alici_v30	Maccheroni alla puveriello con alici	primo	primo	READY_FOR_PRODUCT_MAPPING	limone amalfitano	0.25	pz
+maccheroni_puveriello_alici_v30	Maccheroni alla puveriello con alici	primo	primo	READY_FOR_PRODUCT_MAPPING	peperoncino	0.25	pz
+maccheroni_puveriello_alici_v30	Maccheroni alla puveriello con alici	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+maccheroni_puveriello_alici_v30	Maccheroni alla puveriello con alici	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+maccheroni_puveriello_alici_v30	Maccheroni alla puveriello con alici	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+pasta_ragu_tonno_v30	Pasta al ragù di tonno	primo	primo	READY_FOR_PRODUCT_MAPPING	pasta corta	80	g
+pasta_ragu_tonno_v30	Pasta al ragù di tonno	primo	primo	READY_FOR_PRODUCT_MAPPING	tonno fresco	75	g
+pasta_ragu_tonno_v30	Pasta al ragù di tonno	primo	primo	READY_FOR_PRODUCT_MAPPING	pomodorini	50	g
+pasta_ragu_tonno_v30	Pasta al ragù di tonno	primo	primo	READY_FOR_PRODUCT_MAPPING	aglio	0.25	spicchio
+pasta_ragu_tonno_v30	Pasta al ragù di tonno	primo	primo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	12.5	ml
+pasta_ragu_tonno_v30	Pasta al ragù di tonno	primo	primo	READY_FOR_PRODUCT_MAPPING	olive nere	5	g
+pasta_ragu_tonno_v30	Pasta al ragù di tonno	primo	primo	READY_FOR_PRODUCT_MAPPING	capperi	2.5	g
+pasta_ragu_tonno_v30	Pasta al ragù di tonno	primo	primo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+pasta_ragu_tonno_v30	Pasta al ragù di tonno	primo	primo	READY_FOR_PRODUCT_MAPPING	sale		
+pasta_ragu_tonno_v30	Pasta al ragù di tonno	primo	primo	READY_FOR_PRODUCT_MAPPING	pepe		
+bistecche_pizzaiola_v30	Bistecche alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	fettine di scamone di manzo	100	g
+bistecche_pizzaiola_v30	Bistecche alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	passata di pomodoro	50	g
+bistecche_pizzaiola_v30	Bistecche alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	aglio	0.25	spicchio
+bistecche_pizzaiola_v30	Bistecche alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	0.5	cucchiaio
+bistecche_pizzaiola_v30	Bistecche alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	origano		
+bistecche_pizzaiola_v30	Bistecche alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	sale		
+bistecche_pizzaiola_v30	Bistecche alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	pepe		
+braciole_maiale_napoletane_v30	Braciole di maiale	secondo	secondo	READY_FOR_PRODUCT_MAPPING	lonza di maiale a fette	150	g
+braciole_maiale_napoletane_v30	Braciole di maiale	secondo	secondo	READY_FOR_PRODUCT_MAPPING	prosciutto crudo	16.7	g
+braciole_maiale_napoletane_v30	Braciole di maiale	secondo	secondo	READY_FOR_PRODUCT_MAPPING	uvetta	8.3	g
+braciole_maiale_napoletane_v30	Braciole di maiale	secondo	secondo	READY_FOR_PRODUCT_MAPPING	capperi	8.3	g
+braciole_maiale_napoletane_v30	Braciole di maiale	secondo	secondo	READY_FOR_PRODUCT_MAPPING	passata di pomodoro	8.3	g
+braciole_maiale_napoletane_v30	Braciole di maiale	secondo	secondo	READY_FOR_PRODUCT_MAPPING	pinoli	5	g
+braciole_maiale_napoletane_v30	Braciole di maiale	secondo	secondo	READY_FOR_PRODUCT_MAPPING	pangrattato		
+braciole_maiale_napoletane_v30	Braciole di maiale	secondo	secondo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+braciole_maiale_napoletane_v30	Braciole di maiale	secondo	secondo	READY_FOR_PRODUCT_MAPPING	sale		
+fettine_vitello_olive_pizzaiola_v30	Fettine di vitello e olive alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	fettine di vitello	150	g
+fettine_vitello_olive_pizzaiola_v30	Fettine di vitello e olive alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	salsa di pomodoro	150	g
+fettine_vitello_olive_pizzaiola_v30	Fettine di vitello e olive alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	olive verdi	10	g
+fettine_vitello_olive_pizzaiola_v30	Fettine di vitello e olive alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	10	g
+fettine_vitello_olive_pizzaiola_v30	Fettine di vitello e olive alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	farina	0.25	cucchiaio
+fettine_vitello_olive_pizzaiola_v30	Fettine di vitello e olive alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	origano		
+fettine_vitello_olive_pizzaiola_v30	Fettine di vitello e olive alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	sale		
+fettine_vitello_olive_pizzaiola_v30	Fettine di vitello e olive alla pizzaiola	secondo	secondo	READY_FOR_PRODUCT_MAPPING	pepe		
+agnello_forno_patate_v30	Agnello al forno con patate	secondo	secondo	READY_FOR_PRODUCT_MAPPING	agnello	250	g
+agnello_forno_patate_v30	Agnello al forno con patate	secondo	secondo	READY_FOR_PRODUCT_MAPPING	patate	200	g
+agnello_forno_patate_v30	Agnello al forno con patate	secondo	secondo	READY_FOR_PRODUCT_MAPPING	aglio	0.5	spicchio
+agnello_forno_patate_v30	Agnello al forno con patate	secondo	secondo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	12.5	ml
+agnello_forno_patate_v30	Agnello al forno con patate	secondo	secondo	READY_FOR_PRODUCT_MAPPING	vino bianco	0.25	bicchiere
+agnello_forno_patate_v30	Agnello al forno con patate	secondo	secondo	READY_FOR_PRODUCT_MAPPING	limone	0.25	pz
+agnello_forno_patate_v30	Agnello al forno con patate	secondo	secondo	READY_FOR_PRODUCT_MAPPING	cipolla	0.25	pz
+agnello_forno_patate_v30	Agnello al forno con patate	secondo	secondo	READY_FOR_PRODUCT_MAPPING	rosmarino		
+agnello_forno_patate_v30	Agnello al forno con patate	secondo	secondo	READY_FOR_PRODUCT_MAPPING	sale		
+agnello_forno_patate_v30	Agnello al forno con patate	secondo	secondo	READY_FOR_PRODUCT_MAPPING	pepe		
+salsiccia_patate_v30	Salsiccia con patate al forno	secondo	secondo	READY_FOR_PRODUCT_MAPPING	salsiccia	100	g
+salsiccia_patate_v30	Salsiccia con patate al forno	secondo	secondo	READY_FOR_PRODUCT_MAPPING	patate	100	g
+salsiccia_patate_v30	Salsiccia con patate al forno	secondo	secondo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+salsiccia_patate_v30	Salsiccia con patate al forno	secondo	secondo	READY_FOR_PRODUCT_MAPPING	rosmarino		
+salsiccia_patate_v30	Salsiccia con patate al forno	secondo	secondo	READY_FOR_PRODUCT_MAPPING	sale		
+fettine_lonza_limone_v30	Fettine di lonza al limone	secondo	secondo	READY_FOR_PRODUCT_MAPPING	fettine di lonza	100	g
+fettine_lonza_limone_v30	Fettine di lonza al limone	secondo	secondo	READY_FOR_PRODUCT_MAPPING	burro	12.5	g
+fettine_lonza_limone_v30	Fettine di lonza al limone	secondo	secondo	READY_FOR_PRODUCT_MAPPING	limone	0.25	pz
+fettine_lonza_limone_v30	Fettine di lonza al limone	secondo	secondo	READY_FOR_PRODUCT_MAPPING	farina		
+fettine_lonza_limone_v30	Fettine di lonza al limone	secondo	secondo	READY_FOR_PRODUCT_MAPPING	sale		
+fettine_lonza_limone_v30	Fettine di lonza al limone	secondo	secondo	READY_FOR_PRODUCT_MAPPING	pepe		
+costoletta_maiale_piastra_v30	Costoletta di maiale alla piastra	secondo	secondo	READY_FOR_PRODUCT_MAPPING	costoletta di maiale	180	g
+costoletta_maiale_piastra_v30	Costoletta di maiale alla piastra	secondo	secondo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	5	ml
+costoletta_maiale_piastra_v30	Costoletta di maiale alla piastra	secondo	secondo	READY_FOR_PRODUCT_MAPPING	rosmarino		
+costoletta_maiale_piastra_v30	Costoletta di maiale alla piastra	secondo	secondo	READY_FOR_PRODUCT_MAPPING	sale		
+costoletta_maiale_piastra_v30	Costoletta di maiale alla piastra	secondo	secondo	READY_FOR_PRODUCT_MAPPING	pepe		
+fettina_manzo_piastra_v30	Fettina di manzo alla piastra	secondo	secondo	READY_FOR_PRODUCT_MAPPING	fettina di manzo	150	g
+fettina_manzo_piastra_v30	Fettina di manzo alla piastra	secondo	secondo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	5	ml
+fettina_manzo_piastra_v30	Fettina di manzo alla piastra	secondo	secondo	READY_FOR_PRODUCT_MAPPING	sale		
+fettina_manzo_piastra_v30	Fettina di manzo alla piastra	secondo	secondo	READY_FOR_PRODUCT_MAPPING	pepe		
+involtini_vitello_napoletani_v30	Involtini di vitello	secondo	secondo	READY_FOR_PRODUCT_MAPPING	fettine di vitello	150	g
+involtini_vitello_napoletani_v30	Involtini di vitello	secondo	secondo	READY_FOR_PRODUCT_MAPPING	pecorino	25	g
+involtini_vitello_napoletani_v30	Involtini di vitello	secondo	secondo	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+involtini_vitello_napoletani_v30	Involtini di vitello	secondo	secondo	READY_FOR_PRODUCT_MAPPING	aglio	0.25	spicchio
+involtini_vitello_napoletani_v30	Involtini di vitello	secondo	secondo	READY_FOR_PRODUCT_MAPPING	passata di pomodoro	100	g
+involtini_vitello_napoletani_v30	Involtini di vitello	secondo	secondo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva		
+involtini_vitello_napoletani_v30	Involtini di vitello	secondo	secondo	READY_FOR_PRODUCT_MAPPING	sale		
+involtini_vitello_napoletani_v30	Involtini di vitello	secondo	secondo	READY_FOR_PRODUCT_MAPPING	pepe		
+patate_forno_rosmarino_v30	Patate al forno al rosmarino	contorno	contorno	READY_FOR_PRODUCT_MAPPING	patate	250	g
+patate_forno_rosmarino_v30	Patate al forno al rosmarino	contorno	contorno	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	10	ml
+patate_forno_rosmarino_v30	Patate al forno al rosmarino	contorno	contorno	READY_FOR_PRODUCT_MAPPING	rosmarino		
+patate_forno_rosmarino_v30	Patate al forno al rosmarino	contorno	contorno	READY_FOR_PRODUCT_MAPPING	sale		
+insalata_pomodoro_cipolla_v30	Insalata di pomodori e cipolla	contorno	contorno	READY_FOR_PRODUCT_MAPPING	pomodori	200	g
+insalata_pomodoro_cipolla_v30	Insalata di pomodori e cipolla	contorno	contorno	READY_FOR_PRODUCT_MAPPING	cipolla	0.25	pz
+insalata_pomodoro_cipolla_v30	Insalata di pomodori e cipolla	contorno	contorno	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	10	ml
+insalata_pomodoro_cipolla_v30	Insalata di pomodori e cipolla	contorno	contorno	READY_FOR_PRODUCT_MAPPING	basilico		
+insalata_pomodoro_cipolla_v30	Insalata di pomodori e cipolla	contorno	contorno	READY_FOR_PRODUCT_MAPPING	sale		
+broccoli_aglio_olio_v30	Broccoli saltati con aglio e olio	contorno	contorno	READY_FOR_PRODUCT_MAPPING	broccoli	250	g
+broccoli_aglio_olio_v30	Broccoli saltati con aglio e olio	contorno	contorno	READY_FOR_PRODUCT_MAPPING	aglio	0.25	spicchio
+broccoli_aglio_olio_v30	Broccoli saltati con aglio e olio	contorno	contorno	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	10	ml
+broccoli_aglio_olio_v30	Broccoli saltati con aglio e olio	contorno	contorno	READY_FOR_PRODUCT_MAPPING	sale		
+broccoli_aglio_olio_v30	Broccoli saltati con aglio e olio	contorno	contorno	READY_FOR_PRODUCT_MAPPING	peperoncino		
+verdure_grigliate_v30	Verdure grigliate miste	contorno	contorno	READY_FOR_PRODUCT_MAPPING	zucchine	100	g
+verdure_grigliate_v30	Verdure grigliate miste	contorno	contorno	READY_FOR_PRODUCT_MAPPING	melanzane	100	g
+verdure_grigliate_v30	Verdure grigliate miste	contorno	contorno	READY_FOR_PRODUCT_MAPPING	peperoni	100	g
+verdure_grigliate_v30	Verdure grigliate miste	contorno	contorno	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	10	ml
+verdure_grigliate_v30	Verdure grigliate miste	contorno	contorno	READY_FOR_PRODUCT_MAPPING	sale		
+verdure_grigliate_v30	Verdure grigliate miste	contorno	contorno	READY_FOR_PRODUCT_MAPPING	prezzemolo		
+cicoria_ripassata_v30	Cicoria ripassata in padella	contorno	contorno	READY_FOR_PRODUCT_MAPPING	cicoria	250	g
+cicoria_ripassata_v30	Cicoria ripassata in padella	contorno	contorno	READY_FOR_PRODUCT_MAPPING	aglio	0.25	spicchio
+cicoria_ripassata_v30	Cicoria ripassata in padella	contorno	contorno	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	10	ml
+cicoria_ripassata_v30	Cicoria ripassata in padella	contorno	contorno	READY_FOR_PRODUCT_MAPPING	peperoncino		
+cicoria_ripassata_v30	Cicoria ripassata in padella	contorno	contorno	READY_FOR_PRODUCT_MAPPING	sale		
+fagioli_scarole_v30	Fagioli e scarole	contorno	contorno,secondo	READY_FOR_PRODUCT_MAPPING	scarola	150	g
+fagioli_scarole_v30	Fagioli e scarole	contorno	contorno,secondo	READY_FOR_PRODUCT_MAPPING	fagioli cannellini cotti	150	g
+fagioli_scarole_v30	Fagioli e scarole	contorno	contorno,secondo	READY_FOR_PRODUCT_MAPPING	aglio	0.25	spicchio
+fagioli_scarole_v30	Fagioli e scarole	contorno	contorno,secondo	READY_FOR_PRODUCT_MAPPING	olio extravergine di oliva	10	ml
+fagioli_scarole_v30	Fagioli e scarole	contorno	contorno,secondo	READY_FOR_PRODUCT_MAPPING	sale		
+fagioli_scarole_v30	Fagioli e scarole	contorno	contorno,secondo	READY_FOR_PRODUCT_MAPPING	peperoncino		
+torta_caprese_v31	Torta caprese	dolce	dolce		uova	0.5	pz
+torta_caprese_v31	Torta caprese	dolce	dolce		zucchero bianco	18.75	g
+torta_caprese_v31	Torta caprese	dolce	dolce		burro	18.75	g
+torta_caprese_v31	Torta caprese	dolce	dolce		mandorle spellate	25.0	g
+torta_caprese_v31	Torta caprese	dolce	dolce		cioccolato fondente	31.25	g
+torta_caprese_v31	Torta caprese	dolce	dolce		zucchero a velo		
+sartu_riso_v29	Sartù di riso	primo	primo		riso	100.0	g
+sartu_riso_v29	Sartù di riso	primo	primo		passata di pomodoro	175.0	ml
+sartu_riso_v29	Sartù di riso	primo	primo		salsicce	1.0	pz
+sartu_riso_v29	Sartù di riso	primo	primo		prosciutto cotto	12.5	g
+sartu_riso_v29	Sartù di riso	primo	primo		piselli	50.0	g
+sartu_riso_v29	Sartù di riso	primo	primo		uova	1.0	pz
+sartu_riso_v29	Sartù di riso	primo	primo		brodo vegetale	250.0	ml
+sartu_riso_v29	Sartù di riso	primo	primo		parmigiano reggiano	50.0	g
+sartu_riso_v29	Sartù di riso	primo	primo		mozzarella di bufala	37.5	g
+sartu_riso_v29	Sartù di riso	primo	primo		carne trita di manzo	50.0	g
+sartu_riso_v29	Sartù di riso	primo	primo		mollica di pane	20.0	g
+sartu_riso_v29	Sartù di riso	primo	primo		cipolla	0.375	pz
+sartu_riso_v29	Sartù di riso	primo	primo		vino bianco	0.125	bicchiere
+sartu_riso_v29	Sartù di riso	primo	primo		pangrattato		
+sartu_riso_v29	Sartù di riso	primo	primo		burro		
+sartu_riso_v29	Sartù di riso	primo	primo		latte		
+sartu_riso_v29	Sartù di riso	primo	primo		sale		
+sartu_riso_v29	Sartù di riso	primo	primo		pepe		
+insalata_caprese	Insalata caprese	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	pomodori	250	g
+insalata_caprese	Insalata caprese	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	mozzarella	150	g
+insalata_caprese	Insalata caprese	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	olio extravergine di oliva	12	ml
+insalata_caprese	Insalata caprese	piatto_unico	piatto_unico,secondo,contorno	ALLOWED	basilico	3	g
+pasta_lenticchie_napoletana_v57	Pasta e lenticchie	primo	primo	ALLOWED	pasta corta	60	g
+pasta_lenticchie_napoletana_v57	Pasta e lenticchie	primo	primo	ALLOWED	lenticchie	50	g
+pasta_lenticchie_napoletana_v57	Pasta e lenticchie	primo	primo	ALLOWED	pomodori pelati	75	g
+pasta_lenticchie_napoletana_v57	Pasta e lenticchie	primo	primo	ALLOWED	sedano	25	g
+pasta_lenticchie_napoletana_v57	Pasta e lenticchie	primo	primo	ALLOWED	cipolla	25	g
+pasta_lenticchie_napoletana_v57	Pasta e lenticchie	primo	primo	ALLOWED	aglio	0.5	pz
+pasta_cavolfiore_napoletana_v57	Pasta e cavolfiore	primo	primo	ALLOWED	pasta corta	80	g
+pasta_cavolfiore_napoletana_v57	Pasta e cavolfiore	primo	primo	ALLOWED	cavolfiore	125	g
+pasta_cavolfiore_napoletana_v57	Pasta e cavolfiore	primo	primo	ALLOWED	aglio	0.25	pz
+vermicelli_vesuviana_v57	Spaghetti alla vesuviana	primo	primo	ALLOWED	spaghetti	100	g
+vermicelli_vesuviana_v57	Spaghetti alla vesuviana	primo	primo	ALLOWED	pomodori pelati	250	g
+vermicelli_vesuviana_v57	Spaghetti alla vesuviana	primo	primo	ALLOWED	aglio	0.5	pz
+vermicelli_vesuviana_v57	Spaghetti alla vesuviana	primo	primo	ALLOWED	olive verdi	37.5	g
+vermicelli_vesuviana_v57	Spaghetti alla vesuviana	primo	primo	ALLOWED	capperi	12.5	g
+vermicelli_vesuviana_v57	Spaghetti alla vesuviana	primo	primo	ALLOWED	olio extravergine di oliva	7.5	ml
+spaghetti_fagiolini_casertana_v57	Spaghetti con fagiolini	primo	primo	ALLOWED	spaghetti	75	g
+spaghetti_fagiolini_casertana_v57	Spaghetti con fagiolini	primo	primo	ALLOWED	fagiolini	100	g
+spaghetti_fagiolini_casertana_v57	Spaghetti con fagiolini	primo	primo	ALLOWED	aglio	0.25	pz
+spaghetti_fagiolini_casertana_v57	Spaghetti con fagiolini	primo	primo	ALLOWED	parmigiano		g
+alici_tortiera_v57	Alici in tortiera	secondo	secondo	ALLOWED	alici fresche	200	g
+alici_tortiera_v57	Alici in tortiera	secondo	secondo	ALLOWED	aglio	1	pz
+alici_tortiera_v57	Alici in tortiera	secondo	secondo	ALLOWED	pangrattato		g
+provola_pizzaiola_v57	Provola alla pizzaiola	secondo	secondo	ALLOWED	provola	150	g
+provola_pizzaiola_v57	Provola alla pizzaiola	secondo	secondo	ALLOWED	pomodorini	100	g
+provola_pizzaiola_v57	Provola alla pizzaiola	secondo	secondo	ALLOWED	aglio	0.25	pz
+provola_pizzaiola_v57	Provola alla pizzaiola	secondo	secondo	ALLOWED	olive nere	12.5	g
+trippa_napoletana_v57	Trippa	secondo	secondo	ALLOWED	trippa	200	g
+trippa_napoletana_v57	Trippa	secondo	secondo	ALLOWED	carota	0.25	pz
+trippa_napoletana_v57	Trippa	secondo	secondo	ALLOWED	cipolla	0.25	pz
+trippa_napoletana_v57	Trippa	secondo	secondo	ALLOWED	patate	0.25	pz
+trippa_napoletana_v57	Trippa	secondo	secondo	ALLOWED	aglio	0.25	pz
+trippa_napoletana_v57	Trippa	secondo	secondo	ALLOWED	limone	0.5	pz
+polpette_melanzane_napoletane_v57	Polpette di melanzane	secondo	secondo	ALLOWED	melanzane	150	g
+polpette_melanzane_napoletane_v57	Polpette di melanzane	secondo	secondo	ALLOWED	uova	0.5	pz
+polpette_melanzane_napoletane_v57	Polpette di melanzane	secondo	secondo	ALLOWED	pangrattato	30	g
+polpette_melanzane_napoletane_v57	Polpette di melanzane	secondo	secondo	ALLOWED	parmigiano	15	g
+fagioli_maruzzara_v57	Fagioli alla maruzzara	secondo	secondo	ALLOWED	fagioli cannellini cotti	100	g
+fagioli_maruzzara_v57	Fagioli alla maruzzara	secondo	secondo	ALLOWED	pomodorini	62.5	g
+fagioli_maruzzara_v57	Fagioli alla maruzzara	secondo	secondo	ALLOWED	sedano	0.5	pz
+fagioli_maruzzara_v57	Fagioli alla maruzzara	secondo	secondo	ALLOWED	aglio	0.5	pz
+polpettone_tonno_casertano_v57	Polpettone di tonno	secondo	secondo	ALLOWED	tonno sott olio sgocciolato	40	g
+polpettone_tonno_casertano_v57	Polpettone di tonno	secondo	secondo	ALLOWED	uova	0.5	pz
+polpettone_tonno_casertano_v57	Polpettone di tonno	secondo	secondo	ALLOWED	parmigiano		g
+polpettone_tonno_casertano_v57	Polpettone di tonno	secondo	secondo	ALLOWED	pangrattato		g
+insalata_verde_v57	Insalata verde	contorno	contorno	ALLOWED	lattuga	60	g
+friggitelli_pomodoro_v57	Friggitelli al pomodoro	contorno	contorno	ALLOWED	friggitelli	75	g
+friggitelli_pomodoro_v57	Friggitelli al pomodoro	contorno	contorno	ALLOWED	pomodorini		g
+friggitelli_pomodoro_v57	Friggitelli al pomodoro	contorno	contorno	ALLOWED	aglio	0.25	pz
+cianfotta_napoletana_v57	Cianfotta	contorno	contorno	ALLOWED	peperoni	250	g
+cianfotta_napoletana_v57	Cianfotta	contorno	contorno	ALLOWED	melanzane	200	g
+cianfotta_napoletana_v57	Cianfotta	contorno	contorno	ALLOWED	patate	175	g
+cianfotta_napoletana_v57	Cianfotta	contorno	contorno	ALLOWED	pomodoro	50	g
+cianfotta_napoletana_v57	Cianfotta	contorno	contorno	ALLOWED	cipolla	0.5	pz
+cianfotta_napoletana_v57	Cianfotta	contorno	contorno	ALLOWED	aglio	0.25	pz
+insalata_carciofi_casertana_v57	Insalata di carciofi crudi	contorno	contorno	ALLOWED	carciofi	200	g
+insalata_carciofi_casertana_v57	Insalata di carciofi crudi	contorno	contorno	ALLOWED	parmigiano	12.5	g
+insalata_carciofi_casertana_v57	Insalata di carciofi crudi	contorno	contorno	ALLOWED	limone	0.25	pz
+pasta_carbonara_v58	Pasta alla carbonara	primo	primo	ALLOWED	spaghetti	90	g
+pasta_carbonara_v58	Pasta alla carbonara	primo	primo	ALLOWED	guanciale	35	g
+pasta_carbonara_v58	Pasta alla carbonara	primo	primo	ALLOWED	uova	1	pz
+pasta_carbonara_v58	Pasta alla carbonara	primo	primo	ALLOWED	pecorino romano	25	g
+pasta_carbonara_v58	Pasta alla carbonara	primo	primo	ALLOWED	pepe nero	0.3	g
+insalata_riso_v58	Insalata di riso	primo	primo	ALLOWED	riso	85	g
+insalata_riso_v58	Insalata di riso	primo	primo	ALLOWED	piselli	60	g
+insalata_riso_v58	Insalata di riso	primo	primo	ALLOWED	carota	40	g
+insalata_riso_v58	Insalata di riso	primo	primo	ALLOWED	peperone rosso	50	g
+insalata_riso_v58	Insalata di riso	primo	primo	ALLOWED	olive verdi	20	g
+insalata_riso_v58	Insalata di riso	primo	primo	ALLOWED	olio extravergine di oliva	8	ml
+insalata_riso_v58	Insalata di riso	primo	primo	ALLOWED	aceto di vino bianco	5	ml
+riso_patate_v60	Riso e patate	primo	primo		riso	80	g
+riso_patate_v60	Riso e patate	primo	primo		patate	150	g
+riso_patate_v60	Riso e patate	primo	primo		cipolla	25	g
+riso_patate_v60	Riso e patate	primo	primo		olio extravergine di oliva	10	ml
+riso_patate_v60	Riso e patate	primo	primo		rosmarino	1	g
+riso_verza_v60	Riso e verza	primo	primo		riso	80	g
+riso_verza_v60	Riso e verza	primo	primo		verza	160	g
+riso_verza_v60	Riso e verza	primo	primo		cipolla	25	g
+riso_verza_v60	Riso e verza	primo	primo		olio extravergine di oliva	10	ml
+riso_zucca_v60	Riso e zucca	primo	primo		riso	80	g
+riso_zucca_v60	Riso e zucca	primo	primo		zucca	180	g
+riso_zucca_v60	Riso e zucca	primo	primo		cipolla	25	g
+riso_zucca_v60	Riso e zucca	primo	primo		olio extravergine di oliva	10	ml
+riso_lenticchie_v60	Riso e lenticchie	primo	primo		riso	70	g
+riso_lenticchie_v60	Riso e lenticchie	primo	primo		lenticchie	70	g
+riso_lenticchie_v60	Riso e lenticchie	primo	primo		passata di pomodoro	60	g
+riso_lenticchie_v60	Riso e lenticchie	primo	primo		cipolla	20	g
+riso_lenticchie_v60	Riso e lenticchie	primo	primo		olio extravergine di oliva	8	ml
+riso_fagioli_v60	Riso e fagioli	primo	primo		riso	70	g
+riso_fagioli_v60	Riso e fagioli	primo	primo		fagioli cotti	110	g
+riso_fagioli_v60	Riso e fagioli	primo	primo		passata di pomodoro	60	g
+riso_fagioli_v60	Riso e fagioli	primo	primo		cipolla	20	g
+riso_fagioli_v60	Riso e fagioli	primo	primo		olio extravergine di oliva	8	ml
+riso_piselli_v60	Riso e piselli	primo	primo		riso	80	g
+riso_piselli_v60	Riso e piselli	primo	primo		piselli	100	g
+riso_piselli_v60	Riso e piselli	primo	primo		cipolla	20	g
+riso_piselli_v60	Riso e piselli	primo	primo		olio extravergine di oliva	8	ml
+lenticchie_umido_v60	Lenticchie in umido	secondo	secondo		lenticchie	120	g
+lenticchie_umido_v60	Lenticchie in umido	secondo	secondo		passata di pomodoro	100	g
+lenticchie_umido_v60	Lenticchie in umido	secondo	secondo		cipolla	25	g
+lenticchie_umido_v60	Lenticchie in umido	secondo	secondo		olio extravergine di oliva	8	ml
+ceci_pomodoro_v60	Ceci al pomodoro	secondo	secondo		ceci cotti	150	g
+ceci_pomodoro_v60	Ceci al pomodoro	secondo	secondo		passata di pomodoro	100	g
+ceci_pomodoro_v60	Ceci al pomodoro	secondo	secondo		olio extravergine di oliva	8	ml
+ceci_pomodoro_v60	Ceci al pomodoro	secondo	secondo		rosmarino	1	g
+fagioli_pomodoro_v60	Fagioli al pomodoro	secondo	secondo		fagioli cotti	150	g
+fagioli_pomodoro_v60	Fagioli al pomodoro	secondo	secondo		passata di pomodoro	100	g
+fagioli_pomodoro_v60	Fagioli al pomodoro	secondo	secondo		cipolla	20	g
+fagioli_pomodoro_v60	Fagioli al pomodoro	secondo	secondo		olio extravergine di oliva	8	ml
+patate_prezzemolate_v60	Patate prezzemolate	contorno	contorno		patate	200	g
+patate_prezzemolate_v60	Patate prezzemolate	contorno	contorno		prezzemolo	1	g
+patate_prezzemolate_v60	Patate prezzemolate	contorno	contorno		olio extravergine di oliva	8	ml
+patate_marinara_v60	Patate alla marinara	contorno	contorno		patate	200	g
+patate_marinara_v60	Patate alla marinara	contorno	contorno		aglio	3	g
+patate_marinara_v60	Patate alla marinara	contorno	contorno		olio extravergine di oliva	8	ml
+patate_marinara_v60	Patate alla marinara	contorno	contorno		origano	1	g
+patate_rosmarino_padella_v60	Patate al rosmarino in padella	contorno	contorno		patate	200	g
+patate_rosmarino_padella_v60	Patate al rosmarino in padella	contorno	contorno		olio extravergine di oliva	8	ml
+patate_rosmarino_padella_v60	Patate al rosmarino in padella	contorno	contorno		rosmarino	1	g
+fagioli_insalata_v60	Fagioli all’insalata	contorno	contorno		fagioli cotti	140	g
+fagioli_insalata_v60	Fagioli all’insalata	contorno	contorno		cipolla	20	g
+fagioli_insalata_v60	Fagioli all’insalata	contorno	contorno		olio extravergine di oliva	8	ml
+fagioli_insalata_v60	Fagioli all’insalata	contorno	contorno		prezzemolo	1	g
+ceci_prezzemolo_v60	Ceci al prezzemolo	contorno	contorno		ceci cotti	140	g
+ceci_prezzemolo_v60	Ceci al prezzemolo	contorno	contorno		olio extravergine di oliva	8	ml
+ceci_prezzemolo_v60	Ceci al prezzemolo	contorno	contorno		prezzemolo	1	g
+uova_occhio_bue_v47_4	Uova all'occhio di bue	secondo	secondo		uova	2	pz
+uova_occhio_bue_v47_4	Uova all'occhio di bue	secondo	secondo		olio extravergine di oliva	5	ml
+uova_camicia_v47_4	Uova in camicia	secondo	secondo		uova	2	pz
+uova_camicia_v47_4	Uova in camicia	secondo	secondo		aceto di vino bianco	7.5	ml
+uova_sode_v47_4	Uova sode	secondo	secondo		uova	2	pz
+uova_purgatorio_v47_4	Uova in purgatorio	secondo	secondo		uova	2	pz
+uova_purgatorio_v47_4	Uova in purgatorio	secondo	secondo		passata di pomodoro	100	g
+uova_purgatorio_v47_4	Uova in purgatorio	secondo	secondo		olio extravergine di oliva	7	ml
+frittata_cipolle_v47_4	Frittata di cipolle	secondo	secondo		uova	2	pz
+frittata_cipolle_v47_4	Frittata di cipolle	secondo	secondo		cipolla	100	g
+frittata_cipolle_v47_4	Frittata di cipolle	secondo	secondo		formaggio grattugiato	15	g
+frittata_cipolle_v47_4	Frittata di cipolle	secondo	secondo		olio extravergine di oliva	10	ml
+frittata_zucchine_v47_4	Frittata di zucchine	secondo	secondo		uova	2	pz
+frittata_zucchine_v47_4	Frittata di zucchine	secondo	secondo		zucchine	120	g
+frittata_zucchine_v47_4	Frittata di zucchine	secondo	secondo		formaggio grattugiato	15	g
+frittata_zucchine_v47_4	Frittata di zucchine	secondo	secondo		olio extravergine di oliva	8	ml
+frittata_semplice_v47_4	Frittata semplice	secondo	secondo		uova	2	pz
+frittata_semplice_v47_4	Frittata semplice	secondo	secondo		formaggio grattugiato	10	g
+frittata_semplice_v47_4	Frittata semplice	secondo	secondo		olio extravergine di oliva	5	ml
+petto_pollo_piastra_v48	Petto di pollo alla piastra	secondo	secondo		petto di pollo	180	g
+petto_pollo_piastra_v48	Petto di pollo alla piastra	secondo	secondo		olio extravergine di oliva	5	ml
+petto_pollo_piastra_v48	Petto di pollo alla piastra	secondo	secondo		limone	0.25	pz
+petto_pollo_piastra_v48	Petto di pollo alla piastra	secondo	secondo		sale	1	g
+riso_scarola_v60	Riso e scarola	primo	primo		riso	80	g
+riso_scarola_v60	Riso e scarola	primo	primo		scarola	160	g
+riso_scarola_v60	Riso e scarola	primo	primo		cipolla	20	g
+riso_scarola_v60	Riso e scarola	primo	primo		olio extravergine di oliva	8	ml
+riso_cavolfiore_v60	Riso e cavolfiore	primo	primo		riso	80	g
+riso_cavolfiore_v60	Riso e cavolfiore	primo	primo		cavolfiore	160	g
+riso_cavolfiore_v60	Riso e cavolfiore	primo	primo		cipolla	20	g
+riso_cavolfiore_v60	Riso e cavolfiore	primo	primo		olio extravergine di oliva	8	ml
+spaghetti_pomodoro_v60	Spaghetti al pomodoro	primo	primo		pasta	90	g
+spaghetti_pomodoro_v60	Spaghetti al pomodoro	primo	primo		passata di pomodoro	100	g
+spaghetti_pomodoro_v60	Spaghetti al pomodoro	primo	primo		olio extravergine di oliva	8	ml
+spaghetti_pomodoro_v60	Spaghetti al pomodoro	primo	primo		basilico	2	g
+patate_schiacciate_olio_v60	Patate schiacciate all’olio	contorno	contorno		patate	200	g
+patate_schiacciate_olio_v60	Patate schiacciate all’olio	contorno	contorno		olio extravergine di oliva	8	ml
+salsiccia_piastra_v60	Salsiccia alla piastra	secondo	secondo		salsiccia	180	g
+salsiccia_piastra_v60	Salsiccia alla piastra	secondo	secondo		olio extravergine di oliva	5	ml
+lonza_piastra_v60	Lonza alla piastra	secondo	secondo		fettine di lonza	180	g
+lonza_piastra_v60	Lonza alla piastra	secondo	secondo		olio extravergine di oliva	5	ml
+zucchine_pomodoro_v60	Zucchine al pomodoro	secondo	secondo		zucchine	220	g
+zucchine_pomodoro_v60	Zucchine al pomodoro	secondo	secondo		passata di pomodoro	100	g
+zucchine_pomodoro_v60	Zucchine al pomodoro	secondo	secondo		olio extravergine di oliva	8	ml
+melanzane_pomodoro_v60	Melanzane al pomodoro	secondo	secondo		melanzane	220	g
+melanzane_pomodoro_v60	Melanzane al pomodoro	secondo	secondo		passata di pomodoro	100	g
+melanzane_pomodoro_v60	Melanzane al pomodoro	secondo	secondo		olio extravergine di oliva	8	ml
+linguine_gamberi_pomodorini_v61	Linguine ai gamberi e pomodorini	primo	primo	ALLOWED	linguine	90	g
+linguine_gamberi_pomodorini_v61	Linguine ai gamberi e pomodorini	primo	primo	ALLOWED	gamberi	100	g
+linguine_gamberi_pomodorini_v61	Linguine ai gamberi e pomodorini	primo	primo	ALLOWED	pomodorini	120	g
+linguine_gamberi_pomodorini_v61	Linguine ai gamberi e pomodorini	primo	primo	ALLOWED	aglio	5	g
+linguine_gamberi_pomodorini_v61	Linguine ai gamberi e pomodorini	primo	primo	ALLOWED	prezzemolo	3	g
+linguine_gamberi_pomodorini_v61	Linguine ai gamberi e pomodorini	primo	primo	ALLOWED	olio extravergine di oliva	10	ml
+risotto_gamberi_limone_v61	Risotto ai gamberi e limone	primo	primo	ALLOWED	riso	90	g
+risotto_gamberi_limone_v61	Risotto ai gamberi e limone	primo	primo	ALLOWED	gamberi	100	g
+risotto_gamberi_limone_v61	Risotto ai gamberi e limone	primo	primo	ALLOWED	limone	0.25	pz
+risotto_gamberi_limone_v61	Risotto ai gamberi e limone	primo	primo	ALLOWED	prezzemolo	3	g
+risotto_gamberi_limone_v61	Risotto ai gamberi e limone	primo	primo	ALLOWED	olio extravergine di oliva	8	ml
+risotto_mare_v61	Risotto di mare con gamberi, cozze e seppioline	primo	primo	ALLOWED	riso	90	g
+risotto_mare_v61	Risotto di mare con gamberi, cozze e seppioline	primo	primo	ALLOWED	gamberi	70	g
+risotto_mare_v61	Risotto di mare con gamberi, cozze e seppioline	primo	primo	ALLOWED	cozze	70	g
+risotto_mare_v61	Risotto di mare con gamberi, cozze e seppioline	primo	primo	ALLOWED	seppioline	70	g
+risotto_mare_v61	Risotto di mare con gamberi, cozze e seppioline	primo	primo	ALLOWED	pomodorini	80	g
+risotto_mare_v61	Risotto di mare con gamberi, cozze e seppioline	primo	primo	ALLOWED	aglio	5	g
+risotto_mare_v61	Risotto di mare con gamberi, cozze e seppioline	primo	primo	ALLOWED	prezzemolo	3	g
+risotto_mare_v61	Risotto di mare con gamberi, cozze e seppioline	primo	primo	ALLOWED	olio extravergine di oliva	10	ml
+paccheri_totani_gamberi_v61	Paccheri con totani e gamberi	primo	primo	ALLOWED	paccheri	90	g
+paccheri_totani_gamberi_v61	Paccheri con totani e gamberi	primo	primo	ALLOWED	anelli di totano	110	g
+paccheri_totani_gamberi_v61	Paccheri con totani e gamberi	primo	primo	ALLOWED	gamberi	80	g
+paccheri_totani_gamberi_v61	Paccheri con totani e gamberi	primo	primo	ALLOWED	pomodorini	120	g
+paccheri_totani_gamberi_v61	Paccheri con totani e gamberi	primo	primo	ALLOWED	aglio	5	g
+paccheri_totani_gamberi_v61	Paccheri con totani e gamberi	primo	primo	ALLOWED	prezzemolo	3	g
+paccheri_totani_gamberi_v61	Paccheri con totani e gamberi	primo	primo	ALLOWED	olio extravergine di oliva	10	ml
+frittura_gamberi_totani_v61	Frittura di gamberi e totani	secondo	secondo	ALLOWED	gamberi	120	g
+frittura_gamberi_totani_v61	Frittura di gamberi e totani	secondo	secondo	ALLOWED	anelli di totano	150	g
+frittura_gamberi_totani_v61	Frittura di gamberi e totani	secondo	secondo	ALLOWED	farina	40	g
+frittura_gamberi_totani_v61	Frittura di gamberi e totani	secondo	secondo	ALLOWED	olio per friggere	120	ml
+frittura_gamberi_totani_v61	Frittura di gamberi e totani	secondo	secondo	ALLOWED	limone	0.25	pz
+orata_acqua_pazza_v61	Orata all’acqua pazza	secondo	secondo	ALLOWED	filetti di orata	180	g
+orata_acqua_pazza_v61	Orata all’acqua pazza	secondo	secondo	ALLOWED	pomodorini	120	g
+orata_acqua_pazza_v61	Orata all’acqua pazza	secondo	secondo	ALLOWED	aglio	5	g
+orata_acqua_pazza_v61	Orata all’acqua pazza	secondo	secondo	ALLOWED	prezzemolo	3	g
+orata_acqua_pazza_v61	Orata all’acqua pazza	secondo	secondo	ALLOWED	olio extravergine di oliva	10	ml
+branzino_limone_v61	Branzino al limone	secondo	secondo	ALLOWED	filetto di branzino	180	g
+branzino_limone_v61	Branzino al limone	secondo	secondo	ALLOWED	limone	0.25	pz
+branzino_limone_v61	Branzino al limone	secondo	secondo	ALLOWED	prezzemolo	3	g
+branzino_limone_v61	Branzino al limone	secondo	secondo	ALLOWED	olio extravergine di oliva	8	ml
+spada_pizzaiola_v61	Pesce spada alla pizzaiola	secondo	secondo	ALLOWED	filetto di pesce spada	180	g
+spada_pizzaiola_v61	Pesce spada alla pizzaiola	secondo	secondo	ALLOWED	passata di pomodoro	120	g
+spada_pizzaiola_v61	Pesce spada alla pizzaiola	secondo	secondo	ALLOWED	capperi	8	g
+spada_pizzaiola_v61	Pesce spada alla pizzaiola	secondo	secondo	ALLOWED	olive nere	20	g
+spada_pizzaiola_v61	Pesce spada alla pizzaiola	secondo	secondo	ALLOWED	origano	1	g
+spada_pizzaiola_v61	Pesce spada alla pizzaiola	secondo	secondo	ALLOWED	olio extravergine di oliva	8	ml
+tonno_mediterranea_v61	Filetto di tonno alla mediterranea	secondo	secondo	ALLOWED	filetto di tonno	180	g
+tonno_mediterranea_v61	Filetto di tonno alla mediterranea	secondo	secondo	ALLOWED	pomodorini	120	g
+tonno_mediterranea_v61	Filetto di tonno alla mediterranea	secondo	secondo	ALLOWED	capperi	8	g
+tonno_mediterranea_v61	Filetto di tonno alla mediterranea	secondo	secondo	ALLOWED	olive nere	20	g
+tonno_mediterranea_v61	Filetto di tonno alla mediterranea	secondo	secondo	ALLOWED	olio extravergine di oliva	8	ml
+bistecca_bovino_pizzaiola_v61	Bistecca di bovino alla pizzaiola	secondo	secondo	ALLOWED	bistecca di bovino	200	g
+bistecca_bovino_pizzaiola_v61	Bistecca di bovino alla pizzaiola	secondo	secondo	ALLOWED	passata di pomodoro	140	g
+bistecca_bovino_pizzaiola_v61	Bistecca di bovino alla pizzaiola	secondo	secondo	ALLOWED	aglio	5	g
+bistecca_bovino_pizzaiola_v61	Bistecca di bovino alla pizzaiola	secondo	secondo	ALLOWED	origano	1	g
+bistecca_bovino_pizzaiola_v61	Bistecca di bovino alla pizzaiola	secondo	secondo	ALLOWED	olio extravergine di oliva	8	ml
+riso_pomodoro_semplice_v61	Riso al pomodoro	primo	primo	ALLOWED	riso	90	g
+riso_pomodoro_semplice_v61	Riso al pomodoro	primo	primo	ALLOWED	passata di pomodoro	120	g
+riso_pomodoro_semplice_v61	Riso al pomodoro	primo	primo	ALLOWED	olio extravergine di oliva	8	ml
+riso_parmigiano_v61	Riso al parmigiano	primo	primo	ALLOWED	riso	90	g
+riso_parmigiano_v61	Riso al parmigiano	primo	primo	ALLOWED	parmigiano	20	g
+riso_parmigiano_v61	Riso al parmigiano	primo	primo	ALLOWED	olio extravergine di oliva	5	ml
+riso_limone_v61	Riso al limone	primo	primo	ALLOWED	riso	90	g
+riso_limone_v61	Riso al limone	primo	primo	ALLOWED	limone	0.25	pz
+riso_limone_v61	Riso al limone	primo	primo	ALLOWED	olio extravergine di oliva	8	ml
+provola_piastra_v61	Provola alla piastra	secondo	secondo	ALLOWED	provola	120	g
+provola_piastra_v61	Provola alla piastra	secondo	secondo	ALLOWED	origano	1	g
+mozzarella_origano_v61	Mozzarella con origano	secondo	secondo	ALLOWED	mozzarella	150	g
+mozzarella_origano_v61	Mozzarella con origano	secondo	secondo	ALLOWED	olio extravergine di oliva	6	ml
+mozzarella_origano_v61	Mozzarella con origano	secondo	secondo	ALLOWED	origano	1	g
+ricotta_piatto_v61	Ricotta al piatto	secondo	secondo	ALLOWED	ricotta	150	g
+ricotta_piatto_v61	Ricotta al piatto	secondo	secondo	ALLOWED	olio extravergine di oliva	5	ml
+tonno_naturale_limone_v61	Tonno al naturale con limone	secondo	secondo		tonno al naturale	100	g
+tonno_naturale_limone_v61	Tonno al naturale con limone	secondo	secondo		limone	30	g
+tonno_naturale_limone_v61	Tonno al naturale con limone	secondo	secondo		prezzemolo	2	g
+tonno_naturale_limone_v61	Tonno al naturale con limone	secondo	secondo		olio extravergine di oliva	5	ml
+sgombro_naturale_limone_v61	Sgombro al naturale con limone	secondo	secondo		sgombro al naturale	100	g
+sgombro_naturale_limone_v61	Sgombro al naturale con limone	secondo	secondo		limone	30	g
+sgombro_naturale_limone_v61	Sgombro al naturale con limone	secondo	secondo		prezzemolo	2	g
+sgombro_naturale_limone_v61	Sgombro al naturale con limone	secondo	secondo		olio extravergine di oliva	5	ml
