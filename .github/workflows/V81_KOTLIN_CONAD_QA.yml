@@ -117,3 +117,5 @@ jobs:
           git commit -m "Record validated V81 Kotlin Conad QA"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+
+# trigger: authorized-five-references
