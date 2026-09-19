@@ -130,6 +130,26 @@ spaghetti_aglio_olio	Spaghetti aglio, olio e peperoncino	primo	primo	ALLOWED	agl
 spaghetti_aglio_olio	Spaghetti aglio, olio e peperoncino	primo	primo	ALLOWED	olio extravergine di oliva	15	ml
 spaghetti_aglio_olio	Spaghetti aglio, olio e peperoncino	primo	primo	ALLOWED	peperoncino	0.5	g
 spaghetti_aglio_olio	Spaghetti aglio, olio e peperoncino	primo	primo	ALLOWED	prezzemolo	3	g
+baba_pronto	Babà	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+sfogliatella_riccia_pronta	Sfogliatella riccia	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+sfogliatella_frolla_pronta	Sfogliatella frolla	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+monachina_pronta	Monachina	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+delizia_limone_pronta	Delizia al limone	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+biscotto_amarena_pronto	Biscotto all'amarena	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+migliaccio_pronto	Migliaccio	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+pastiera_pronta	Pastiera	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+zeppola_san_giuseppe_pronta	Zeppola di San Giuseppe	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+struffoli_pronti	Struffoli	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+mustaccioli_pronti	Mustaccioli	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+roccoco_pronti	Roccocò	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+susamielli_pronti	Susamielli	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+raffioli_pronti	Raffioli	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+sospiri_limone_pronti	Sospiri al limone	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+torrone_benevento_pronto	Torrone di Benevento	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+torrone_croccantino_pronto	Torrone croccantino di San Marco dei Cavoti	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+amaretto_caposele_pronto	Amaretto di Caposele	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+guanto_caleno_pronto	Guanto caleno	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
+cannolo_irpino_pronto	Cannolo irpino	dolce	dolce	BLOCKED_UNTIL_SELECTED_SUPERMARKET_MATCH			
 pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		ziti	80.0	g
 pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		cipolle dorate	250.0	g
 pasta_genovese_napoletana_v29	Pasta alla genovese	primo	primo		polpa di manzo	200.0	g
