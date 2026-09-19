@@ -1,0 +1,34 @@
+name: V81 STAPLE REFERENCE PROBE
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'V81_STAPLE_REFERENCE_PROBE.py'
+      - '.github/workflows/V81_STAPLE_REFERENCE_PROBE.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Probe validated supermarket databases
+        run: python V81_STAPLE_REFERENCE_PROBE.py
+
+      - name: Commit probe result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add v81_staple_reference_probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Audit V81 rosemary and chili market references"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
