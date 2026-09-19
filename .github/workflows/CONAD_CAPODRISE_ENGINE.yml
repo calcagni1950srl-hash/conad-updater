@@ -153,3 +153,5 @@ jobs:
           git commit -m "Update validated Conad Capodrise databases"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+
+# retrigger after QA matcher alignment 2026-09-19
