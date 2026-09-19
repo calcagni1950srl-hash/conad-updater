@@ -22,11 +22,14 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Install Kotlin compiler
+      - name: Install Kotlin compiler 2.0.21
         run: |
           sudo apt-get update
-          sudo apt-get install -y kotlin
-          kotlinc -version
+          sudo apt-get install -y unzip curl
+          curl -L -o /tmp/kotlin.zip https://github.com/JetBrains/kotlin/releases/download/v2.0.21/kotlin-compiler-2.0.21.zip
+          unzip -q /tmp/kotlin.zip -d /tmp/kotlin
+          echo "/tmp/kotlin/kotlinc/bin" >> "$GITHUB_PATH"
+          /tmp/kotlin/kotlinc/bin/kotlinc -version
 
       - name: Build exact Android-product TSV
         run: |
@@ -70,7 +73,7 @@ jobs:
 
       - name: Compile real Kotlin matcher and shopping calculator
         run: |
-          kotlinc             qa_v81/SupermarketRepositoryStub.kt             qa_v81/ShoppingCalculator.kt             qa_v81/IngredientMatcher_V81_CONAD.kt             qa_v81/ConadV81Harness.kt             -include-runtime             -d qa_v81/v81-conad-harness.jar
+          /tmp/kotlin/kotlinc/bin/kotlinc             qa_v81/SupermarketRepositoryStub.kt             qa_v81/ShoppingCalculator.kt             qa_v81/IngredientMatcher_V81_CONAD.kt             qa_v81/ConadV81Harness.kt             -include-runtime             -d qa_v81/v81-conad-harness.jar
 
       - name: Run real 157-recipe QA
         run: |
