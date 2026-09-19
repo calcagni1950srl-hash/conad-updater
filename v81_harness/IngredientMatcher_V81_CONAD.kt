@@ -249,7 +249,7 @@ internal object IngredientMatcher {
         "polpo verace" to setOf("polpo verace", "polpo"),
         "calamari" to setOf("calamari", "calamaro"),
         "calamaretti" to setOf("calamaretti", "calamaro"),
-        "gamberi" to setOf("gamberi", "gambero"),
+        "gamberi" to setOf("gamberi", "gambero", "gamberoni", "gamberone"),
         "gamberi o calamaretti" to setOf("gamberi", "calamaretti"),
         "scampi" to setOf("scampi", "scampo"),
         "seppie pulite" to setOf("seppie", "seppia"),
@@ -750,6 +750,11 @@ internal object IngredientMatcher {
             if (listOf("biscott", "wafer", "gallette", "cereali", "bar ", "protein", "snack", "frollin").any { productName.contains(it) }) return false
         }
 
+        if (ingredient == "olive") {
+            if (listOf("mix ", "insalat", "peperoni", "feta", "crostini").any { productName.contains(it) }) return false
+            if (!(productName.startsWith("olive ") || productName.contains(" olive "))) return false
+        }
+
         if (ingredient == "tonno al naturale") {
             if (!productName.contains("tonno") || !productName.contains("naturale")) return false
             if (listOf("insalatissime", "quinoa", "orzo", "farro", "ceci", "fagioli", "mais", "pasta").any { productName.contains(it) }) return false
@@ -876,7 +881,7 @@ internal object IngredientMatcher {
                     ingredient in setOf("spaghetti", "linguine", "paccheri", "mezzi paccheri", "scialatielli", "ziti", "lasagne") ->
                     cat("pasta e riso")
                 ingredient == "uova" ->
-                    cat("formaggi latte e uova") &&
+                    cat("formaggi latte e uova", "preparazioni dolci e salate") &&
                         (name.contains("uova") || name.contains("uovo")) &&
                         !hasAny("albume", "tuorlo", "quaglia", "liquido", "pastorizzato")
                 ingredient in setOf("mela", "pera", "pesca", "percoca", "uva", "albicocca", "susina", "melone", "anguria", "fico", "kiwi") ->
@@ -894,7 +899,7 @@ internal object IngredientMatcher {
                     ingredient.contains("grana") || ingredient.contains("pecorino") || ingredient.contains("mozzarella") ||
                     ingredient.contains("provola") || ingredient.contains("fiordilatte") || ingredient.contains("caciocavallo") ->
                     cat("formaggi latte e uova")
-                ingredient == "farina" || ingredient == "farina 00" -> cat("pasta e riso", "biscotti cereali e dolci")
+                ingredient == "farina" || ingredient == "farina 00" -> cat("pasta e riso", "biscotti cereali e dolci", "preparazioni dolci e salate")
                 ingredient == "zucchero bianco" || ingredient == "cioccolato fondente" -> cat("biscotti cereali e dolci", "condimenti e conserve")
                 ingredient in setOf("pomodoro", "pomodori", "pomodorini", "pomodorini pizzutelli", "carciofi",
                     "zucchine", "melanzane", "patate", "patate a pasta gialla", "peperoni", "peperone rosso",
@@ -992,12 +997,12 @@ internal object IngredientMatcher {
                     cat("frutta e verdura") || (cat("prodotti alimentari") && name.contains("prezzemolo") && name.contains("foglie"))
                 ingredient == "rosmarino" ->
                     cat("frutta e verdura") || (cat("prodotti alimentari") && name.contains("rosmarino") && name.contains("foglie"))
-                ingredient == "origano" ->
-                    cat("prodotti alimentari") && name.contains("origano") && !hasAny("crostini", "gusto pizza")
+                ingredient == "origano" ->                    cat("prodotti alimentari") && name.contains("origano") && !hasAny("crostini", "gusto pizza")
                 ingredient == "pepe" || ingredient == "pepe nero" ->
                     cat("prodotti alimentari") && hasAny("pepe nero", "pepe bianco") && !hasAny("acini di pepe", "pepe bucato", "cacio e pepe", "ricotta")
                 ingredient == "sale" -> cat("prodotti alimentari")
-                ingredient == "uvetta" ->                    cat("prodotti alimentari", "colazione merenda e dolci") &&
+                ingredient == "uvetta" ->
+                    cat("prodotti alimentari", "colazione merenda e dolci") &&
                         (name.startsWith("uvetta ") || name.contains("uvetta sultanina") || name.contains("uva sultanina") || name.contains("uva passa"))
                 ingredient.contains("olio") ->
                     cat("prodotti alimentari") &&
@@ -1299,6 +1304,10 @@ internal object IngredientMatcher {
         }
 
         if (pack.family == QuantityFamily.MASS && ingredient == "sale") {
+            return pack.baseValue in 500.0..2000.0
+        }
+
+        if (pack.family == QuantityFamily.MASS && (ingredient == "farina" || ingredient == "farina 00")) {
             return pack.baseValue in 500.0..2000.0
         }
 
