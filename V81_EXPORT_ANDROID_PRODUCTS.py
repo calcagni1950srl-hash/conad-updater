@@ -2,7 +2,7 @@ import json
 import sqlite3
 from pathlib import Path
 
-DB = Path("prezzi_conad_capodrise_app.db")
+# V81 QA export trigger 2026-09-19\nDB = Path("prezzi_conad_capodrise_app.db")
 OUT = Path("conad_v81_android_products.jsonl")
 
 def main():
