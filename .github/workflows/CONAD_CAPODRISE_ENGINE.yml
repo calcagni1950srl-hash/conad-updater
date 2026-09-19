@@ -70,4 +70,5 @@ jobs:
           git add prezzi_conad_capodrise.db prezzi_conad_capodrise_app.db conad_bassifissi_audit.json conad_capodrise_audit.json
           git diff --cached --quiet && exit 0
           git commit -m "Update validated Conad Capodrise databases"
-          git push
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
