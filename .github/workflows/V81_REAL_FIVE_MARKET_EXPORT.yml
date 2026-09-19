@@ -30,6 +30,26 @@ jobs:
       - name: Export real catalogs
         run: python qa_v81_real/export_catalogs.py
 
+      - name: Stamp workflow run id
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path("qa_v81_real/catalog_summary.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          d["run_id"]=int(os.environ["GITHUB_RUN_ID"])
+          d["artifact_ready"]=True
+          d["workflow_version"]="v2"
+          p.write_text(json.dumps(d,indent=2,ensure_ascii=False),encoding="utf-8")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v81-real-five-market-catalogs
+          path: |
+            qa_v81_real/catalog_*.tsv
+            qa_v81_real/catalog_summary.json
+
       - name: Commit compressed text catalogs
         run: |
           git config user.name "github-actions[bot]"
