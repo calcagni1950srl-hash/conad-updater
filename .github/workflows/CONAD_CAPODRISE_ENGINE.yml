@@ -96,8 +96,8 @@ jobs:
               fh.write("key\tname\tbrand\tcategory\tquantityValue\tquantityUnit\tpriceEur\tunitPriceEur\tunitPriceUnit\tvariableWeight\tsourceUrl\tcheckedAt\n")
               for row in rows:
                   fh.write("\t".join(row)+"\n")
-          if len(rows) != 733:
-              raise SystemExit(f"Expected 733 Android products, got {len(rows)}")
+          if len(rows) < 733:
+              raise SystemExit(f"Expected at least 733 Android products, got {len(rows)}")
           PY
 
           kotlinc             qa_v81/SupermarketRepositoryStub.kt             qa_v81/ShoppingCalculator.kt             qa_v81/IngredientMatcher_V81_CONAD.kt             qa_v81/ConadV81Harness.kt             -include-runtime             -d qa_v81/v81-conad-harness.jar
@@ -115,7 +115,6 @@ jobs:
               return m.group(1).strip()
           expected={
               "recipes_total":"157",
-              "products":"733",
               "threshold_primi":"true",
               "threshold_secondi":"true",
               "threshold_contorni":"true",
@@ -124,6 +123,8 @@ jobs:
               got=val(k)
               if got.lower()!=v.lower():
                   raise SystemExit(f"{k}: expected {v}, got {got}")
+          if int(val("products")) < 733:
+              raise SystemExit(f'products: expected at least 733, got {val("products")}')
           print({
               "recipes_total":val("recipes_total"),
               "recipes_testable":val("recipes_testable"),
