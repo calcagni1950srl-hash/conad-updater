@@ -1,0 +1,41 @@
+name: V81 REAL FIVE MARKET CATALOG EXPORT
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'qa_v81_real/export_catalogs.py'
+      - '.github/workflows/V81_REAL_FIVE_MARKET_EXPORT.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Piccolo validated DB
+        run: |
+          mkdir -p qa_v81_real
+          curl -L --fail --retry 3 \
+            https://raw.githubusercontent.com/calcagni1950srl-hash/piccolo-updater/main/prezzi.db \
+            -o qa_v81_real/prezzi_piccolo.db
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Export real catalogs
+        run: python qa_v81_real/export_catalogs.py
+
+      - name: Commit compressed text catalogs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa_v81_real/catalog_*.tsv.gz.b64 qa_v81_real/catalog_summary.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Export V81 real five-market catalogs"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
