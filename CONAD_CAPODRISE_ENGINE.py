@@ -581,6 +581,25 @@ VISUAL_VERIFIED_OFFERS_V81 = [
         "source_url": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026-4-spunta-campania.pdf",
         "source_label": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81|SPUNTA_RISPARMIO_CAMPANIA|NO_OCR",
     },
+    {
+        # Volantino ufficiale PAC "Convenienza Più" (Integrativa 19 Campania), PDV 010548.
+        # PDF image-only: riga verificata visivamente, NON ottenuta con OCR.
+        "product_code": "VISUAL:INTEGRATIVA19_MALDON_SALE_MARINO_125G",
+        "product_name": "Sale marino Maldon 125 g",
+        "brand": "Maldon",
+        "category1": "Condimenti e conserve",
+        "category2": "Sale e spezie",
+        "quantity_value": 0.125,
+        "quantity_unit": "KG",
+        "price_eur": 3.19,
+        "unit_price": 25.52,
+        "unit_price_unit": "EUR/KG",
+        "variable_weight": False,
+        "valid_from": "2026-09-16",
+        "valid_to": "2026-09-22",
+        "source_url": "https://www.conad.it/assets/common/volantini/pac/vinteg/Integrativa%2019%20Campania.pdf",
+        "source_label": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81|CONVENIENZA_PIU_INTEGRATIVA19_CAMPANIA|NO_OCR",
+    },
 ]
 
 
