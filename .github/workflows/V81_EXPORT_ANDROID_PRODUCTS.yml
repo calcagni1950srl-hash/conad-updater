@@ -20,11 +20,20 @@ jobs:
           python-version: '3.12'
       - name: Export Android products
         run: python V81_EXPORT_ANDROID_PRODUCTS.py
+      - name: Upload export artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: v81-android-products
+          path: conad_v81_android_products.jsonl
+
+      - name: Record run id
+        run: echo "$GITHUB_RUN_ID" > v81_export_run_id.txt
+
       - name: Commit export
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add conad_v81_android_products.jsonl
+          git add conad_v81_android_products.jsonl v81_export_run_id.txt
           git diff --cached --quiet && exit 0
           git commit -m "Export V81 Android products for Kotlin QA"
           git pull --rebase origin "${GITHUB_REF_NAME}"
