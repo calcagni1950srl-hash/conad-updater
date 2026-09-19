@@ -50,7 +50,7 @@ jobs:
               assert rows == positive
               assert stores == [('010548',)]
               assert local >= 40
-              assert refs == 3
+              assert refs == 7
               con.close()
           PY
 
