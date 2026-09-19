@@ -1,0 +1,95 @@
+name: V81 CONAD REAL KOTLIN HARNESS
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/V81_CONAD_HARNESS.yml'
+      - 'v81_harness/IngredientMatcher_V81_CONAD.kt'
+      - 'v81_harness/ShoppingCalculator.kt'
+      - 'v81_harness/SupermarketRepositoryStub.kt'
+      - 'v81_harness/ConadV81Harness.kt'
+      - 'v81_harness/recipes_v61_157.tsv'
+      - 'prezzi_conad_capodrise_app.db'
+
+permissions:
+  contents: write
+
+jobs:
+  conad-kotlin-harness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Export real Conad Android SQLite rows to TSV
+        run: |
+          python - <<'PY'
+          import csv, sqlite3
+          db='prezzi_conad_capodrise_app.db'
+          con=sqlite3.connect(db)
+          rows=con.execute("""
+            SELECT product_code, product_name, COALESCE(brand,''), COALESCE(category1,''),
+                   quantity_value, COALESCE(quantity_unit,''), price_eur, unit_price,
+                   COALESCE(unit_price_unit,''), COALESCE(variable_weight,0),
+                   COALESCE(source_queries,''), COALESCE(checked_at,'')
+            FROM products_current
+            WHERE price_eur > 0
+            ORDER BY product_code
+          """).fetchall()
+          con.close()
+          with open('v81_harness/conad_products.tsv','w',encoding='utf-8',newline='') as f:
+              w=csv.writer(f,delimiter='\t',lineterminator='\n')
+              w.writerow(['key','name','brand','category','quantity_value','quantity_unit','price_eur','unit_price','unit_price_unit','variable_weight','source','checked_at'])
+              for row in rows:
+                  row=list(row)
+                  for i in (1,2,3,10,11):
+                      row[i]=str(row[i] or '').replace('\t',' ').replace('\r',' ').replace('\n',' ')
+                  w.writerow(row)
+          print('exported_products', len(rows))
+          assert len(rows) == 733, len(rows)
+          PY
+
+      - name: Install Kotlin compiler
+        run: |
+          curl -fsSL -o kotlin.zip https://github.com/JetBrains/kotlin/releases/download/v2.0.21/kotlin-compiler-2.0.21.zip
+          unzip -q kotlin.zip -d kotlin-dist
+          echo "$PWD/kotlin-dist/kotlinc/bin" >> "$GITHUB_PATH"
+
+      - name: Compile real matcher and ShoppingCalculator
+        run: |
+          kotlinc             v81_harness/SupermarketRepositoryStub.kt             v81_harness/IngredientMatcher_V81_CONAD.kt             v81_harness/ShoppingCalculator.kt             v81_harness/ConadV81Harness.kt             -include-runtime             -d v81_harness/conad_v81_harness.jar
+
+      - name: Run 157-recipe Conad coverage harness
+        run: |
+          java -jar v81_harness/conad_v81_harness.jar             v81_harness/conad_products.tsv             v81_harness/recipes_v61_157.tsv             2 | tee v81_harness/v81_conad_report.txt
+
+      - name: Show summary
+        run: |
+          sed -n '1,20p' v81_harness/v81_conad_report.txt
+          echo "---- thresholds ----"
+          grep '^threshold_' v81_harness/v81_conad_report.txt || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v81-conad-real-kotlin-harness
+          path: |
+            v81_harness/v81_conad_report.txt
+            v81_harness/conad_products.tsv
+
+      - name: Commit harness report to test branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add v81_harness/v81_conad_report.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Add V81 Conad real Kotlin harness report"
+          git push
