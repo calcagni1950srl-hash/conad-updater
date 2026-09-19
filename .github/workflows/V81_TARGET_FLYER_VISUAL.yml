@@ -1,0 +1,28 @@
+name: V81 TARGET FLYER VISUAL
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'qa_v81_visual/render_target_flyers.py'
+      - '.github/workflows/V81_TARGET_FLYER_VISUAL.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pymupdf
+      - run: python qa_v81_visual/render_target_flyers.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v81-target-flyer-pages
+          path: |
+            qa_v81_visual/*.png
+            qa_v81_visual/summary.json
