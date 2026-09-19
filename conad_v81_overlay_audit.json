@@ -1,0 +1,162 @@
+{
+  "status": "OK",
+  "checked_at": "2026-09-19T13:17:11.229099+00:00",
+  "store_code": "010548",
+  "base": {
+    "rows": 908,
+    "positive": 908,
+    "bassi_fissi": 789,
+    "local_offers": 115,
+    "local_flyer_valid_to": "2026-09-20"
+  },
+  "visual_verified_offers": {
+    "inserted": [
+      {
+        "product_code": "VISUAL:SPUNTA2026_ACETO_BIANCO_PONTI_1L",
+        "product_name": "Aceto di vino bianco Ponti 1 L",
+        "price_eur": 1.19,
+        "quantity_value": 1.0,
+        "quantity_unit": "L",
+        "valid_from": "2026-08-01",
+        "valid_to": "2026-09-30",
+        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
+      }
+    ],
+    "expired": []
+  },
+  "fixed_reference_prices": {
+    "inserted": [
+      {
+        "ingredient": "aglio",
+        "product_code": "REF:AVG_AGLIO",
+        "product_name": "Aglio fresco - prezzo medio di mercato",
+        "price_eur": 0.4,
+        "quantity_value": 0.05,
+        "quantity_unit": "KG",
+        "reference_scope": "FIXED_MARKET_AVERAGE_V81"
+      },
+      {
+        "ingredient": "cipolla",
+        "product_code": "REF:AVG_CIPOLLA",
+        "product_name": "Cipolla - prezzo medio di mercato",
+        "price_eur": 0.45,
+        "quantity_value": 0.25,
+        "quantity_unit": "KG",
+        "reference_scope": "FIXED_MARKET_AVERAGE_V81"
+      },
+      {
+        "ingredient": "prezzemolo",
+        "product_code": "REF:AVG_PREZZEMOLO",
+        "product_name": "Prezzemolo fresco - prezzo medio di mercato",
+        "price_eur": 0.36,
+        "quantity_value": 0.03,
+        "quantity_unit": "KG",
+        "reference_scope": "FIXED_MARKET_AVERAGE_V81"
+      },
+      {
+        "ingredient": "rosmarino",
+        "product_code": "REF:AVG_ROSMARINO",
+        "product_name": "Rosmarino - prezzo medio di mercato",
+        "price_eur": 1.47,
+        "quantity_value": 0.03,
+        "quantity_unit": "KG",
+        "reference_scope": "FIXED_MARKET_AVERAGE_V81"
+      },
+      {
+        "ingredient": "peperoncino",
+        "product_code": "REF:AVG_PEPERONCINO",
+        "product_name": "Peperoncino - prezzo medio di mercato",
+        "price_eur": 0.67,
+        "quantity_value": 0.02,
+        "quantity_unit": "KG",
+        "reference_scope": "FIXED_MARKET_AVERAGE_V81"
+      }
+    ],
+    "skipped": [],
+    "missing_after": [],
+    "scope": "FIXED_MARKET_AVERAGE_V81"
+  },
+  "reference_rows": [
+    {
+      "product_code": "REF:AVG_AGLIO",
+      "product_name": "Aglio fresco - prezzo medio di mercato",
+      "quantity_value": 0.05,
+      "quantity_unit": "KG",
+      "price_eur": 0.4,
+      "unit_price": 8.0,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": 1
+    },
+    {
+      "product_code": "REF:AVG_CIPOLLA",
+      "product_name": "Cipolla - prezzo medio di mercato",
+      "quantity_value": 0.25,
+      "quantity_unit": "KG",
+      "price_eur": 0.45,
+      "unit_price": 1.8,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": 1
+    },
+    {
+      "product_code": "REF:AVG_PEPERONCINO",
+      "product_name": "Peperoncino - prezzo medio di mercato",
+      "quantity_value": 0.02,
+      "quantity_unit": "KG",
+      "price_eur": 0.67,
+      "unit_price": 33.5,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": 1
+    },
+    {
+      "product_code": "REF:AVG_PREZZEMOLO",
+      "product_name": "Prezzemolo fresco - prezzo medio di mercato",
+      "quantity_value": 0.03,
+      "quantity_unit": "KG",
+      "price_eur": 0.36,
+      "unit_price": 12.0,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": 1
+    },
+    {
+      "product_code": "REF:AVG_ROSMARINO",
+      "product_name": "Rosmarino - prezzo medio di mercato",
+      "quantity_value": 0.03,
+      "quantity_unit": "KG",
+      "price_eur": 1.47,
+      "unit_price": 49.0,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": 1
+    }
+  ],
+  "visual_rows": [
+    {
+      "product_code": "VISUAL:SPUNTA2026_ACETO_BIANCO_PONTI_1L",
+      "product_name": "Aceto di vino bianco Ponti 1 L",
+      "quantity_value": 1.0,
+      "quantity_unit": "L",
+      "price_eur": 1.19,
+      "unit_price": 1.19,
+      "unit_price_unit": "EUR/L"
+    }
+  ],
+  "full_db": {
+    "rows": 910,
+    "positive": 910,
+    "bassi_fissi": 789,
+    "local_offers": 115,
+    "reference_fallbacks": 5,
+    "store_codes": [
+      "010548"
+    ]
+  },
+  "app_db": {
+    "rows": 733,
+    "positive": 733,
+    "bassi_fissi": 612,
+    "local_offers": 115,
+    "reference_fallbacks": 5,
+    "store_codes": [
+      "010548"
+    ]
+  }
+}
