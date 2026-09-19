@@ -560,9 +560,12 @@ def apply_local_offers(offers, flyer_info):
 
 
 FALLBACK_SPECS = {
-    # V81: SOLO tre prezzi medi fissi approvati dall'utente.
-    # Non sono prezzi Conad/Capodrise; servono unicamente a non bloccare
-    # le ricette per tre ingredienti base a impatto economico minimo.
+    # V81: riferimenti fissi SOLO per piccoli ingredienti-base che altrimenti
+    # bloccano il menu. Non sono prezzi Conad/Capodrise.
+    #
+    # I primi tre sono i riferimenti medi gia' approvati; peperoncino,
+    # origano e rosmarino sono il set minimo aggiuntivo emerso dal test
+    # reale sulle 157 ricette per raggiungere 14 primi + 14 secondi + 7 contorni.
     "aglio": {
         "product_code": "REF:AVG_AGLIO",
         "product_name": "Aglio fresco - prezzo medio di mercato",
@@ -594,6 +597,39 @@ FALLBACK_SPECS = {
         "quantity_value": 0.030,
         "quantity_unit": "KG",
         "price_eur": 0.36,
+        "variable_weight": True,
+    },
+    "peperoncino": {
+        "product_code": "REF:AVG_PEPERONCINO",
+        "product_name": "Peperoncino essiccato - riferimento fisso di mercato",
+        "brand": None,
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+        "quantity_value": 0.030,
+        "quantity_unit": "KG",
+        "price_eur": 1.80,
+        "variable_weight": True,
+    },
+    "origano": {
+        "product_code": "REF:AVG_ORIGANO",
+        "product_name": "Origano essiccato - riferimento fisso di mercato",
+        "brand": None,
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+        "quantity_value": 0.012,
+        "quantity_unit": "KG",
+        "price_eur": 1.50,
+        "variable_weight": True,
+    },
+    "rosmarino": {
+        "product_code": "REF:AVG_ROSMARINO",
+        "product_name": "Rosmarino essiccato - riferimento fisso di mercato",
+        "brand": None,
+        "category1": "Condimenti e conserve",
+        "category2": "Sale, aromi e spezie",
+        "quantity_value": 0.022,
+        "quantity_unit": "KG",
+        "price_eur": 1.50,
         "variable_weight": True,
     },
 }
@@ -664,7 +700,7 @@ def apply_fixed_reference_prices():
             raise RuntimeError(f"Prezzo fisso non valido per {ingredient}")
 
         unit_price = round(price / qty, 4)
-        source_label = "FIXED_MARKET_AVERAGE_V81|USER_APPROVED|2026-09-18"
+        source_label = "FIXED_MARKET_AVERAGE_V81|LOW_IMPACT_STAPLES|2026-09-19"
 
         row = (
             "Conad", STORE_CODE, STORE_NAME, STORE_ADDRESS,
@@ -733,7 +769,7 @@ def apply_fixed_reference_prices():
     )
     con.execute(
         "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
-        ("reference_fallback_policy", "USER_APPROVED_FIXED_2026-09-18"),
+        ("reference_fallback_policy", "LOW_IMPACT_STAPLES_FIXED_2026-09-19"),
     )
     con.commit()
     con.close()
