@@ -1,0 +1,31 @@
+name: V81 EXPORT ANDROID PRODUCTS
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'V81_EXPORT_ANDROID_PRODUCTS.py'
+      - '.github/workflows/V81_EXPORT_ANDROID_PRODUCTS.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Export Android products
+        run: python V81_EXPORT_ANDROID_PRODUCTS.py
+      - name: Commit export
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add conad_v81_android_products.jsonl
+          git diff --cached --quiet && exit 0
+          git commit -m "Export V81 Android products for Kotlin QA"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
