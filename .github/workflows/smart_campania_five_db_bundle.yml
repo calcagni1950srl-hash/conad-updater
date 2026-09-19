@@ -1,0 +1,30 @@
+name: Smart Campania Five DB Bundle
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/smart_campania_five_db_bundle.yml'
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect validated market databases
+        run: |
+          mkdir -p five_db
+          cp prezzi_deco.db five_db/prezzi_deco.db
+          cp prezzi_famila_app.db five_db/prezzi_famila_app.db
+          cp prezzi_sole365_app.db five_db/prezzi_sole365_app.db
+          cp prezzi_conad_capodrise_app.db five_db/prezzi_conad_capodrise_app.db
+          curl -L --fail --retry 3             https://raw.githubusercontent.com/calcagni1950srl-hash/piccolo-updater/main/prezzi.db             -o five_db/prezzi_piccolo.db
+          python - <<'PY'
+          from pathlib import Path
+          for p in Path('five_db').glob('*.db'):
+              b=p.read_bytes()[:16]
+              print(p.name,p.stat().st_size,b)
+              assert b.startswith(b'SQLite format 3')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: smart-campania-five-db
+          path: five_db/
