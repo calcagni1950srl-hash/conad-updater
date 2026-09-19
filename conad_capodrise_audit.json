@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-19T13:16:30Z",
+  "checked_at": "2026-09-19T13:56:17Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -83,6 +83,24 @@
         "quantity_value": 0.03,
         "quantity_unit": "KG",
         "reference_scope": "FIXED_MARKET_AVERAGE_V81"
+      },
+      {
+        "ingredient": "rosmarino",
+        "product_code": "REF:AVG_ROSMARINO",
+        "product_name": "Rosmarino - prezzo medio di mercato",
+        "price_eur": 1.47,
+        "quantity_value": 0.03,
+        "quantity_unit": "KG",
+        "reference_scope": "FIXED_MARKET_AVERAGE_V81"
+      },
+      {
+        "ingredient": "peperoncino",
+        "product_code": "REF:AVG_PEPERONCINO",
+        "product_name": "Peperoncino - prezzo medio di mercato",
+        "price_eur": 0.67,
+        "quantity_value": 0.02,
+        "quantity_unit": "KG",
+        "reference_scope": "FIXED_MARKET_AVERAGE_V81"
       }
     ],
     "skipped": [],
@@ -90,17 +108,17 @@
     "scope": "FIXED_MARKET_AVERAGE_V81"
   },
   "full_db": {
-    "rows": 908,
-    "positive": 908,
+    "rows": 910,
+    "positive": 910,
     "bassi_fissi": 789,
     "local_offers": 115,
-    "reference_fallbacks": 3,
+    "reference_fallbacks": 5,
     "store_codes": [
       "010548"
     ]
   },
   "app_db": {
-    "rows": 731,
+    "rows": 733,
     "local_offers": 115,
     "stores": [
       "010548"
