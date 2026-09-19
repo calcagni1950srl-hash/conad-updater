@@ -1,4 +1,5 @@
 name: CONAD GOURMET OVERVIEW
+# rerun tiny visual overview
 
 on:
   workflow_dispatch:
