@@ -359,6 +359,7 @@ def classify_food(description):
         "alimento per gatti", "pannolini", "ambipur", "oxi action",
         "vino ", "spumante", "grappa", "whiskey", "gin ", "amaro ", "birra ",
         "lavatrice", "televisore", "smart tv", "friggitrice", "caffettiera",
+        "profumo", "disinfettante", "gel mani", "amuchina",
     ]
     if any(word in text for word in exclude):
         return None
