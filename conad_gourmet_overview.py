@@ -6,7 +6,7 @@ SRC=Path("probe_gourmet_pages")
 thumbs=[]
 for i in range(1,21):
     im=Image.open(SRC/f"page_{i:02d}.jpg").convert("RGB")
-    w=260
+    w=125
     h=round(im.height*w/im.width)
     im=im.resize((w,h))
     canvas=Image.new("RGB",(w,h+26),"white")
@@ -23,8 +23,8 @@ for idx,im in enumerate(thumbs):
     x=(idx%cols)*cell_w
     y=(idx//cols)*cell_h
     sheet.paste(im,(x,y))
-out=SRC/"overview_20_pages.jpg"
-sheet.save(out,quality=48,optimize=True)
+out=SRC/"overview_20_pages_tiny.jpg"
+sheet.save(out,quality=28,optimize=True)
 data=base64.b64encode(out.read_bytes()).decode("ascii")
-(SRC/"overview_20_pages.b64.txt").write_text("\n".join(textwrap.wrap(data,4000)),encoding="ascii")
+(SRC/"overview_20_pages_tiny.b64.txt").write_text("\n".join(textwrap.wrap(data,4000)),encoding="ascii")
 print({"size":out.stat().st_size,"b64_lines":len(textwrap.wrap(data,4000)),"dimensions":sheet.size})
