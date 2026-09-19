@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-19T09:22:14Z",
+  "checked_at": "2026-09-19T09:59:32Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -28,11 +28,11 @@
   ],
   "parser": {
     "raw_price_cards": 300,
-    "accepted_before_dedup": 118,
-    "accepted_unique": 118,
+    "accepted_before_dedup": 115,
+    "accepted_unique": 115,
     "rejected": {
       "quantity_ambiguous": 83,
-      "not_food_or_not_useful": 63,
+      "not_food_or_not_useful": 66,
       "starting_from": 21,
       "marketing_or_legal": 4,
       "unit_price_mismatch": 3,
@@ -75,18 +75,18 @@
     "scope": "FIXED_MARKET_AVERAGE_V81"
   },
   "full_db": {
-    "rows": 910,
-    "positive": 910,
+    "rows": 907,
+    "positive": 907,
     "bassi_fissi": 789,
-    "local_offers": 118,
+    "local_offers": 115,
     "reference_fallbacks": 3,
     "store_codes": [
       "010548"
     ]
   },
   "app_db": {
-    "rows": 733,
-    "local_offers": 118,
+    "rows": 730,
+    "local_offers": 115,
     "stores": [
       "010548"
     ]
@@ -359,34 +359,6 @@
       "unit_text": null
     },
     {
-      "product_code": "FLYER:3BBEB6F7A9ECE0A29AA4",
-      "product_name": "PROFUMO AROMATICO TESORI D’ORIENTE muschio bianco/ aegyptus/mirra 100ml",
-      "category1": "Bevande e preparati",
-      "quantity_value": 0.1,
-      "quantity_unit": "L",
-      "price_eur": 2.99,
-      "unit_price": 29.9,
-      "unit_price_unit": "EUR/L",
-      "variable_weight": false,
-      "page": 6,
-      "quantity_reason": "100ml",
-      "unit_text": "€ 29,90 al L"
-    },
-    {
-      "product_code": "FLYER:04621EDB85025164F346",
-      "product_name": "DISINFETTANTE MANI GEL XGERM AMUCHINA 600ml",
-      "category1": "Bevande e preparati",
-      "quantity_value": 0.6,
-      "quantity_unit": "L",
-      "price_eur": 5.89,
-      "unit_price": 9.82,
-      "unit_price_unit": "EUR/L",
-      "variable_weight": false,
-      "page": 6,
-      "quantity_reason": "600ml",
-      "unit_text": "€ 9,82 al L"
-    },
-    {
       "product_code": "FLYER:4BB8B7C91C5AE588D33A",
       "product_name": "LATTE INTERO SAPORI&DINTORNI CONAD prodotto di montagna microﬁ ltrato pet - 1L",
       "category1": "Formaggi, latte e uova",
@@ -511,6 +483,34 @@
       "page": 8,
       "quantity_reason": "250g",
       "unit_text": "€ 11,56 al Kg"
+    },
+    {
+      "product_code": "FLYER:2BCE367D6DEB80FDEF37",
+      "product_name": "YOGURT INTERO VIPITENO vari gusti 2x125g",
+      "category1": "Formaggi, latte e uova",
+      "quantity_value": 0.25,
+      "quantity_unit": "KG",
+      "price_eur": 0.69,
+      "unit_price": 2.76,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 9,
+      "quantity_reason": "2x125g",
+      "unit_text": "€ 2,76 al Kg"
+    },
+    {
+      "product_code": "FLYER:C748AB2D8793B9A0EDE1",
+      "product_name": "PRONTO DA BERE A BASE DI LATTE E CACAO SOLUBILE NESQUIK NESTLÈ classico/senza lattosio brik - 3x180ml",
+      "category1": "Formaggi, latte e uova",
+      "quantity_value": 0.54,
+      "quantity_unit": "L",
+      "price_eur": 2.35,
+      "unit_price": 4.35,
+      "unit_price_unit": "EUR/L",
+      "variable_weight": false,
+      "page": 9,
+      "quantity_reason": "3x180ml",
+      "unit_text": "€ 4,35 al L"
     }
   ]
 }
