@@ -111,20 +111,33 @@ async def browser_probe():
                   .map(e => ({tag:e.tagName, cls:e.className, id:e.id, text:(e.innerText||'').trim()}))""")
                 interaction["address_candidates"]=candidates
                 clicked=False
-                for selector in [".pac-item","[role=option]","li"]:
+                selectors=[
+                    '.pac-container-custom .pac-item[data-place-id]',
+                    '.pac-item[data-place-id]',
+                    '[data-place-id]',
+                    '.pac-item',
+                    '[role=option]',
+                    'li'
+                ]
+                for selector in selectors:
                     locs=page.locator(selector)
                     n=await locs.count()
                     for i in range(min(n,30)):
                         try:
                             txt=(await locs.nth(i).inner_text()).strip()
-                            if "capodrise" in txt.lower():
-                                await locs.nth(i).click()
+                            desc=(await locs.nth(i).get_attribute("data-description")) or ""
+                            if "capodrise" in (txt+" "+desc).lower():
+                                await locs.nth(i).click(force=True)
                                 clicked=True
+                                interaction["clicked_selector"]=selector
+                                interaction["clicked_text"]=txt
+                                interaction["clicked_description"]=desc
                                 break
                         except Exception:
                             pass
                     if clicked:
                         break
+                interaction["clicked"]=clicked
                 await page.wait_for_timeout(1000)
                 interaction["form_after_suggestion"]=(await form.evaluate("(e)=>e.outerHTML"))[:30000] if await form.count() else ""
 
