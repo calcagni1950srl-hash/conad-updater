@@ -59,3 +59,5 @@ jobs:
           git commit -m "Export V81 real five-market catalogs"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+
+# retrigger current Conad catalog 2026-09-21
