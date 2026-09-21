@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-21T08:22:13Z",
+  "checked_at": "2026-09-21T08:44:09Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -135,6 +135,26 @@
         "valid_from": "2026-08-01",
         "valid_to": "2026-09-30",
         "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
+      },
+      {
+        "product_code": "VISUAL:GOURMET3_SALSICCIA_CURVA_PICCANTE_300G",
+        "product_name": "Salsiccia curva piccante Sapori&Dintorni Conad 300 g",
+        "price_eur": 4.79,
+        "quantity_value": 0.3,
+        "quantity_unit": "KG",
+        "valid_from": "2026-09-09",
+        "valid_to": "2026-10-04",
+        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
+      },
+      {
+        "product_code": "VISUAL:GOURMET3_VONGOLE_ADRIATICO_450G",
+        "product_name": "Vongole dell'Adriatico Sapori&Idee Conad 450 g",
+        "price_eur": 3.99,
+        "quantity_value": 0.45,
+        "quantity_unit": "KG",
+        "valid_from": "2026-09-09",
+        "valid_to": "2026-10-04",
+        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
       }
     ],
     "expired": [
@@ -198,8 +218,8 @@
     "scope": "FIXED_MARKET_AVERAGE_V81"
   },
   "full_db": {
-    "rows": 804,
-    "positive": 804,
+    "rows": 806,
+    "positive": 806,
     "bassi_fissi": 789,
     "local_offers": 0,
     "reference_fallbacks": 5,
@@ -208,7 +228,7 @@
     ]
   },
   "app_db": {
-    "rows": 627,
+    "rows": 629,
     "local_offers": 0,
     "stores": [
       "010548"
