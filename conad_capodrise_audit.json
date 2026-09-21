@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-21T08:15:31Z",
+  "checked_at": "2026-09-21T08:22:13Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -54,6 +54,86 @@
         "quantity_unit": "KG",
         "valid_from": "2026-09-16",
         "valid_to": "2026-09-22",
+        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
+      },
+      {
+        "product_code": "VISUAL:INTEGRATIVA19_PASSATA_VALFRUTTA_700G",
+        "product_name": "Passata di pomodoro Valfrutta al Vapore 700 g",
+        "price_eur": 0.79,
+        "quantity_value": 0.7,
+        "quantity_unit": "KG",
+        "valid_from": "2026-09-16",
+        "valid_to": "2026-09-22",
+        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
+      },
+      {
+        "product_code": "VISUAL:INTEGRATIVA19_PASTA_DECECCO_1KG",
+        "product_name": "Pasta di semola De Cecco vari tipi 1 kg",
+        "price_eur": 1.49,
+        "quantity_value": 1.0,
+        "quantity_unit": "KG",
+        "valid_from": "2026-09-16",
+        "valid_to": "2026-09-22",
+        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
+      },
+      {
+        "product_code": "VISUAL:INTEGRATIVA19_OLIO_EVO_FARCHIONI_1L",
+        "product_name": "Olio extra vergine di oliva Farchioni 100% Italiano 1 L",
+        "price_eur": 7.9,
+        "quantity_value": 1.0,
+        "quantity_unit": "L",
+        "valid_from": "2026-09-16",
+        "valid_to": "2026-09-22",
+        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
+      },
+      {
+        "product_code": "VISUAL:INTEGRATIVA19_RISO_CURTIRISO_1KG",
+        "product_name": "Riso per risotto Curtiriso 1 kg",
+        "price_eur": 1.9,
+        "quantity_value": 1.0,
+        "quantity_unit": "KG",
+        "valid_from": "2026-09-16",
+        "valid_to": "2026-09-22",
+        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
+      },
+      {
+        "product_code": "VISUAL:INTEGRATIVA19_FIORDILATTE_VALLELATA_4X180G",
+        "product_name": "Fior di latte Vallelata 4 x 180 g",
+        "price_eur": 5.9,
+        "quantity_value": 0.72,
+        "quantity_unit": "KG",
+        "valid_from": "2026-09-16",
+        "valid_to": "2026-09-22",
+        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
+      },
+      {
+        "product_code": "VISUAL:SPUNTA4_PETTO_POLLO_KG",
+        "product_name": "Petto di pollo",
+        "price_eur": 9.9,
+        "quantity_value": 1.0,
+        "quantity_unit": "KG",
+        "valid_from": "2026-08-01",
+        "valid_to": "2026-09-30",
+        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
+      },
+      {
+        "product_code": "VISUAL:SPUNTA4_FILETTO_PESCE_SPADA_KG",
+        "product_name": "Filetto di pesce spada decongelato",
+        "price_eur": 16.9,
+        "quantity_value": 1.0,
+        "quantity_unit": "KG",
+        "valid_from": "2026-08-01",
+        "valid_to": "2026-09-30",
+        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
+      },
+      {
+        "product_code": "VISUAL:SPUNTA4_OLIO_ARACHIDE_1L",
+        "product_name": "Olio di semi di arachide Desantis 1 L",
+        "price_eur": 2.99,
+        "quantity_value": 1.0,
+        "quantity_unit": "L",
+        "valid_from": "2026-08-01",
+        "valid_to": "2026-09-30",
         "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
       }
     ],
@@ -118,8 +198,8 @@
     "scope": "FIXED_MARKET_AVERAGE_V81"
   },
   "full_db": {
-    "rows": 796,
-    "positive": 796,
+    "rows": 804,
+    "positive": 804,
     "bassi_fissi": 789,
     "local_offers": 0,
     "reference_fallbacks": 5,
@@ -128,7 +208,7 @@
     ]
   },
   "app_db": {
-    "rows": 619,
+    "rows": 627,
     "local_offers": 0,
     "stores": [
       "010548"
