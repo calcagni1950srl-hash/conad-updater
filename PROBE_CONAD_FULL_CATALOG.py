@@ -110,6 +110,38 @@ async def browser_probe():
             except Exception:
                 pass
 
+        js_endpoint_snippets=[]
+        endpoint_patterns=[
+            "stores.json","pointOfService","typeOfService","ORDER_AND_COLLECT",
+            "selectStore","storeSelection","setPointOfService","setStore",
+            "internalStoreCode","preparationCenters","newPlatform"
+        ]
+        for su in script_urls:
+            if "conad-ecommerce" not in su:
+                continue
+            try:
+                rr=await ctx.request.get(su,timeout=30000)
+                if not rr.ok:
+                    continue
+                txt=await rr.text()
+                for pat in endpoint_patterns:
+                    start=0
+                    seen=0
+                    while seen<8:
+                        pos=txt.find(pat,start)
+                        if pos<0:
+                            break
+                        js_endpoint_snippets.append({
+                            "url":su,
+                            "pattern":pat,
+                            "pos":pos,
+                            "snippet":txt[max(0,pos-6000):pos+12000],
+                        })
+                        seen+=1
+                        start=pos+len(pat)
+            except Exception:
+                pass
+
         interaction={"attempted":False,"address_candidates":[],"form_before":"","form_after_suggestion":"","after_verify_text":"","after_verify_url":"","visible_modals":[],"error":None}
         direct_store_probe=None
         try:
@@ -281,6 +313,7 @@ async def browser_probe():
         "initial_buttons":initial_buttons[:150],
         "script_urls":script_urls,
         "script_scan":script_scan,
+        "js_endpoint_snippets":js_endpoint_snippets,
         "interaction":interaction,
         "direct_store_probe":direct_store_probe,
         "selected_page_products":len(selected_products),
