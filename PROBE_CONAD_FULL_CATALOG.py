@@ -56,12 +56,14 @@ async def browser_probe():
 
     def on_request(req):
         u=req.url
-        if any(k in u.lower() for k in ("loader","store","pointofservice","product","search","service","address","location","delivery","pickup","ritiro")):
+        if req.resource_type in ("xhr","fetch","document") or any(k in u.lower() for k in ("loader","store","pointofservice","product","search","service","address","location","delivery","pickup","ritiro","check","funnel","geo")):
             captured.append(u)
             requests_meta.append({
+                "resource_type": req.resource_type,
                 "method": req.method,
                 "url": u,
-                "post_data": (req.post_data or "")[:5000],
+                "post_data": (req.post_data or "")[:10000],
+                "headers": {k:v for k,v in req.headers.items() if k.lower() in ("content-type","referer","x-requested-with")},
             })
 
     async with async_playwright() as p:
@@ -89,9 +91,11 @@ async def browser_probe():
           text:(e.innerText||'').trim(), id:e.id, cls:e.className
         })).filter(x=>x.text)""")
 
-        interaction={"attempted":False,"address_candidates":[],"after_verify_text":"","error":None}
+        interaction={"attempted":False,"address_candidates":[],"form_before":"","form_after_suggestion":"","after_verify_text":"","after_verify_url":"","visible_modals":[],"error":None}
         try:
-            addr=page.locator('input[placeholder*="Via Mario Rossi"]').first
+            form=page.locator("form.banner-address-form").first
+            interaction["form_before"]=(await form.evaluate("(e)=>e.outerHTML"))[:20000] if await form.count() else ""
+            addr=form.locator('input[placeholder*="Via Mario Rossi"]').first if await form.count() else page.locator('input[placeholder*="Via Mario Rossi"]').first
             if await addr.count():
                 interaction["attempted"]=True
                 await addr.fill("Via Retella, Capodrise")
@@ -122,8 +126,9 @@ async def browser_probe():
                     if clicked:
                         break
                 await page.wait_for_timeout(1000)
+                interaction["form_after_suggestion"]=(await form.evaluate("(e)=>e.outerHTML"))[:30000] if await form.count() else ""
 
-                civici=page.locator('input[placeholder*="10"]')
+                civici=form.locator('input[placeholder*="10"]') if await form.count() else page.locator('input[placeholder*="10"]')
                 if await civici.count():
                     for i in range(await civici.count()):
                         try:
@@ -134,13 +139,15 @@ async def browser_probe():
                             pass
 
                 try:
-                    btn=page.get_by_role("button",name="Verifica").first
+                    btn=form.locator("button.submitButton").first if await form.count() else page.get_by_role("button",name="Verifica").first
                     if await btn.count() and await btn.is_visible():
                         await btn.click()
                 except Exception:
                     pass
-                await page.wait_for_timeout(4000)
-                interaction["after_verify_text"]=(await page.locator("body").inner_text())[:15000]
+                await page.wait_for_timeout(6000)
+                interaction["after_verify_url"]=page.url
+                interaction["after_verify_text"]=(await page.locator("body").inner_text())[:20000]
+                interaction["visible_modals"]=await page.locator(".uk-modal.uk-open, .uk-offcanvas.uk-open, [role=dialog]").evaluate_all("""els=>els.map(e=>({id:e.id,cls:e.className,text:(e.innerText||'').trim().slice(0,5000)}))""")
         except Exception as e:
             interaction["error"]=repr(e)
 
