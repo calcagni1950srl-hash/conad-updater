@@ -7,6 +7,7 @@ OUT.mkdir(exist_ok=True)
 FLYERS={
  "integrativa19":"https://www.conad.it/assets/common/volantini/pac/vinteg/Integrativa%2019%20Campania.pdf",
  "spunta4":"https://www.conad.it/assets/common/volantini/pac/v2026-/2026-4-spunta-campania.pdf",
+ "gourmet3":"https://www.conad.it/assets/common/volantini/pac/vcatal/Catalogo%20Gourmet%20Campania.pdf",
 }
 
 summary={}
