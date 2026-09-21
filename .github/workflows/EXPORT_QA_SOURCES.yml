@@ -1,0 +1,25 @@
+name: EXPORT QA SOURCES
+
+on:
+  push:
+    branches:
+      - probe-conad-full-catalog
+    paths:
+      - '.github/workflows/EXPORT_QA_SOURCES.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pack QA sources
+        run: |
+          zip -r qa_sources.zip qa_v81
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qa-sources
+          path: qa_sources.zip
