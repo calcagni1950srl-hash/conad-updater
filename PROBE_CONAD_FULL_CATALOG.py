@@ -145,6 +145,7 @@ async def browser_probe():
 
         interaction={"attempted":False,"address_candidates":[],"form_before":"","form_after_suggestion":"","after_verify_text":"","after_verify_url":"","visible_modals":[],"error":None}
         direct_store_probe=None
+        ecaccess_probe=None
         try:
             form=page.locator("form.banner-address-form").first
             interaction["form_before"]=(await form.evaluate("(e)=>e.outerHTML"))[:20000] if await form.count() else ""
@@ -244,6 +245,90 @@ async def browser_probe():
                 except Exception as e:
                     direct_store_probe={"error":repr(e)}
 
+                try:
+                    store_obj=None
+                    if direct_store_probe and direct_store_probe.get("ok") and direct_store_probe.get("text"):
+                        parsed=json.loads(direct_store_probe["text"])
+                        stores=(parsed.get("data",{}).get("orderAndCollect",{}).get("pointOfServices",[]) or [])
+                        store_obj=next((x for x in stores if x.get("name")=="010548"), None)
+                    if store_obj:
+                        payload={
+                            "pointOfServiceId":store_obj["name"],
+                            "becommerce":store_obj.get("becommerce","sap"),
+                            "typeOfService":"ORDER_AND_COLLECT",
+                            "deliveryAddress":"VIA RETELLA EX GIARD.DEL SOLE, SNC, 81020 CAPODRISE",
+                            "completeAddress":{
+                                "formatted_address":"VIA RETELLA EX GIARD.DEL SOLE, SNC, 81020 CAPODRISE",
+                                "line1":"VIA RETELLA EX GIARD.DEL SOLE",
+                                "line2":"SNC",
+                                "postalCode":"81020",
+                                "town":"CAPODRISE",
+                                "country":{"isocode":"IT","name":"Italia"},
+                                "notCompleted":False,
+                            },
+                            "latitudine":store_obj.get("geoPoint",{}).get("latitude"),
+                            "longitudine":store_obj.get("geoPoint",{}).get("longitude"),
+                            "nStoresFound":len(stores),
+                        }
+                        ecaccess_probe=await page.evaluate("""async (payload)=>{
+                          const out={
+                            hasManager:!!window.OnboardingManager,
+                            hasProtection:typeof window.gpGetProtectionToken==='function',
+                            before:{
+                              localStorage:Object.fromEntries(Object.entries(localStorage)),
+                              pointOfService:window.pointOfService||null,
+                              typeOfService:window.typeOfService||null
+                            }
+                          };
+                          try{
+                            const mgr=window.OnboardingManager;
+                            out.managerKeys=mgr?Object.keys(mgr).slice(0,100):[];
+                            out.setChosenStoreSource=mgr?.storeService?.setChosenStore?.toString?.()||null;
+                            out.postSource=mgr?.storeService?.post?.toString?.()||null;
+                            if(!mgr?.storeService?.setChosenStore) throw new Error("setChosenStore unavailable");
+                            const response=await new Promise((resolve,reject)=>{
+                              mgr.storeService.setChosenStore(
+                                (x)=>resolve({ok:true,data:x}),
+                                (x)=>resolve({ok:false,error:x}),
+                                {...payload}
+                              );
+                              setTimeout(()=>resolve({ok:false,timeout:true}),20000);
+                            });
+                            out.response=response;
+                            out.after={
+                              localStorage:Object.fromEntries(Object.entries(localStorage)),
+                              pointOfService:window.pointOfService||null,
+                              typeOfService:window.typeOfService||null
+                            };
+                          }catch(e){out.error=String(e?.stack||e)}
+                          return out;
+                        }""", payload)
+                        if ecaccess_probe and ecaccess_probe.get("response",{}).get("ok"):
+                            await page.goto(BASE+"/home",wait_until="domcontentloaded",timeout=120000)
+                            await page.wait_for_timeout(5000)
+                            ecaccess_probe["home_url"]=page.url
+                            ecaccess_probe["home_text"]=(await page.locator("body").inner_text())[:25000]
+                            ecaccess_probe["home_storage"]=await page.evaluate("Object.fromEntries(Object.entries(localStorage))")
+                            ecaccess_probe["home_pointOfService"]=await page.evaluate("window.pointOfService||null")
+                            ecaccess_probe["home_typeOfService"]=await page.evaluate("window.typeOfService||null")
+                            ecaccess_probe["home_cookies"]=await ctx.cookies()
+                            await page.goto(FULL_URL,wait_until="domcontentloaded",timeout=120000)
+                            await page.wait_for_timeout(5000)
+                            products_after=[]
+                            for el in await page.locator("[data-product]").all():
+                                raw=await el.get_attribute("data-product")
+                                if raw:
+                                    try: products_after.append(json.loads(raw))
+                                    except Exception: pass
+                            ecaccess_probe["catalog_products"]=len(products_after)
+                            ecaccess_probe["catalog_positive"]=sum(1 for x in products_after if float(x.get("basePrice") or 0)>0)
+                            ecaccess_probe["catalog_sample"]=[{
+                                "code":x.get("code"),"title":x.get("title"),"basePrice":x.get("basePrice"),
+                                "promo":x.get("promo"),"variante":x.get("variante"),"increment":x.get("increment")
+                            } for x in products_after[:15]]
+                except Exception as e:
+                    ecaccess_probe={"error":repr(e)}
+
                 civici=form.locator('#googleInputEntrypageLine2') if await form.count() else page.locator('#googleInputEntrypageLine2')
                 if await civici.count():
                     for i in range(await civici.count()):
@@ -317,6 +402,7 @@ async def browser_probe():
         "js_endpoint_snippets":js_endpoint_snippets,
         "interaction":interaction,
         "direct_store_probe":direct_store_probe,
+        "ecaccess_probe":ecaccess_probe,
         "selected_page_products":len(selected_products),
         "selected_positive_products":sum(1 for x in selected_products if float(x.get("basePrice") or 0)>0),
         "selected_product_sample":selected_products[:10],
