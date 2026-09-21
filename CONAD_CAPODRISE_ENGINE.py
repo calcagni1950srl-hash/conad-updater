@@ -101,17 +101,44 @@ def flyer_urls_from_store_page():
 
 def parse_validity(text):
     compact = clean_text(text).upper()
-    patterns = [
+    month_re = (
+        r"(GENNAIO|FEBBRAIO|MARZO|APRILE|MAGGIO|GIUGNO|LUGLIO|"
+        r"AGOSTO|SETTEMBRE|OTTOBRE|NOVEMBRE|DICEMBRE)"
+    )
+
+    # Intervallo tra mesi diversi, es.:
+    # "OFFERTA VALIDA DA MERCOLEDÌ 23 SETTEMBRE A DOMENICA 4 OTTOBRE 2026"
+    cross_month_patterns = [
         re.compile(
-            r"OFFERTA\s+VALIDA\s+DA\s+[A-ZÀ-Ù]+\s+(\d{1,2})\s+A\s+[A-ZÀ-Ù]+\s+(\d{1,2})\s+"
-            r"(GENNAIO|FEBBRAIO|MARZO|APRILE|MAGGIO|GIUGNO|LUGLIO|AGOSTO|SETTEMBRE|OTTOBRE|NOVEMBRE|DICEMBRE)\s+(20\d{2})"
+            rf"OFFERTA\s+VALIDA\s+DA\s+[A-ZÀ-Ù]+\s+(\d{{1,2}})\s+{month_re}\s+"
+            rf"A\s+[A-ZÀ-Ù]+\s+(\d{{1,2}})\s+{month_re}\s+(20\d{{2}})"
         ),
         re.compile(
-            r"DA\s+[A-ZÀ-Ù]+\s+(\d{1,2})\s+A\s+[A-ZÀ-Ù]+\s+(\d{1,2})\s+"
-            r"(GENNAIO|FEBBRAIO|MARZO|APRILE|MAGGIO|GIUGNO|LUGLIO|AGOSTO|SETTEMBRE|OTTOBRE|NOVEMBRE|DICEMBRE)\s+(20\d{2})"
+            rf"DA\s+[A-ZÀ-Ù]+\s+(\d{{1,2}})\s+{month_re}\s+"
+            rf"A\s+[A-ZÀ-Ù]+\s+(\d{{1,2}})\s+{month_re}\s+(20\d{{2}})"
         ),
     ]
-    for pat in patterns:
+    for pat in cross_month_patterns:
+        m = pat.search(compact)
+        if m:
+            d1, month1_name, d2, month2_name, year = m.groups()
+            return (
+                date(int(year), MONTHS[month1_name], int(d1)),
+                date(int(year), MONTHS[month2_name], int(d2)),
+            )
+
+    # Intervallo nello stesso mese, formato storico.
+    same_month_patterns = [
+        re.compile(
+            rf"OFFERTA\s+VALIDA\s+DA\s+[A-ZÀ-Ù]+\s+(\d{{1,2}})\s+A\s+[A-ZÀ-Ù]+\s+(\d{{1,2}})\s+"
+            rf"{month_re}\s+(20\d{{2}})"
+        ),
+        re.compile(
+            rf"DA\s+[A-ZÀ-Ù]+\s+(\d{{1,2}})\s+A\s+[A-ZÀ-Ù]+\s+(\d{{1,2}})\s+"
+            rf"{month_re}\s+(20\d{{2}})"
+        ),
+    ]
+    for pat in same_month_patterns:
         m = pat.search(compact)
         if m:
             d1, d2, month_name, year = m.groups()
