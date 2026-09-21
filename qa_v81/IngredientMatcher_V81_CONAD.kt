@@ -629,7 +629,6 @@ internal object IngredientMatcher {
             "zucchine medie" -> "zucchine"
             "peperoni di colori diversi" -> "peperoni"
             "pomodori maturi", "pomodoro ramato" -> "pomodoro"
-            "pomodorini pizzutelli" -> "pomodorini"
             "pasta", "pasta generica", "pasta generico" -> "pasta corta"
             else -> n
         }
@@ -775,7 +774,7 @@ internal object IngredientMatcher {
         }
 
         if (ingredient == "cioccolato fondente") {
-            if (listOf("biscott", "wafer", "gallette", "cereali", "bar ", "protein", "snack", "frollin").any { productName.contains(it) }) return false
+            if (listOf("biscott", "wafer", "gallette", "cereali", "bar ", "protein", "snack", "frollin", "oro ciok").any { productName.contains(it) }) return false
         }
 
         if (ingredient == "olive") {
