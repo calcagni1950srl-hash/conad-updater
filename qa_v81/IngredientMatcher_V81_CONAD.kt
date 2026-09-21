@@ -930,15 +930,49 @@ internal object IngredientMatcher {
                 ingredient == "zucchero bianco" || ingredient == "cioccolato fondente" -> cat("biscotti cereali e dolci", "condimenti e conserve")
                 ingredient == "fagiolini" ->
                     cat("frutta e verdura", "surgelati e gelati") && name.contains("fagiolin")
+                ingredient == "scarola" ->
+                    (cat("frutta e verdura") && name.contains("scarola")) ||
+                        (cat("surgelati e gelati") && name.contains("scarola"))
+                ingredient == "friarielli" ->
+                    (cat("frutta e verdura") && name.contains("friarielli")) ||
+                        (cat("surgelati e gelati") && name.contains("friarielli"))
+                ingredient == "broccoli" ->
+                    cat("frutta e verdura", "surgelati e gelati") &&
+                        name.contains("broccoli") &&
+                        !hasAny("tortini", "quadratini", "minestrone")
                 ingredient in setOf("pomodoro", "pomodori", "pomodorini", "pomodorini pizzutelli", "carciofi",
                     "zucchine", "melanzane", "patate", "patate a pasta gialla", "peperoni", "peperone rosso",
-                    "cavolfiore", "verza", "lattuga", "friggitelli", "scarola", "friarielli",
-                    "broccoli", "cicoria", "finocchi", "finocchio", "zucca", "carota", "sedano") ->
+                    "cavolfiore", "verza", "lattuga", "friggitelli",
+                    "cicoria", "finocchi", "finocchio", "zucca", "carota", "sedano") ->
                     cat("frutta e verdura")
                 ingredient == "aglio" || ingredient == "cipolla" || ingredient.startsWith("cipolla") || ingredient.startsWith("cipolle") ->
                     cat("frutta e verdura")
-                ingredient == "limone" || ingredient == "limone amalfitano" -> cat("frutta e verdura")
-                ingredient == "basilico" || ingredient == "prezzemolo" || ingredient == "rosmarino" ->
+                ingredient == "riso" ->
+                    cat("pasta e riso") && name.contains("riso") &&
+                        !hasAny(
+                            "risoni", "pasta ", "ditalini", "penne", "spaghetti",
+                            "rigatoni", "fusilli", "stelline", "tagliatelle", "gnocchi",
+                            "cotto a vapore", "pronte da condire", "apri scalda",
+                            "mix 3 cereali", "salsa"
+                        )
+                ingredient == "limone" || ingredient == "limone amalfitano" ->
+                    cat("frutta e verdura") &&
+                        (name.startsWith("limone") || name.startsWith("limoni")) &&
+                        !hasAny("cioc", "scorz", "filetti")
+                ingredient == "basilico" ->
+                    (
+                        cat("condimenti e conserve") &&
+                            (
+                                name.startsWith("basilico") ||
+                                name.contains("erbe aromatiche basilico") ||
+                                name.contains("basilico foglie")
+                            )
+                    ) ||
+                        (
+                            cat("surgelati e gelati") &&
+                                name.contains("basilico tritato")
+                        )
+                ingredient == "prezzemolo" || ingredient == "rosmarino" ->
                     cat("frutta e verdura", "condimenti e conserve") &&
                         !hasAny("pesto", "sugo", "snack", "patatine", "gratinat", "spiedini")
                 ingredient == "peperoncino" || ingredient == "peperoncino essiccato" ->
@@ -957,10 +991,16 @@ internal object IngredientMatcher {
                          QuantityParser.familyOf(product.unitPriceUnit) == QuantityFamily.VOLUME)
                 ingredient == "aceto" || ingredient == "aceto di vino bianco" ->
                     cat("condimenti e conserve") && name.contains("aceto")
-                ingredient.contains("vino") -> cat("bevande e preparati", "vino birra e altri alcolici")
+                ingredient.contains("vino") ->
+                    cat("vino birra e altri alcolici") && name.contains("vino")
                 ingredient == "alici fresche" -> cat("pesce", "surgelati e gelati")
                 ingredient.contains("acciug") || ingredient.startsWith("alici") -> cat("condimenti e conserve", "pesce", "surgelati e gelati")
-                ingredient in setOf("tonno al naturale", "sgombro al naturale") -> cat("condimenti e conserve", "pesce", "piatti pronti")
+                ingredient == "tonno al naturale" ->
+                    cat("condimenti e conserve", "pesce", "piatti pronti") &&
+                        name.contains("tonno") && name.contains("naturale")
+                ingredient == "sgombro al naturale" ->
+                    cat("condimenti e conserve", "pesce", "piatti pronti") &&
+                        name.contains("sgombro") && name.contains("naturale")
                 ingredient in setOf("gamberi", "gamberi o calamaretti") ->
                     cat("pesce", "surgelati e gelati") &&
                         !hasAny("misto", "pastellat", "sugo", "cialde", "saikebon", "insalat")
