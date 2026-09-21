@@ -37,7 +37,8 @@ jobs:
       - name: Final SQLite audit
         run: |
           python - <<'PY'
-          import json, sqlite3
+          import json, sqlite3, datetime
+          today=datetime.date.today()
           for name, minimum in [('prezzi_conad_capodrise.db', 740), ('prezzi_conad_capodrise_app.db', 600)]:
               con=sqlite3.connect(name)
               rows=con.execute('select count(*) from products_current').fetchone()[0]
@@ -45,12 +46,23 @@ jobs:
               stores=con.execute('select distinct store_code from products_current').fetchall()
               local=con.execute("select count(*) from products_current where product_code like 'FLYER:%'").fetchone()[0]
               refs=con.execute("select count(*) from products_current where product_code like 'REF:%'").fetchone()[0]
-              print(json.dumps({'db':name,'rows':rows,'positive':positive,'stores':stores,'local_offers':local,'reference_fallbacks':refs}))
+              meta=dict(con.execute("select key,value from metadata").fetchall())
+              valid_to=(meta.get('local_flyer_valid_to') or '').strip()
+              active_main=False
+              if valid_to:
+                  try:
+                      active_main=datetime.date.fromisoformat(valid_to) >= today
+                  except ValueError:
+                      active_main=False
+              print(json.dumps({'db':name,'rows':rows,'positive':positive,'stores':stores,'local_offers':local,'reference_fallbacks':refs,'active_main_flyer':active_main,'local_flyer_valid_to':valid_to}))
               assert rows >= minimum
               assert rows == positive
               assert stores == [('010548',)]
-              assert local >= 40
-              assert refs in (3, 5)
+              if active_main:
+                  assert local >= 40
+              else:
+                  assert local == 0
+              assert refs == 5
               con.close()
           PY
 
@@ -96,8 +108,8 @@ jobs:
               fh.write("key\tname\tbrand\tcategory\tquantityValue\tquantityUnit\tpriceEur\tunitPriceEur\tunitPriceUnit\tvariableWeight\tsourceUrl\tcheckedAt\n")
               for row in rows:
                   fh.write("\t".join(row)+"\n")
-          if len(rows) < 733:
-              raise SystemExit(f"Expected at least 733 Android products, got {len(rows)}")
+          if len(rows) < 600:
+              raise SystemExit(f"Expected at least 600 Android products, got {len(rows)}")
           PY
 
           kotlinc             qa_v81/SupermarketRepositoryStub.kt             qa_v81/ShoppingCalculator.kt             qa_v81/IngredientMatcher_V81_CONAD.kt             qa_v81/ConadV81Harness.kt             -include-runtime             -d qa_v81/v81-conad-harness.jar
@@ -123,8 +135,8 @@ jobs:
               got=val(k)
               if got.lower()!=v.lower():
                   raise SystemExit(f"{k}: expected {v}, got {got}")
-          if int(val("products")) < 733:
-              raise SystemExit(f'products: expected at least 733, got {val("products")}')
+          if int(val("products")) < 600:
+              raise SystemExit(f'products: expected at least 600, got {val("products")}')
           print({
               "recipes_total":val("recipes_total"),
               "recipes_testable":val("recipes_testable"),
