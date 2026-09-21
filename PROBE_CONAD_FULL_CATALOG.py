@@ -114,7 +114,8 @@ async def browser_probe():
         endpoint_patterns=[
             "stores.json","pointOfService","typeOfService","ORDER_AND_COLLECT",
             "selectStore","storeSelection","setPointOfService","setStore",
-            "internalStoreCode","preparationCenters","newPlatform"
+            "internalStoreCode","preparationCenters","newPlatform",
+            "chosenStore","storeSelected","selectedDeliveryId","setPointOfService"
         ]
         for su in script_urls:
             if "conad-ecommerce" not in su:
