@@ -33,4 +33,5 @@ jobs:
           git add conad_capodrise_active_flyers_probe.json
           git diff --cached --quiet && exit 0
           git commit -m "Audit active Conad Capodrise flyers"
-          git push
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
