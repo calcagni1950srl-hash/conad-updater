@@ -1,0 +1,48 @@
+name: V81 CURRENT CONAD PROJECTION QA
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'qa_v81/current_projection_20260921.py'
+      - '.github/workflows/V81_CURRENT_CONAD_PROJECTION_QA.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build current projected catalog
+        run: python qa_v81/current_projection_20260921.py
+
+      - name: Install Kotlin
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip curl
+          curl -L -o /tmp/kotlin.zip https://github.com/JetBrains/kotlin/releases/download/v2.0.21/kotlin-compiler-2.0.21.zip
+          unzip -q /tmp/kotlin.zip -d /tmp/kotlin
+          echo "/tmp/kotlin/kotlinc/bin" >> "${GITHUB_PATH}"
+
+      - name: Compile and run current QA
+        run: |
+          kotlinc             qa_v81/SupermarketRepositoryStub.kt             qa_v81/ShoppingCalculator.kt             qa_v81/IngredientMatcher_V81_CONAD.kt             qa_v81/ConadV81Harness.kt             -include-runtime             -d qa_v81/v81-current-conad-harness.jar
+
+          java -jar qa_v81/v81-current-conad-harness.jar             qa_v81/products_current_20260921.tsv             qa_v81/recipes_v61_157.tsv             2 | tee qa_v81/v81_current_projection_report.txt
+
+      - name: Commit current projection report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa_v81/current_projection_summary.json qa_v81/v81_current_projection_report.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Record current V81 Conad projection QA"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
