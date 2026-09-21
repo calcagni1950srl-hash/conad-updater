@@ -76,17 +76,18 @@ internal object IngredientMatcher {
         "basilico" to setOf("basilico"),
         "prezzemolo" to setOf("prezzemolo"),
         "peperoncino" to setOf("peperoncino", "peperoncino rosso", "peperoncini"),
+        "peperoncino essiccato" to setOf("peperoncino essiccato", "peperoncino macinato"),
         "origano" to setOf("origano"),
         "rosmarino" to setOf("rosmarino"),
         "menta" to setOf("menta"),
         "capperi" to setOf("capperi", "cappero"),
         "capperi sotto sale" to setOf("capperi sotto sale", "capperi"),
         "acciughe" to setOf("acciughe", "acciuga", "alici", "alice", "filetti di acciuga"),
-        "acciughe sott olio" to setOf("acciughe sott olio", "filetti di acciuga sott olio"),
-        "filetti di acciuga" to setOf("filetti di acciuga", "acciughe"),
+        "acciughe sott olio" to setOf("acciughe sott olio", "filetti di acciuga sott olio", "filetti di alici sott olio"),
+        "filetti di acciuga" to setOf("filetti di acciuga", "filetti di alici", "acciughe"),
         "alici sotto sale" to setOf("alici sotto sale", "acciughe sotto sale"),
         "alici fresche" to setOf("alici fresche", "alici"),
-        "olio di semi di arachidi" to setOf("olio di semi di arachidi", "olio arachidi"),
+        "olio di semi di arachidi" to setOf("olio di semi di arachidi", "olio di semi di arachide", "olio arachidi"),
         "olio di semi per frittura" to setOf("olio di semi", "olio di semi di girasole", "olio di girasole", "olio per friggere"),
         "olio per friggere" to setOf("olio di semi", "olio di semi di girasole", "olio di girasole", "olio per friggere"),
 
@@ -106,7 +107,7 @@ internal object IngredientMatcher {
 
         "pomodoro" to setOf("pomodoro"),
         "pomodori" to setOf("pomodori", "pomodoro"),
-        "pomodorini" to setOf("pomodorini", "pomodoro ciliegino", "ciliegino"),
+        "pomodorini" to setOf("pomodorini", "pomodoro ciliegino", "ciliegino", "pomodoro ciliegia", "pomodoro datterino", "datterino"),
         "pomodori pelati" to setOf("pomodori pelati", "pelati"),
         "pomodori san marzano pelati" to setOf("san marzano pelati", "pomodori pelati"),
         "pomodori pelati san marzano" to setOf("san marzano pelati", "pomodori pelati"),
@@ -941,6 +942,9 @@ internal object IngredientMatcher {
                 ingredient == "basilico" || ingredient == "prezzemolo" || ingredient == "rosmarino" ->
                     cat("frutta e verdura", "condimenti e conserve") &&
                         !hasAny("pesto", "sugo", "snack", "patatine", "gratinat", "spiedini")
+                ingredient == "peperoncino" || ingredient == "peperoncino essiccato" ->
+                    cat("condimenti e conserve") && name.contains("peperoncino") &&
+                        !hasAny("olio", "sugo", "pesto", "snack", "crostini", "patatine")
                 ingredient == "origano" ->
                     cat("condimenti e conserve") && name.contains("origano") && !hasAny("crostini", "gusto pizza")
                 ingredient == "pepe" || ingredient == "pepe nero" ->
@@ -954,17 +958,29 @@ internal object IngredientMatcher {
                          QuantityParser.familyOf(product.unitPriceUnit) == QuantityFamily.VOLUME)
                 ingredient == "aceto" || ingredient == "aceto di vino bianco" ->
                     cat("condimenti e conserve") && name.contains("aceto")
-                ingredient.contains("vino") -> cat("bevande e preparati")
+                ingredient.contains("vino") -> cat("bevande e preparati", "vino birra e altri alcolici")
                 ingredient == "alici fresche" -> cat("pesce", "surgelati e gelati")
                 ingredient.contains("acciug") || ingredient.startsWith("alici") -> cat("condimenti e conserve", "pesce", "surgelati e gelati")
-                ingredient in setOf("tonno al naturale", "sgombro al naturale") -> cat("condimenti e conserve", "pesce")
+                ingredient in setOf("tonno al naturale", "sgombro al naturale") -> cat("condimenti e conserve", "pesce", "piatti pronti")
+                ingredient in setOf("gamberi", "gamberi o calamaretti") ->
+                    cat("pesce", "surgelati e gelati") &&
+                        !hasAny("misto", "pastellat", "sugo", "cialde", "saikebon", "insalat")
+                ingredient in setOf("calamari", "calamaretti") ->
+                    cat("pesce", "surgelati e gelati") &&
+                        !hasAny("misto", "pastellat", "sugo", "preparat")
+                ingredient in setOf("totani", "anelli di totano") ->
+                    cat("pesce", "surgelati e gelati") && !hasAny("pastellat", "misto")
+                ingredient in setOf("branzino", "filetto di branzino") ->
+                    cat("pesce", "surgelati e gelati") &&
+                        !hasAny("con verdure", "alla ligure", "piatto pronto", "preparat")
+                ingredient == "frutti di mare misti" ->
+                    cat("pesce", "surgelati e gelati") &&
+                        !hasAny("sugo", "zuppa", "piatto pronto", "pastellat")
                 ingredient in setOf(
                     "cozze", "vongole", "vongole veraci", "polpo", "polpo verace",
-                    "calamari", "calamaretti", "gamberi", "gamberi o calamaretti", "scampi",
-                    "seppie pulite", "seppioline", "totani", "anelli di totano", "moscardini",
+                    "scampi", "seppie pulite", "seppioline", "moscardini",
                     "pesce spada", "filetto di pesce spada", "tonno fresco", "filetto di tonno",
-                    "sgombro pulito", "tranci di spigola", "orata", "filetti di orata",
-                    "branzino", "filetto di branzino"
+                    "sgombro pulito", "tranci di spigola", "orata", "filetti di orata"
                 ) -> cat("pesce", "surgelati e gelati")
                 ingredient == "carne macinata" || ingredient.contains("manzo") || ingredient.contains("bovino") ||
                     ingredient.contains("vitello") || ingredient.contains("maiale") || ingredient.contains("salsic") ||
