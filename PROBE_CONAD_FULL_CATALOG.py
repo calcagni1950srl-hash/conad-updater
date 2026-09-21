@@ -127,7 +127,11 @@ async def browser_probe():
                             txt=(await locs.nth(i).inner_text()).strip()
                             desc=(await locs.nth(i).get_attribute("data-description")) or ""
                             if "capodrise" in (txt+" "+desc).lower():
-                                await locs.nth(i).click(force=True)
+                                target=locs.nth(i).locator("a").first
+                                if await target.count():
+                                    await target.click(force=True)
+                                else:
+                                    await locs.nth(i).click(force=True)
                                 clicked=True
                                 interaction["clicked_selector"]=selector
                                 interaction["clicked_text"]=txt
@@ -138,10 +142,13 @@ async def browser_probe():
                     if clicked:
                         break
                 interaction["clicked"]=clicked
-                await page.wait_for_timeout(1000)
+                await page.wait_for_timeout(1800)
                 interaction["form_after_suggestion"]=(await form.evaluate("(e)=>e.outerHTML"))[:30000] if await form.count() else ""
+                interaction["address_value_after_click"]=await addr.input_value()
+                interaction["line2_class_after_click"]=await page.locator("#googleInputEntrypageLine2").get_attribute("class")
+                interaction["line2_visible_after_click"]=await page.locator("#googleInputEntrypageLine2").is_visible()
 
-                civici=form.locator('input[placeholder*="10"]') if await form.count() else page.locator('input[placeholder*="10"]')
+                civici=form.locator('#googleInputEntrypageLine2') if await form.count() else page.locator('#googleInputEntrypageLine2')
                 if await civici.count():
                     for i in range(await civici.count()):
                         try:
@@ -157,10 +164,41 @@ async def browser_probe():
                         await btn.click()
                 except Exception:
                     pass
-                await page.wait_for_timeout(6000)
+                await page.wait_for_timeout(5000)
+
                 interaction["after_verify_url"]=page.url
-                interaction["after_verify_text"]=(await page.locator("body").inner_text())[:20000]
-                interaction["visible_modals"]=await page.locator(".uk-modal.uk-open, .uk-offcanvas.uk-open, [role=dialog]").evaluate_all("""els=>els.map(e=>({id:e.id,cls:e.className,text:(e.innerText||'').trim().slice(0,5000)}))""")
+                interaction["after_verify_text"]=(await page.locator("body").inner_text())[:30000]
+                interaction["visible_modals"]=await page.locator(".uk-modal.uk-open, .uk-offcanvas.uk-open, [role=dialog]").evaluate_all("""els=>els.map(e=>({id:e.id,cls:e.className,text:(e.innerText||'').trim().slice(0,8000)}))""")
+                interaction["buttons_after_verify"]=await page.locator("button,a").evaluate_all("""els=>els.map(e=>({
+                    tag:e.tagName,text:(e.innerText||'').trim(),id:e.id,cls:e.className,href:e.getAttribute('href')
+                })).filter(x=>x.text).slice(0,500)""")
+
+                service_clicked=None
+                for label in ["Ordina e Ritira","Ordina e ritira","Ritiro","Spesa a Casa"]:
+                    try:
+                        loc=page.get_by_text(label, exact=False)
+                        n=await loc.count()
+                        for j in range(min(n,20)):
+                            if await loc.nth(j).is_visible():
+                                await loc.nth(j).click(force=True)
+                                service_clicked=label
+                                break
+                        if service_clicked:
+                            break
+                    except Exception:
+                        pass
+                interaction["service_clicked"]=service_clicked
+                if service_clicked:
+                    await page.wait_for_timeout(5000)
+                    interaction["after_service_url"]=page.url
+                    interaction["after_service_text"]=(await page.locator("body").inner_text())[:30000]
+                    interaction["buttons_after_service"]=await page.locator("button,a").evaluate_all("""els=>els.map(e=>({
+                        tag:e.tagName,text:(e.innerText||'').trim(),id:e.id,cls:e.className,href:e.getAttribute('href')
+                    })).filter(x=>x.text).slice(0,500)""")
+                    interaction["capodrise_nodes_after_service"]=await page.locator("body *").evaluate_all("""els=>els.filter(e=>{
+                        const s=getComputedStyle(e),t=(e.innerText||'').trim().toLowerCase();
+                        return t.includes('capodrise') && t.length<1500 && s.display!=='none' && s.visibility!=='hidden';
+                    }).slice(0,100).map(e=>({tag:e.tagName,id:e.id,cls:e.className,text:(e.innerText||'').trim()}))""")
         except Exception as e:
             interaction["error"]=repr(e)
 
