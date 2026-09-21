@@ -67,7 +67,7 @@ async def browser_probe():
             })
 
     async with async_playwright() as p:
-        browser=await p.chromium.launch(headless=True)
+        browser=await p.chromium.launch(headless=(os.getenv("CONAD_HEADLESS","1")!="0"))
         ctx=await browser.new_context(locale="it-IT")
         page=await ctx.new_page()
         page.on("request", on_request)
