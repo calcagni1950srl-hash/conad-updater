@@ -91,6 +91,25 @@ async def browser_probe():
           text:(e.innerText||'').trim(), id:e.id, cls:e.className
         })).filter(x=>x.text)""")
 
+        script_urls=await page.locator("script[src]").evaluate_all("""els=>els.map(e=>e.src).filter(Boolean)""")
+        script_scan=[]
+        for su in script_urls:
+            try:
+                rr=await ctx.request.get(su,timeout=30000)
+                if not rr.ok:
+                    continue
+                txt=await rr.text()
+                low=txt.lower()
+                if any(k in low for k in ("googleinputentrypageline1","banner-address-form","pac-container-custom","scelta negozio","id negozio")):
+                    hits=[]
+                    for key in ("googleInputEntrypageLine1","banner-address-form","pac-container-custom","ID Negozio","pointOfService","storeCode","pickup","ritiro"):
+                        pos=txt.find(key)
+                        if pos>=0:
+                            hits.append({"key":key,"snippet":txt[max(0,pos-1200):pos+3500]})
+                    script_scan.append({"url":su,"bytes":len(txt),"hits":hits})
+            except Exception:
+                pass
+
         interaction={"attempted":False,"address_candidates":[],"form_before":"","form_after_suggestion":"","after_verify_text":"","after_verify_url":"","visible_modals":[],"error":None}
         try:
             form=page.locator("form.banner-address-form").first
@@ -111,36 +130,59 @@ async def browser_probe():
                   .map(e => ({tag:e.tagName, cls:e.className, id:e.id, text:(e.innerText||'').trim()}))""")
                 interaction["address_candidates"]=candidates
                 clicked=False
-                selectors=[
-                    '.pac-container-custom .pac-item[data-place-id]',
-                    '.pac-item[data-place-id]',
-                    '[data-place-id]',
-                    '.pac-item',
-                    '[role=option]',
-                    'li'
-                ]
-                for selector in selectors:
-                    locs=page.locator(selector)
-                    n=await locs.count()
-                    for i in range(min(n,30)):
-                        try:
-                            txt=(await locs.nth(i).inner_text()).strip()
-                            desc=(await locs.nth(i).get_attribute("data-description")) or ""
-                            if "capodrise" in (txt+" "+desc).lower():
-                                target=locs.nth(i).locator("a").first
-                                if await target.count():
-                                    await target.click(force=True)
-                                else:
-                                    await locs.nth(i).click(force=True)
-                                clicked=True
-                                interaction["clicked_selector"]=selector
-                                interaction["clicked_text"]=txt
-                                interaction["clicked_description"]=desc
-                                break
-                        except Exception:
-                            pass
-                    if clicked:
-                        break
+                try:
+                    await addr.press("ArrowDown")
+                    await page.wait_for_timeout(300)
+                    await addr.press("Enter")
+                    await page.wait_for_timeout(1200)
+                    interaction["keyboard_selection_attempted"]=True
+                    interaction["keyboard_address_value"]=await addr.input_value()
+                    interaction["keyboard_line2_class"]=await page.locator("#googleInputEntrypageLine2").get_attribute("class")
+                    if "uk-hidden" not in (interaction["keyboard_line2_class"] or ""):
+                        clicked=True
+                        interaction["clicked_selector"]="keyboard:ArrowDown+Enter"
+                except Exception as e:
+                    interaction["keyboard_selection_error"]=repr(e)
+
+                if not clicked:
+                    selectors=[
+                        '.pac-container-custom .pac-item[data-place-id]',
+                        '.pac-item[data-place-id]',
+                        '[data-place-id]',
+                        '.pac-item',
+                        '[role=option]',
+                        'li'
+                    ]
+                    for selector in selectors:
+                        locs=page.locator(selector)
+                        n=await locs.count()
+                        for i in range(min(n,30)):
+                            try:
+                                txt=(await locs.nth(i).inner_text()).strip()
+                                desc=(await locs.nth(i).get_attribute("data-description")) or ""
+                                if "capodrise" in (txt+" "+desc).lower():
+                                    target=locs.nth(i).locator("a").first
+                                    if await target.count():
+                                        await target.evaluate("""e=>{
+                                          e.dispatchEvent(new MouseEvent('mousedown',{bubbles:true,cancelable:true,view:window}));
+                                          e.dispatchEvent(new MouseEvent('mouseup',{bubbles:true,cancelable:true,view:window}));
+                                          e.click();
+                                        }""")
+                                    else:
+                                        await locs.nth(i).evaluate("""e=>{
+                                          e.dispatchEvent(new MouseEvent('mousedown',{bubbles:true,cancelable:true,view:window}));
+                                          e.dispatchEvent(new MouseEvent('mouseup',{bubbles:true,cancelable:true,view:window}));
+                                          e.click();
+                                        }""")
+                                    clicked=True
+                                    interaction["clicked_selector"]=selector
+                                    interaction["clicked_text"]=txt
+                                    interaction["clicked_description"]=desc
+                                    break
+                            except Exception:
+                                pass
+                        if clicked:
+                            break
                 interaction["clicked"]=clicked
                 await page.wait_for_timeout(1800)
                 interaction["form_after_suggestion"]=(await form.evaluate("(e)=>e.outerHTML"))[:30000] if await form.count() else ""
@@ -216,6 +258,8 @@ async def browser_probe():
         "storage":storage,
         "initial_inputs":initial_inputs,
         "initial_buttons":initial_buttons[:150],
+        "script_urls":script_urls,
+        "script_scan":script_scan,
         "interaction":interaction,
         "selected_page_products":len(selected_products),
         "selected_positive_products":sum(1 for x in selected_products if float(x.get("basePrice") or 0)>0),
