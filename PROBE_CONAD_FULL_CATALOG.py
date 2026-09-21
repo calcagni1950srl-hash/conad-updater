@@ -102,7 +102,7 @@ async def browser_probe():
                 low=txt.lower()
                 if any(k in low for k in ("googleinputentrypageline1","banner-address-form","pac-container-custom","scelta negozio","id negozio")):
                     hits=[]
-                    for key in ("googleInputEntrypageLine1","banner-address-form","pac-container-custom","ID Negozio","pointOfService","storeCode","pickup","ritiro"):
+                    for key in ("googleInputEntrypageLine1","banner-address-form","pac-container-custom","ID Negozio","pointOfService","storeCode","stores.json","ORDER_AND_COLLECT","pickup","ritiro"):
                         pos=txt.find(key)
                         if pos>=0:
                             hits.append({"key":key,"snippet":txt[max(0,pos-1200):pos+3500]})
@@ -111,6 +111,7 @@ async def browser_probe():
                 pass
 
         interaction={"attempted":False,"address_candidates":[],"form_before":"","form_after_suggestion":"","after_verify_text":"","after_verify_url":"","visible_modals":[],"error":None}
+        direct_store_probe=None
         try:
             form=page.locator("form.banner-address-form").first
             interaction["form_before"]=(await form.evaluate("(e)=>e.outerHTML"))[:20000] if await form.count() else ""
@@ -190,6 +191,26 @@ async def browser_probe():
                 interaction["line2_class_after_click"]=await page.locator("#googleInputEntrypageLine2").get_attribute("class")
                 interaction["line2_visible_after_click"]=await page.locator("#googleInputEntrypageLine2").is_visible()
 
+                try:
+                    rr=await ctx.request.post(
+                        BASE+"/api/ecommerce/it-it.stores.json",
+                        data={
+                            "latitudine":41.0435591,
+                            "longitudine":14.3170526,
+                            "typeOfService":"ORDER_AND_COLLECT",
+                            "partial":True,
+                        },
+                        headers={"referer":BASE+"/entry","content-type":"application/json"},
+                        timeout=60000,
+                    )
+                    direct_store_probe={
+                        "status":rr.status,
+                        "ok":rr.ok,
+                        "text":(await rr.text())[:200000],
+                    }
+                except Exception as e:
+                    direct_store_probe={"error":repr(e)}
+
                 civici=form.locator('#googleInputEntrypageLine2') if await form.count() else page.locator('#googleInputEntrypageLine2')
                 if await civici.count():
                     for i in range(await civici.count()):
@@ -261,6 +282,7 @@ async def browser_probe():
         "script_urls":script_urls,
         "script_scan":script_scan,
         "interaction":interaction,
+        "direct_store_probe":direct_store_probe,
         "selected_page_products":len(selected_products),
         "selected_positive_products":sum(1 for x in selected_products if float(x.get("basePrice") or 0)>0),
         "selected_product_sample":selected_products[:10],
