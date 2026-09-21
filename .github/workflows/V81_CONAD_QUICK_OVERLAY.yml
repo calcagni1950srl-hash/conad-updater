@@ -1,0 +1,77 @@
+name: V81 CONAD QUICK OVERLAY QA
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'qa_v81/quick_overlay_current.py'
+      - '.github/workflows/V81_CONAD_QUICK_OVERLAY.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  quick:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install lightweight dependencies
+        run: pip install requests pymupdf beautifulsoup4 playwright
+
+      - name: Apply current verified visual offers
+        run: python qa_v81/quick_overlay_current.py
+
+      - name: Export Android products
+        run: |
+          python V81_EXPORT_ANDROID_PRODUCTS.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          src=Path("conad_v81_android_products.jsonl")
+          out=Path("qa_v81/products_v81_android.tsv")
+          rows=[]
+          for line in src.read_text(encoding="utf-8").splitlines():
+              if not line.strip():
+                  continue
+              x=json.loads(line)
+              def clean(v):
+                  if v is None:
+                      return ""
+                  return str(v).replace("\t"," ").replace("\r"," ").replace("\n"," ")
+              rows.append([
+                  clean(x.get("key")), clean(x.get("name")), clean(x.get("brand")),
+                  clean(x.get("category")), clean(x.get("quantityValue")),
+                  clean(x.get("quantityUnit")), clean(x.get("priceEur")),
+                  clean(x.get("unitPriceEur")), clean(x.get("unitPriceUnit")),
+                  "1" if x.get("variableWeight") else "0",
+                  clean(x.get("sourceUrl")), clean(x.get("checkedAt")),
+              ])
+          with out.open("w", encoding="utf-8") as fh:
+              fh.write("key\tname\tbrand\tcategory\tquantityValue\tquantityUnit\tpriceEur\tunitPriceEur\tunitPriceUnit\tvariableWeight\tsourceUrl\tcheckedAt\n")
+              for row in rows:
+                  fh.write("\t".join(row)+"\n")
+          print({"rows":len(rows)})
+          PY
+
+      - name: Run Kotlin QA
+        run: |
+          curl -L -o /tmp/kotlin.zip https://github.com/JetBrains/kotlin/releases/download/v2.0.21/kotlin-compiler-2.0.21.zip
+          unzip -q /tmp/kotlin.zip -d /tmp/kotlin
+          export PATH="/tmp/kotlin/kotlinc/bin:$PATH"
+          kotlinc             qa_v81/SupermarketRepositoryStub.kt             qa_v81/ShoppingCalculator.kt             qa_v81/IngredientMatcher_V81_CONAD.kt             qa_v81/ConadV81Harness.kt             -include-runtime             -d qa_v81/v81-conad-harness.jar
+          java -jar qa_v81/v81-conad-harness.jar             qa_v81/products_v81_android.tsv             qa_v81/recipes_v61_157.tsv             2 | tee qa_v81/v81_kotlin_conad_report.txt
+
+      - name: Commit quick QA outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add prezzi_conad_capodrise.db prezzi_conad_capodrise_app.db conad_capodrise_audit.json conad_v81_android_products.jsonl qa_v81/v81_kotlin_conad_report.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Record fast current Conad overlay QA"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
