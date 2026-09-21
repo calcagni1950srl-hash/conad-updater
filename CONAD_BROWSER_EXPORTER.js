@@ -8,8 +8,8 @@
   const STORE_CODE = "010548";
   const STORE_LABEL = "CONAD SUPERSTORE - VIA RETELLA EX GIARD.DEL SOLE - 81020 CAPODRISE";
   const BASE = "/tutti-i-prodotti";
-  const MAX_PAGES = 250;
-  const PAUSE_MS = 500;
+  const MAX_PAGES = 450;
+  const PAUSE_MS = 4500;
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   const bodyText = (document.body?.innerText || "").toUpperCase();
@@ -51,25 +51,39 @@
   };
 
   const fetchText = async url => {
-    const res = await fetch(url, {
-      method: "GET",
-      credentials: "include",
-      cache: "no-store",
-      headers: { "Accept": "text/html, */*;q=0.8" }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status} su ${url}`);
-    return await res.text();
+    for (let attempt = 1; attempt <= 8; attempt++) {
+      const res = await fetch(url, {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+        headers: { "Accept": "text/html, */*;q=0.8" }
+      });
+      if (res.ok) return await res.text();
+      if (res.status === 429) {
+        const waitSeconds = Math.min(120, 20 * attempt);
+        console.log(`[Conad] HTTP 429: attendo ${waitSeconds}s e riprovo...`);
+        await sleep(waitSeconds * 1000);
+        continue;
+      }
+      throw new Error(`HTTP ${res.status} su ${url}`);
+    }
+    throw new Error(`Conad continua a limitare le richieste su ${url}`);
   };
 
   console.log("[Conad] Verifica Capodrise OK. Lettura catalogo stabile...");
   const firstHtml = await fetchText(BASE);
+  const firstDoc = new DOMParser().parseFromString(firstHtml, "text/html");
+  const resultText = firstDoc.querySelector("b.results")?.textContent || "";
+  const declaredTotal = Number((resultText.match(/[0-9.]+/)?.[0] || "").replaceAll(".", "")) || null;
+  const expectedPages = declaredTotal ? Math.ceil(declaredTotal / 30) : null;
+  const targetPages = Math.min(MAX_PAGES, expectedPages || MAX_PAGES);
   const first = parseProducts(firstHtml);
   addProducts(first);
   console.log(`[Conad] pagina iniziale: ${first.length} prodotti, unici ${byCode.size}`);
 
   let noNewPages = 0;
   let lastPage = 1;
-  for (let page = 2; page <= MAX_PAGES; page++) {
+  for (let page = 2; page <= targetPages; page++) {
     const url = `${BASE}/_jcr_content/root/search.loader.html?page=${page}`;
     const html = await fetchText(url);
     const list = parseProducts(html);
@@ -115,6 +129,9 @@
     },
     stats: {
       pagesScanned: lastPage,
+      declaredTotal,
+      expectedPages,
+      catalogComplete: declaredTotal ? products.length >= declaredTotal : noNewPages >= 3,
       products: products.length,
       positiveBasePrice: positive.length,
       zeroBasePrice: zero.length,
