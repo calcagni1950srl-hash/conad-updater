@@ -345,9 +345,19 @@ internal object IngredientMatcher {
             ) ?: continue
 
             if (pack.family != need.family || pack.baseValue <= 0.0) continue
-            if (!reasonablePack(ingredient, need.baseValue, pack)) continue
+            val isConadReferenceVariable =
+                normalize(product.supermarket).contains("conad") &&
+                    product.variableWeight &&
+                    product.key.startsWith("REF:")
+            val isConadVerifiedMaldon =
+                ingredient == "sale" &&
+                    normalize(product.supermarket).contains("conad") &&
+                    normalize(product.name).contains("maldon")
+            if (!isConadReferenceVariable && !isConadVerifiedMaldon &&
+                !reasonablePack(ingredient, need.baseValue, pack)) continue
             if (!realisticSpecialPack(ingredient, pack)) continue
-            if (!realisticProductForIngredient(ingredient, product, pack)) continue
+            if (!isConadVerifiedMaldon &&
+                !realisticProductForIngredient(ingredient, product, pack)) continue
 
             val packs = ceil(need.baseValue / pack.baseValue)
                 .toInt()
@@ -437,9 +447,19 @@ internal object IngredientMatcher {
                 ingredientName = ingredient
             ) ?: continue
             if (pack.family != need.family || pack.baseValue <= 0.0) continue
-            if (!reasonablePack(ingredient, need.baseValue, pack)) continue
+            val isConadReferenceVariable =
+                normalize(product.supermarket).contains("conad") &&
+                    product.variableWeight &&
+                    product.key.startsWith("REF:")
+            val isConadVerifiedMaldon =
+                ingredient == "sale" &&
+                    normalize(product.supermarket).contains("conad") &&
+                    normalize(product.name).contains("maldon")
+            if (!isConadReferenceVariable && !isConadVerifiedMaldon &&
+                !reasonablePack(ingredient, need.baseValue, pack)) continue
             if (!realisticSpecialPack(ingredient, pack)) continue
-            if (!realisticProductForIngredient(ingredient, product, pack)) continue
+            if (!isConadVerifiedMaldon &&
+                !realisticProductForIngredient(ingredient, product, pack)) continue
 
             val packs = ceil(need.baseValue / pack.baseValue).toInt().coerceAtLeast(1)
             val cost = if (product.variableWeight && product.unitPriceEur != null) {
