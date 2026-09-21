@@ -35,6 +35,7 @@ jobs:
         run: python CONAD_CAPODRISE_ENGINE.py
 
       - name: Final SQLite audit
+        id: sqlite_audit
         run: |
           python - <<'PY'
           import json, sqlite3, datetime
@@ -148,21 +149,25 @@ jobs:
           PY
 
       - uses: actions/upload-artifact@v4
+        if: always() && steps.sqlite_audit.outcome == 'success'
         with:
-          name: conad-capodrise-validated
+          name: conad-capodrise-current
           path: |
             prezzi_conad_capodrise.db
             prezzi_conad_capodrise_app.db
             conad_bassifissi_audit.json
             conad_capodrise_audit.json
 
-      - name: Commit validated Conad Capodrise databases
+      - name: Commit current Conad Capodrise databases
+        if: always() && steps.sqlite_audit.outcome == 'success'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add prezzi_conad_capodrise.db prezzi_conad_capodrise_app.db conad_bassifissi_audit.json conad_capodrise_audit.json qa_v81/v81_kotlin_conad_report.txt conad_v81_android_products.jsonl
+          git add prezzi_conad_capodrise.db prezzi_conad_capodrise_app.db conad_bassifissi_audit.json conad_capodrise_audit.json
+          [ -f qa_v81/v81_kotlin_conad_report.txt ] && git add qa_v81/v81_kotlin_conad_report.txt || true
+          [ -f conad_v81_android_products.jsonl ] && git add conad_v81_android_products.jsonl || true
           git diff --cached --quiet && exit 0
-          git commit -m "Update validated Conad Capodrise databases"
+          git commit -m "Update current Conad Capodrise databases"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
 
