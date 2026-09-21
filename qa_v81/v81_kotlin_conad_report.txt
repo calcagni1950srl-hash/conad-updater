@@ -1,3 +1,9 @@
+V81_QA_DIAGNOSTIC
+commit=cf69e31afd102f915b3b6c64d71f2fad23c53587
+started_at=2026-09-21T08:18:24Z
+info: kotlinc-jvm 2.0.21 (JRE 21.0.12.1+1-LTS)
+kotlin_install_exit=0
+compile_exit=0
 V81_CONAD_REAL_KOTLIN_HARNESS
 persons=2
 products=619
@@ -269,3 +275,4 @@ FAIL	secondo	trippa_napoletana_v57	Trippa	Limone:Nessun prodotto sicuro trovato 
 FAIL	secondo	uova_occhio_bue_v47_4	Uova all'occhio di bue	Olio extravergine di oliva:Nessun prodotto sicuro trovato
 FAIL	secondo	uova_purgatorio_v47_4	Uova in purgatorio	Olio extravergine di oliva:Nessun prodotto sicuro trovato
 FAIL	secondo	zucchine_pomodoro_v60	Zucchine al pomodoro	Olio extravergine di oliva:Nessun prodotto sicuro trovato | Zucchine:Nessun prodotto sicuro trovato
+run_exit=0
