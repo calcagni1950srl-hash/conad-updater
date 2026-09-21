@@ -1,0 +1,31 @@
+name: CONAD FLYER20 VALIDITY PROBE
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'qa_v81/flyer20_probe.py'
+      - '.github/workflows/CONAD_FLYER20_VALIDITY_PROBE.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pymupdf
+      - run: python qa_v81/flyer20_probe.py
+      - name: Commit result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa_v81/flyer20_text_probe.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record Conad flyer20 validity probe"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
