@@ -1136,21 +1136,82 @@ def apply_fixed_reference_prices():
     }
 
 def build_app_db():
+    """
+    V81 Conad Android policy: STABLE-ONLY.
+
+    Il matcher/ricettario Android puo' usare solo il catalogo stabile:
+    - prodotti ufficiali CONAD_BASSI_E_FISSI_UFFICIALE
+    - i 5 riferimenti fissi V81 gia' autorizzati (REF:)
+
+    Le offerte temporanee FLYER:/VISUAL: restano nel FULL_DB per audit,
+    ma vengono SEMPRE escluse dall'APP_DB. In questo modo un volantino
+    non puo' mai sbloccare una ricetta che smetterebbe di essere disponibile
+    alla scadenza dell'offerta.
+    """
     shutil.copy2(FULL_DB, APP_DB)
     con = sqlite3.connect(APP_DB)
     ensure_schema_extensions(con)
+
     placeholders = ",".join("?" for _ in NON_FOOD_BASE)
     con.execute(
         "DELETE FROM products_current WHERE category1 IN (" + placeholders + ")",
         tuple(sorted(NON_FOOD_BASE)),
     )
-    con.commit()
-    count = con.execute("SELECT COUNT(*) FROM products_current WHERE price_eur > 0").fetchone()[0]
-    local = con.execute("SELECT COUNT(*) FROM products_current WHERE product_code LIKE 'FLYER:%'").fetchone()[0]
-    stores = [row[0] for row in con.execute("SELECT DISTINCT store_code FROM products_current")]
-    con.close()
-    return {"rows": count, "local_offers": local, "stores": stores}
 
+    temporary_before = con.execute(
+        """
+        SELECT COUNT(*) FROM products_current
+        WHERE product_code LIKE 'FLYER:%' OR product_code LIKE 'VISUAL:%'
+        """
+    ).fetchone()[0]
+
+    con.execute(
+        """
+        DELETE FROM products_current
+        WHERE product_code LIKE 'FLYER:%' OR product_code LIKE 'VISUAL:%'
+        """
+    )
+
+    con.execute(
+        "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
+        ("android_catalog_policy", "STABLE_ONLY_NO_FLYER_NO_VISUAL_V81"),
+    )
+    con.execute(
+        "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
+        ("temporary_offer_rows_excluded", str(temporary_before)),
+    )
+    con.commit()
+
+    count = con.execute(
+        "SELECT COUNT(*) FROM products_current WHERE price_eur > 0"
+    ).fetchone()[0]
+    local = con.execute(
+        "SELECT COUNT(*) FROM products_current WHERE product_code LIKE 'FLYER:%'"
+    ).fetchone()[0]
+    visual = con.execute(
+        "SELECT COUNT(*) FROM products_current WHERE product_code LIKE 'VISUAL:%'"
+    ).fetchone()[0]
+    refs = con.execute(
+        "SELECT COUNT(*) FROM products_current WHERE product_code LIKE 'REF:%'"
+    ).fetchone()[0]
+    bassi = con.execute(
+        "SELECT COUNT(*) FROM products_current WHERE bassi_fissi=1"
+    ).fetchone()[0]
+    stores = [row[0] for row in con.execute(
+        "SELECT DISTINCT store_code FROM products_current"
+    )]
+    con.close()
+
+    return {
+        "rows": count,
+        "bassi_fissi": bassi,
+        "reference_fallbacks": refs,
+        "local_offers": local,
+        "visual_offers": visual,
+        "temporary_offers_excluded": temporary_before,
+        "stable_only": True,
+        "stores": stores,
+    }
 
 def database_stats(path):
     con = sqlite3.connect(path)
@@ -1208,6 +1269,10 @@ def main():
         raise RuntimeError("Nel DB è presente uno store_code diverso da 010548.")
     if app_stats["rows"] < 600:
         raise RuntimeError("DB Android alimentare insufficiente.")
+    if app_stats["local_offers"] != 0 or app_stats["visual_offers"] != 0:
+        raise RuntimeError("DB Android Conad contiene offerte temporanee: policy stable-only violata.")
+    if not app_stats["stable_only"]:
+        raise RuntimeError("DB Android Conad non risulta marcato stable-only.")
     if pdf_bytes is not None and app_stats["local_offers"] < 40:
         raise RuntimeError("DB Android senza sufficiente copertura del volantino attivo.")
     if pdf_bytes is None and app_stats["local_offers"] != 0:
