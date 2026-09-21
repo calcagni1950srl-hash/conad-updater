@@ -33,7 +33,12 @@ def main():
                 "quantityUnit": r["quantity_unit"],
                 "priceEur": r["price_eur"],
                 "unitPriceEur": r["unit_price"],
-                "unitPriceUnit": r["unit_price_unit"],
+                "unitPriceUnit": (
+                    "kg" if str(r["unit_price_unit"] or "").upper() in ("EUR/KG","KG")
+                    else "litro" if str(r["unit_price_unit"] or "").upper() in ("EUR/L","EUR/LT","L","LT")
+                    else "pezzo" if str(r["unit_price_unit"] or "").upper() in ("EUR/PZ","PZ","PEZZO")
+                    else r["unit_price_unit"]
+                ),
                 "variableWeight": bool(r["variable_weight"]),
                 "sourceUrl": r["source_queries"],
                 "checkedAt": r["checked_at"],
