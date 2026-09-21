@@ -13,13 +13,13 @@
   },
   "sole365": {
     "rows": 6864,
-    "b64_chars": 248968
+    "b64_chars": 248952
   },
   "conad": {
-    "rows": 733,
-    "b64_chars": 27704
+    "rows": 629,
+    "b64_chars": 20192
   },
-  "run_id": 35451581854,
+  "run_id": 35579560555,
   "artifact_ready": true,
   "workflow_version": "v2"
 }
