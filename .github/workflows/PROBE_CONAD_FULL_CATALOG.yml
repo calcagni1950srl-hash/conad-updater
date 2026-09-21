@@ -23,7 +23,7 @@ jobs:
       - run: |
           pip install requests beautifulsoup4 playwright
           python -m playwright install --with-deps chromium
-      - run: python PROBE_CONAD_FULL_CATALOG.py
+      - run: xvfb-run -a env CONAD_HEADLESS=0 python PROBE_CONAD_FULL_CATALOG.py
       - uses: actions/upload-artifact@v4
         with:
           name: conad-full-catalog-probe
