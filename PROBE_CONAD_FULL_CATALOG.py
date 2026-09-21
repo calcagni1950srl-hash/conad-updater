@@ -127,8 +127,14 @@ async def browser_probe():
                     continue
                 txt=await rr.text()
                 import re
-                api_paths=sorted(set(re.findall(r'["\\\'](/api/(?:ecommerce|myconad)/[^"\\\']+?\\.(?:json|html)(?:\\?[^"\\\']*)?)["\\\']',txt)))
-                loader_paths=sorted(set(re.findall(r'["\\\']([^"\\\']*search\\.loader\\.html[^"\\\']*)["\\\']',txt)))
+                api_paths=sorted(set(
+                    x.rstrip("),;]}")
+                    for x in re.findall(r"/api/(?:ecommerce|myconad)/[^\"'\\s]+",txt)
+                ))
+                loader_paths=sorted(set(
+                    x.rstrip("),;]}")
+                    for x in re.findall(r"[^\"'\\s]*search\\.loader\\.html[^\"'\\s]*",txt)
+                ))
                 interesting=[x for x in api_paths if any(k in x.lower() for k in (
                     "product","search","catalog","price","category","store","assort","article","sku"
                 ))]
