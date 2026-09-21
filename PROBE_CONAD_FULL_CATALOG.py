@@ -1,4 +1,4 @@
-import asyncio, html, json, re
+import asyncio, html, json, os, re
 from pathlib import Path
 import requests
 from bs4 import BeautifulSoup
