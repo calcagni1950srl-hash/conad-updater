@@ -141,10 +141,14 @@ def choose_active_flyer():
         attempts.append(row)
         if start and end and start <= today <= end:
             return rr.content, row, attempts
-    raise RuntimeError(
-        "Nessun volantino Superstore Campania ufficiale risulta valido oggi. "
-        + json.dumps(attempts, ensure_ascii=False)
-    )
+    return None, {
+        "url": None,
+        "bytes": 0,
+        "pages": 0,
+        "valid_from": None,
+        "valid_to": None,
+        "status": "NO_ACTIVE_SUPERSTORE_FLYER",
+    }, attempts
 
 
 def page_entries(page):
@@ -514,7 +518,12 @@ def apply_local_offers(offers, flyer_info):
     con.execute("DELETE FROM products_current WHERE product_code LIKE 'FLYER:%'")
     con.execute("DELETE FROM price_history WHERE product_code LIKE 'FLYER:%'")
 
-    source_label = "PAC_SUPERSTORE_CAMPANIA:" + Path(urlsplit(flyer_info["url"]).path).name
+    source_url = flyer_info.get("url") or ""
+    source_label = (
+        "PAC_SUPERSTORE_CAMPANIA:" + Path(urlsplit(source_url).path).name
+        if source_url else
+        "PAC_SUPERSTORE_CAMPANIA:NO_ACTIVE_FLYER"
+    )
 
     for offer in offers:
         row = (
@@ -553,9 +562,9 @@ def apply_local_offers(offers, flyer_info):
             "collegato alla pagina Conad del punto vendita 010548; parser geometrico fail-closed.",
         ),
     )
-    con.execute("INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)", ("local_flyer_url", flyer_info["url"]))
-    con.execute("INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)", ("local_flyer_valid_from", flyer_info["valid_from"]))
-    con.execute("INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)", ("local_flyer_valid_to", flyer_info["valid_to"]))
+    con.execute("INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)", ("local_flyer_url", flyer_info.get("url") or ""))
+    con.execute("INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)", ("local_flyer_valid_from", flyer_info.get("valid_from") or ""))
+    con.execute("INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)", ("local_flyer_valid_to", flyer_info.get("valid_to") or ""))
     con.execute("INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)", ("local_offer_count", str(len(offers))))
     con.commit()
     con.close()
@@ -964,13 +973,22 @@ def main():
 
     store_check = verify_store()
     pdf_bytes, flyer_info, flyer_attempts = choose_active_flyer()
-    offers, parser_audit = parse_flyer(pdf_bytes)
-
-    if len(offers) < 40:
-        raise RuntimeError(
-            "Parser volantino troppo povero: solo %d offerte affidabili; DB precedente lasciato invariato."
-            % len(offers)
-        )
+    if pdf_bytes is None:
+        offers = []
+        parser_audit = {
+            "status": "NO_ACTIVE_SUPERSTORE_FLYER",
+            "raw_price_cards": 0,
+            "accepted_before_dedup": 0,
+            "accepted_unique": 0,
+            "rejected": {},
+        }
+    else:
+        offers, parser_audit = parse_flyer(pdf_bytes)
+        if len(offers) < 40:
+            raise RuntimeError(
+                "Parser volantino troppo povero: solo %d offerte affidabili; DB precedente lasciato invariato."
+                % len(offers)
+            )
 
     apply_local_offers(offers, flyer_info)
     visual_audit = apply_visual_verified_offers()
@@ -982,12 +1000,18 @@ def main():
         raise RuntimeError("DB Conad contiene prezzi non positivi.")
     if full_stats["bassi_fissi"] < 700:
         raise RuntimeError("Copertura Bassi e Fissi insufficiente.")
-    if full_stats["local_offers"] < 40:
+    if pdf_bytes is not None and full_stats["local_offers"] < 40:
         raise RuntimeError("Offerte locali insufficienti.")
+    if pdf_bytes is None and full_stats["local_offers"] != 0:
+        raise RuntimeError("Sono rimaste offerte FLYER scadute senza un volantino Superstore attivo.")
     if full_stats["store_codes"] != [STORE_CODE]:
         raise RuntimeError("Nel DB è presente uno store_code diverso da 010548.")
-    if app_stats["rows"] < 600 or app_stats["local_offers"] < 40:
+    if app_stats["rows"] < 600:
         raise RuntimeError("DB Android alimentare insufficiente.")
+    if pdf_bytes is not None and app_stats["local_offers"] < 40:
+        raise RuntimeError("DB Android senza sufficiente copertura del volantino attivo.")
+    if pdf_bytes is None and app_stats["local_offers"] != 0:
+        raise RuntimeError("DB Android contiene offerte FLYER scadute.")
 
     audit = {
         "status": "OK",
