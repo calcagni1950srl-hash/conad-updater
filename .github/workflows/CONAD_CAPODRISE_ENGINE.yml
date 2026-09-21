@@ -224,3 +224,5 @@ jobs:
           exit 1
 
 # retrigger after QA matcher alignment 2026-09-19
+
+# manual refresh trigger 2026-09-21
