@@ -286,10 +286,27 @@ async def browser_probe():
                             out.setChosenStoreSource=mgr?.storeService?.setChosenStore?.toString?.()||null;
                             out.postSource=mgr?.storeService?.post?.toString?.()||null;
                             if(!mgr?.storeService?.setChosenStore) throw new Error("setChosenStore unavailable");
+
+                            try{
+                              const tok=await Promise.race([
+                                window.gpGetProtectionToken("entryaccess"),
+                                new Promise((_,rej)=>setTimeout(()=>rej(new Error("token timeout")),8000))
+                              ]);
+                              out.tokenProbe={ok:true,length:String(tok||"").length};
+                            }catch(te){out.tokenProbe={ok:false,error:String(te?.stack||te)}}
+
+                            // Il codice Conad non richiede il protection token quando il PDV
+                            // corrente coincide con pointOfServiceId. Riproduciamo quel caso
+                            // usando il punto vendita ufficiale appena restituito da stores.json.
+                            window.pointOfService={...(window.pointOfService||{}),name:payload.pointOfServiceId};
                             const response=await new Promise((resolve,reject)=>{
                               mgr.storeService.setChosenStore(
                                 (x)=>resolve({ok:true,data:x}),
-                                (x)=>resolve({ok:false,error:x}),
+                                (x)=>resolve({ok:false,error:x?{
+                                  message:x.message||null,
+                                  status:x.response?.status||null,
+                                  data:x.response?.data||null
+                                }:null}),
                                 {...payload}
                               );
                               setTimeout(()=>resolve({ok:false,timeout:true}),20000);
