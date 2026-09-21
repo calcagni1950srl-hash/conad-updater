@@ -1,6 +1,6 @@
 V81_QA_DIAGNOSTIC
-commit=73cb128376134177ea68f18184b197ea0cfe52e2
-started_at=2026-09-21T13:24:35Z
+commit=67895070d10607d2f6840c0950a180d00f478ab7
+started_at=2026-09-21T14:06:49Z
 info: kotlinc-jvm 2.0.21 (JRE 21.0.12.1+1-LTS)
 kotlin_install_exit=0
 compile_exit=0
@@ -105,6 +105,7 @@ MISS	1	brandy	Prodotto non trovato con sufficiente sicurezza=1		Linguine con spa
 MISS	1	linguine fresche	Nessun prodotto sicuro trovato=1		Linguine con sparnocchie
 MISS	1	sparnocchie	Nessun prodotto sicuro trovato=1		Linguine con sparnocchie
 MISS	1	pesce spada	Nessun prodotto sicuro trovato=1		Paccheri al ragù di pesce spada
+MISS	1	pomodorini pizzutelli	Nessun prodotto sicuro trovato=1		Paccheri al ragù di pesce spada
 MISS	1	baccala ammollato	Nessun prodotto sicuro trovato=1		Spaghetti con baccalà e olive nere
 MISS	1	lasagne	Nessun prodotto sicuro trovato=1	Lasagne al ragù di carne 500 g Conad [Surgelati e gelati] 0.5KG €3.75 || Pasta di Semola di Grano Duro Specialità N°216 Lasagnette a Nido 500 g Conad [Pasta e riso] 0.5KG €0.89	Lasagna di mare
 MISS	1	vino bianco falanghina	Prodotto non trovato con sufficiente sicurezza=1		Lasagna di mare
@@ -180,7 +181,7 @@ FAIL	primo	linguine_sparnocchie_v30	Linguine con sparnocchie	Brandy:Prodotto non
 FAIL	primo	maccheroni_puveriello_alici_v30	Maccheroni alla puveriello con alici	Alici sotto sale:Nessun prodotto sicuro trovato | Limone amalfitano:Nessun prodotto sicuro trovato | Olio extravergine di oliva:Prodotto non trovato con sufficiente sicurezza | Pangrattato:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
 FAIL	primo	mezzi_paccheri_tonno_limone_v30	Mezzi paccheri al tonno e limone	Limone:Nessun prodotto sicuro trovato | Mezzi paccheri:Nessun prodotto sicuro trovato | Olio extravergine di oliva:Nessun prodotto sicuro trovato | Olive:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Tonno sott olio sgocciolato:Nessun prodotto sicuro trovato
 FAIL	primo	paccheri_gamberi_v30	Paccheri ai gamberi e pomodori	Gamberi:Nessun prodotto sicuro trovato | Olio extravergine di oliva:Prodotto non trovato con sufficiente sicurezza | Origano:Prodotto non trovato con sufficiente sicurezza | Paccheri:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza | Vino bianco:Nessun prodotto sicuro trovato
-FAIL	primo	paccheri_pesce_spada_v30	Paccheri al ragù di pesce spada	Olio extravergine di oliva:Nessun prodotto sicuro trovato | Paccheri:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Pesce spada:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
+FAIL	primo	paccheri_pesce_spada_v30	Paccheri al ragù di pesce spada	Olio extravergine di oliva:Nessun prodotto sicuro trovato | Paccheri:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Pesce spada:Nessun prodotto sicuro trovato | Pomodorini pizzutelli:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
 FAIL	primo	scarpariello	Paccheri allo scarpariello	Basilico:Nessun prodotto sicuro trovato | Olio extravergine di oliva:Nessun prodotto sicuro trovato | Paccheri:Nessun prodotto sicuro trovato
 FAIL	primo	paccheri_scoglio_v30	Paccheri allo scoglio	Cozze:Nessun prodotto sicuro trovato | Olio extravergine di oliva:Prodotto non trovato con sufficiente sicurezza | Paccheri:Nessun prodotto sicuro trovato | Pepe:Prodotto non trovato con sufficiente sicurezza | Sale:Prodotto non trovato con sufficiente sicurezza | Totani:Nessun prodotto sicuro trovato | Vongole veraci:Nessun prodotto sicuro trovato
 FAIL	primo	paccheri_calamari_piennolo_v30	Paccheri con calamari e pomodori del Piennolo	Calamari:Nessun prodotto sicuro trovato | Capperi:Prodotto non trovato con sufficiente sicurezza | Olio extravergine di oliva:Prodotto non trovato con sufficiente sicurezza | Paccheri:Nessun prodotto sicuro trovato | Pomodori del piennolo:Nessun prodotto sicuro trovato | Sale:Prodotto non trovato con sufficiente sicurezza
