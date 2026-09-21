@@ -65,6 +65,7 @@ jobs:
               positive=con.execute('select count(*) from products_current where price_eur>0').fetchone()[0]
               stores=con.execute('select distinct store_code from products_current').fetchall()
               local=con.execute("select count(*) from products_current where product_code like 'FLYER:%'").fetchone()[0]
+              visual=con.execute("select count(*) from products_current where product_code like 'VISUAL:%'").fetchone()[0]
               refs=con.execute("select count(*) from products_current where product_code like 'REF:%'").fetchone()[0]
               meta=dict(con.execute("select key,value from metadata").fetchall())
               valid_to=(meta.get('local_flyer_valid_to') or '').strip()
@@ -74,11 +75,16 @@ jobs:
                       active_main=datetime.date.fromisoformat(valid_to) >= today
                   except ValueError:
                       active_main=False
-              print(json.dumps({'db':name,'rows':rows,'positive':positive,'stores':stores,'local_offers':local,'reference_fallbacks':refs,'active_main_flyer':active_main,'local_flyer_valid_to':valid_to}))
+              stable_app=name.endswith('_app.db')
+              print(json.dumps({'db':name,'rows':rows,'positive':positive,'stores':stores,'local_offers':local,'visual_offers':visual,'reference_fallbacks':refs,'active_main_flyer':active_main,'local_flyer_valid_to':valid_to,'stable_app':stable_app,'android_catalog_policy':meta.get('android_catalog_policy')}))
               assert rows >= minimum
               assert rows == positive
               assert stores == [('010548',)]
-              if active_main:
+              if stable_app:
+                  assert local == 0
+                  assert visual == 0
+                  assert meta.get('android_catalog_policy') == 'STABLE_ONLY_NO_FLYER_NO_VISUAL_V81'
+              elif active_main:
                   assert local >= 40
               else:
                   assert local == 0
