@@ -96,8 +96,6 @@ def flyer_urls_from_store_page():
         key = url.split("?", 1)[0]
         if key not in [x.split("?", 1)[0] for x in found]:
             found.append(url)
-    if not found:
-        raise RuntimeError("Nessun volantino Superstore Campania trovato nella pagina ufficiale 010548.")
     return found
 
 
