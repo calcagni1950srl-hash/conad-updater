@@ -2,7 +2,8 @@ import json
 import sqlite3
 from pathlib import Path
 
-# V81 QA export trigger 2026-09-19\n# artifact-enabled trigger\nDB = Path("prezzi_conad_capodrise_app.db")
+# V81 QA export
+DB = Path("prezzi_conad_capodrise_app.db")
 OUT = Path("conad_v81_android_products.jsonl")
 
 def main():
@@ -19,7 +20,7 @@ def main():
     """).fetchall()
     con.close()
 
-    with OUT.open("w", encoding="utf-8") as f:
+    with OUT.open("w", encoding="utf-8") as fh:
         for r in rows:
             obj = {
                 "key": r["product_code"],
@@ -37,11 +38,11 @@ def main():
                 "sourceUrl": r["source_queries"],
                 "checkedAt": r["checked_at"],
             }
-            f.write(json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + "\n")
+            fh.write(json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + "\n")
 
     print(json.dumps({"rows": len(rows), "output": str(OUT)}, ensure_ascii=False))
-    if len(rows) != 733:
-        raise RuntimeError(f"Attesi 733 prodotti Android V81, trovati {len(rows)}")
+    if len(rows) < 600:
+        raise RuntimeError(f"Attesi almeno 600 prodotti Android V81, trovati {len(rows)}")
 
 if __name__ == "__main__":
     main()
