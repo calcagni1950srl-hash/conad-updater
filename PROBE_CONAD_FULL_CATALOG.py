@@ -110,6 +110,7 @@ async def browser_probe():
             except Exception:
                 pass
 
+        api_endpoint_inventory=[]
         js_endpoint_snippets=[]
         endpoint_patterns=[
             "stores.json","pointOfService","typeOfService","ORDER_AND_COLLECT",
@@ -125,6 +126,19 @@ async def browser_probe():
                 if not rr.ok:
                     continue
                 txt=await rr.text()
+                import re
+                api_paths=sorted(set(re.findall(r'["\\\'](/api/(?:ecommerce|myconad)/[^"\\\']+?\\.(?:json|html)(?:\\?[^"\\\']*)?)["\\\']',txt)))
+                loader_paths=sorted(set(re.findall(r'["\\\']([^"\\\']*search\\.loader\\.html[^"\\\']*)["\\\']',txt)))
+                interesting=[x for x in api_paths if any(k in x.lower() for k in (
+                    "product","search","catalog","price","category","store","assort","article","sku"
+                ))]
+                if interesting or loader_paths:
+                    api_endpoint_inventory.append({
+                        "url":su,
+                        "interesting_api_paths":interesting[:300],
+                        "search_loader_paths":loader_paths[:100],
+                        "all_api_count":len(api_paths),
+                    })
                 for pat in endpoint_patterns:
                     start=0
                     seen=0
@@ -416,6 +430,7 @@ async def browser_probe():
         "initial_buttons":initial_buttons[:150],
         "script_urls":script_urls,
         "script_scan":script_scan,
+        "api_endpoint_inventory":api_endpoint_inventory,
         "js_endpoint_snippets":js_endpoint_snippets,
         "interaction":interaction,
         "direct_store_probe":direct_store_probe,
