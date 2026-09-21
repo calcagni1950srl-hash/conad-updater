@@ -52,22 +52,118 @@ def scan_http():
 
 async def browser_probe():
     captured=[]
+    requests_meta=[]
+
+    def on_request(req):
+        u=req.url
+        if any(k in u.lower() for k in ("loader","store","pointofservice","product","search","service","address","location","delivery","pickup","ritiro")):
+            captured.append(u)
+            requests_meta.append({
+                "method": req.method,
+                "url": u,
+                "post_data": (req.post_data or "")[:5000],
+            })
+
     async with async_playwright() as p:
         browser=await p.chromium.launch(headless=True)
         ctx=await browser.new_context(locale="it-IT")
         page=await ctx.new_page()
-        page.on("request", lambda req: captured.append(req.url) if any(k in req.url.lower() for k in ("loader","store","pointofservice","product","search","service")) else None)
+        page.on("request", on_request)
+
+        await page.goto(BASE+"/entry",wait_until="domcontentloaded",timeout=120000)
+        for sel in ("#onetrust-reject-all-handler","#onetrust-accept-btn-handler"):
+            try:
+                loc=page.locator(sel)
+                if await loc.count() and await loc.first.is_visible():
+                    await loc.first.click(force=True,timeout=3000)
+                    break
+            except Exception:
+                pass
+        await page.wait_for_timeout(1200)
+
+        initial_inputs=await page.locator("input").evaluate_all("""els => els.map(e => ({
+          id:e.id,name:e.name,type:e.type,placeholder:e.placeholder,
+          aria:e.getAttribute('aria-label'),value:e.value
+        }))""")
+        initial_buttons=await page.locator("button").evaluate_all("""els => els.map(e => ({
+          text:(e.innerText||'').trim(), id:e.id, cls:e.className
+        })).filter(x=>x.text)""")
+
+        interaction={"attempted":False,"address_candidates":[],"after_verify_text":"","error":None}
+        try:
+            addr=page.locator('input[placeholder*="Via Mario Rossi"]').first
+            if await addr.count():
+                interaction["attempted"]=True
+                await addr.fill("Via Retella, Capodrise")
+                await page.wait_for_timeout(2500)
+                candidates=await page.locator("body *").evaluate_all("""els => els
+                  .filter(e => {
+                    const s=getComputedStyle(e);
+                    const t=(e.innerText||'').trim();
+                    return t && t.length<300 && s.display!=='none' && s.visibility!=='hidden' &&
+                      t.toLowerCase().includes('capodrise');
+                  })
+                  .slice(0,80)
+                  .map(e => ({tag:e.tagName, cls:e.className, id:e.id, text:(e.innerText||'').trim()}))""")
+                interaction["address_candidates"]=candidates
+                clicked=False
+                for selector in [".pac-item","[role=option]","li"]:
+                    locs=page.locator(selector)
+                    n=await locs.count()
+                    for i in range(min(n,30)):
+                        try:
+                            txt=(await locs.nth(i).inner_text()).strip()
+                            if "capodrise" in txt.lower():
+                                await locs.nth(i).click()
+                                clicked=True
+                                break
+                        except Exception:
+                            pass
+                    if clicked:
+                        break
+                await page.wait_for_timeout(1000)
+
+                civici=page.locator('input[placeholder*="10"]')
+                if await civici.count():
+                    for i in range(await civici.count()):
+                        try:
+                            if await civici.nth(i).is_visible():
+                                await civici.nth(i).fill("1")
+                                break
+                        except Exception:
+                            pass
+
+                try:
+                    btn=page.get_by_role("button",name="Verifica").first
+                    if await btn.count() and await btn.is_visible():
+                        await btn.click()
+                except Exception:
+                    pass
+                await page.wait_for_timeout(4000)
+                interaction["after_verify_text"]=(await page.locator("body").inner_text())[:15000]
+        except Exception as e:
+            interaction["error"]=repr(e)
+
         await page.goto(PAGE,wait_until="networkidle",timeout=120000)
         cookies=await ctx.cookies()
         storage=await page.evaluate("""() => ({
           local: Object.fromEntries(Object.entries(localStorage)),
           session: Object.fromEntries(Object.entries(sessionStorage))
         })""")
+        selected_products=extract_products(await page.content())
         await browser.close()
+
     return {
-        "cookies":[{"name":c["name"],"domain":c["domain"],"path":c["path"],"value_preview":c["value"][:120]} for c in cookies],
+        "cookies":[{"name":c["name"],"domain":c["domain"],"path":c["path"],"value_preview":c["value"][:300]} for c in cookies],
         "storage":storage,
-        "captured_urls":sorted(set(captured))[:500],
+        "initial_inputs":initial_inputs,
+        "initial_buttons":initial_buttons[:150],
+        "interaction":interaction,
+        "selected_page_products":len(selected_products),
+        "selected_positive_products":sum(1 for x in selected_products if float(x.get("basePrice") or 0)>0),
+        "selected_product_sample":selected_products[:10],
+        "captured_urls":sorted(set(captured))[:1000],
+        "requests_meta":requests_meta[:1000],
     }
 
 async def main():
