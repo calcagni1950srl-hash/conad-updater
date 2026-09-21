@@ -5,11 +5,11 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 9945,
-  "android_food_products_positive_price": 6864,
+  "unique_products_positive_price": 9930,
+  "android_food_products_positive_price": 6872,
   "android_food_categories": 11,
-  "android_low_price_rows": 490,
-  "android_low_price_rows_with_kg_reference": 490,
+  "android_low_price_rows": 491,
+  "android_low_price_rows_with_kg_reference": 491,
   "categories": {
     "10001": {
       "name": "Amici animali",
@@ -19,9 +19,9 @@
     },
     "10002": {
       "name": "Acqua, bevande, vino e alcolici",
-      "totalResults": 1121,
-      "received": 1121,
-      "positive_price_products": 1121
+      "totalResults": 1122,
+      "received": 1122,
+      "positive_price_products": 1122
     },
     "10003": {
       "name": "Carne",
@@ -43,21 +43,21 @@
     },
     "10006": {
       "name": "Frutta e verdura",
-      "totalResults": 394,
-      "received": 394,
-      "positive_price_products": 387
+      "totalResults": 391,
+      "received": 391,
+      "positive_price_products": 383
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
-      "totalResults": 198,
-      "received": 198,
-      "positive_price_products": 198
+      "totalResults": 199,
+      "received": 199,
+      "positive_price_products": 199
     },
     "10008": {
       "name": "Gelati e surgelati",
-      "totalResults": 357,
-      "received": 357,
-      "positive_price_products": 357
+      "totalResults": 364,
+      "received": 364,
+      "positive_price_products": 364
     },
     "10009": {
       "name": "Latte, burro, uova e yogurt",
@@ -85,9 +85,9 @@
     },
     "10013": {
       "name": "Salumi e formaggi",
-      "totalResults": 418,
-      "received": 418,
-      "positive_price_products": 418
+      "totalResults": 421,
+      "received": 421,
+      "positive_price_products": 421
     },
     "10014": {
       "name": "Tempo libero",
@@ -103,10 +103,10 @@
     },
     "10016": {
       "name": "Tutto per la casa",
-      "totalResults": 1077,
-      "received": 1077,
-      "positive_price_products": 1070
+      "totalResults": 1054,
+      "received": 1054,
+      "positive_price_products": 1047
     }
   },
-  "merged_at": "2026-09-20T10:13:21.203903+00:00"
+  "merged_at": "2026-09-21T11:13:09.907691+00:00"
 }
