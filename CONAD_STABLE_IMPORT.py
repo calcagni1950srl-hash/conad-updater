@@ -9,20 +9,52 @@ NON_FOOD_BASE = {
     "Cura persona", "Articoli per la casa", "Prima infanzia", "Animali domestici"
 }
 
-def unit_price(p):
+def normalized_quantity_and_price(p):
+    """Return real purchasable/reference quantity from Conad product metadata.
+
+    For fixed packs use netQuantity/netQuantityUm.
+    For variable-weight cards Conad exposes increment.minWeight; basePrice is the
+    price of that minimum purchasable weight (e.g. 100 g meat, 500 g produce).
+    """
     try:
-        q = float(p.get("netQuantity") or 0)
         price = float(p.get("basePrice") or 0)
     except Exception:
-        return None, None
+        price = 0.0
+    q = p.get("netQuantity")
     unit = str(p.get("netQuantityUm") or "").upper()
-    if q <= 0 or price <= 0:
-        return None, None
-    if unit == "KG":
-        return round(price / q, 4), "EUR/KG"
-    if unit in ("L", "LT"):
-        return round(price / q, 4), "EUR/L"
-    return None, None
+    try:
+        q = float(q) if q is not None else None
+    except Exception:
+        q = None
+
+    variable = False
+    inc = p.get("increment") if isinstance(p.get("increment"), dict) else None
+    if (q is None or q <= 0) and inc:
+        try:
+            min_weight = float(inc.get("minWeight") or 0)
+        except Exception:
+            min_weight = 0.0
+        inc_unit = str(inc.get("unitOfMeasure") or "").upper()
+        if min_weight > 0 and inc_unit in ("G", "GR"):
+            q, unit, variable = min_weight, "GR", True
+        elif min_weight > 0 and inc_unit == "KG":
+            q, unit, variable = min_weight, "KG", True
+
+    up = None
+    upu = None
+    if q and q > 0 and price > 0:
+        if unit == "KG":
+            up, upu = price / q, "EUR/KG"
+        elif unit in ("G", "GR"):
+            up, upu = price / (q / 1000.0), "EUR/KG"
+        elif unit in ("L", "LT"):
+            up, upu = price / q, "EUR/L"
+        elif unit == "ML":
+            up, upu = price / (q / 1000.0), "EUR/L"
+        elif unit in ("PZ", "PEZZO", "PEZZI"):
+            up, upu = price / q, "EUR/PZ"
+
+    return q, unit or None, (round(up, 4) if up is not None else None), upu, variable
 
 def init_db(path):
     con = sqlite3.connect(path)
@@ -51,6 +83,7 @@ def init_db(path):
       image_url TEXT,
       source_queries TEXT,
       checked_at TEXT NOT NULL,
+      variable_weight INTEGER NOT NULL DEFAULT 0,
       PRIMARY KEY(store_code, product_code)
     );
     CREATE TABLE price_history(
@@ -132,18 +165,21 @@ def main():
 
     con = init_db(out_db)
     try:
+        variable_rows = 0
         for code, p in by_code.items():
-            up, upu = unit_price(p)
+            qty, qty_unit, up, upu, variable = normalized_quantity_and_price(p)
+            if variable:
+                variable_rows += 1
             price = float(p.get("basePrice"))
             row = (
                 "Conad", STORE_CODE, STORE_NAME, STORE_ADDRESS,
                 code, p.get("nome") or p.get("title"), p.get("marchio") or p.get("brand"),
                 p.get("categoriaPrimoLivello"), p.get("categoriaSecondoLivello"), p.get("categoriaTerzoLivello"),
-                p.get("netQuantity"), p.get("netQuantityUm"),
+                qty, qty_unit,
                 price, up, upu, 1 if p.get("bassiFissi") in (True, 1) else 0,
-                p.get("defaultImgSrc"), SOURCE_SCOPE, checked_at
+                p.get("defaultImgSrc"), SOURCE_SCOPE, checked_at, int(variable)
             )
-            con.execute("INSERT INTO products_current VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", row)
+            con.execute("INSERT INTO products_current VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", row)
             con.execute(
                 "INSERT INTO price_history(store_code,product_code,price_eur,unit_price,checked_at) VALUES(?,?,?,?,?)",
                 (STORE_CODE, code, price, up, checked_at)
@@ -164,6 +200,12 @@ def main():
             "excluded_non_food": str(non_food),
             "excluded_invalid": str(invalid),
             "products_with_promo_metadata": str(promo_metadata),
+            "variable_weight_rows": str(variable_rows),
+            "catalog_complete": "false" if (
+                int((data.get("stats") or {}).get("pagesScanned") or 0) == 250
+                and len(products) == 7500
+                and not (data.get("stats") or {}).get("declaredTotal")
+            ) else "unknown",
         }
         con.executemany("INSERT INTO metadata(key,value) VALUES(?,?)", meta.items())
         con.execute(
@@ -188,6 +230,12 @@ def main():
         "excluded_non_food": non_food,
         "excluded_invalid": invalid,
         "products_with_promo_metadata": promo_metadata,
+        "variable_weight_rows": variable_rows,
+        "catalog_complete": False if (
+            int((data.get("stats") or {}).get("pagesScanned") or 0) == 250
+            and len(products) == 7500
+            and not (data.get("stats") or {}).get("declaredTotal")
+        ) else None,
         "min_base_price": min(float(p.get("basePrice")) for p in by_code.values()),
         "max_base_price": max(float(p.get("basePrice")) for p in by_code.values()),
         "output_db": str(out_db),
