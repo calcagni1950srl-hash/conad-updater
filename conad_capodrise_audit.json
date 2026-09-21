@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-21T08:44:09Z",
+  "checked_at": "2026-09-21T09:19:42Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -228,8 +228,13 @@
     ]
   },
   "app_db": {
-    "rows": 629,
+    "rows": 617,
+    "bassi_fissi": 612,
+    "reference_fallbacks": 5,
     "local_offers": 0,
+    "visual_offers": 0,
+    "temporary_offers_excluded": 12,
+    "stable_only": true,
     "stores": [
       "010548"
     ]
