@@ -75,3 +75,5 @@ jobs:
           git commit -m "Record fast current Conad overlay QA"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+
+# trigger: gourmet-sausage-clams-2026-09-21
