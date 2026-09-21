@@ -545,11 +545,16 @@ internal object IngredientMatcher {
                 ingredientName = ingredient
             )
 
+            val isConadVerifiedMaldon =
+                ingredient == "sale" &&
+                    normalize(product.supermarket).contains("conad") &&
+                    normalize(product.name).contains("sale marino maldon")
             if (pack != null && !reasonableUnknownNeedPack(ingredient, pack)) {
                 continue
             }
             if (pack != null && !realisticSpecialPack(ingredient, pack)) continue
-            if (pack != null && !realisticProductForIngredient(ingredient, product, pack)) continue
+            if (pack != null && !isConadVerifiedMaldon &&
+                !realisticProductForIngredient(ingredient, product, pack)) continue
 
             val packSize = pack?.baseValue ?: Double.POSITIVE_INFINITY
             val target = when {
@@ -672,7 +677,9 @@ internal object IngredientMatcher {
                 productName.contains("senza sale") ||
                 productName.contains("senza sale aggiunto")
             )) return false
-        if (ingredient == "sale" && listOf(
+        if (ingredient == "sale" &&
+            !productName.contains("sale marino maldon") &&
+            listOf(
                 "himalaya", "rosa", "maldon", "fiocchi", "affumicato",
                 "aromatizzato", "gourmet", "nero di", "blu di"
             ).any { productName.contains(it) }) return false
