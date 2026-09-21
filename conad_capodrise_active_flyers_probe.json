@@ -1,6 +1,6 @@
 {
   "store_id": "010548",
-  "checked_at": "2026-09-19T10:40:10.713320+00:00",
+  "checked_at": "2026-09-21T07:37:45.389559+00:00",
   "flyers_total": 6,
   "active_flyers": [
     {
@@ -93,12 +93,12 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "feTitle": "Convenienza Più",
-        "visibilitySet": true,
-        "onYumpu": true,
         "disaggregatedId": "Integrativa19Campania__d",
         "hideDefaultFlyer": false,
         "promoDetails": "",
+        "feTitle": "Convenienza Più",
+        "visibilitySet": true,
+        "onYumpu": true,
         "cooperative": "PAC",
         "id": "v-1962687935",
         "link": {
@@ -164,395 +164,6 @@
           }
         ],
         "text_sample": "\n\n\n\n\n\n\n"
-      }
-    },
-    {
-      "title": "Campioni del Risparmio",
-      "pdfUrl": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026_19_Superstore_Campania.pdf?_u=da4cc953febf1a8673afdbda4e9b6c93912115f7",
-      "validFrom": 1788904800000,
-      "validTo": 1789855200000,
-      "visible": true,
-      "valid": true,
-      "mainFlyer": false,
-      "promotions": "promozioni-nazionali",
-      "catalogue": "",
-      "hasDisaggregated": false,
-      "disTotalProducts": 0,
-      "rawKeys": [
-        "assetState",
-        "attempts",
-        "catalogue",
-        "cooperative",
-        "creationDate",
-        "disTotalProducts",
-        "disabledDownload",
-        "disaggregatedId",
-        "disaggregatoCategories",
-        "externalizedVolantinoUrl",
-        "feTitle",
-        "hasDisaggregated",
-        "hideDefaultFlyer",
-        "id",
-        "image",
-        "imageAlt",
-        "lastModified",
-        "lastSync",
-        "link",
-        "localPromo",
-        "mainFlyer",
-        "meccanicaPromozione",
-        "name",
-        "nationalPromo",
-        "onYumpu",
-        "pdfPath",
-        "pdfUrl",
-        "priority",
-        "promoDetails",
-        "promotions",
-        "published",
-        "reupload",
-        "seoRobots",
-        "slug",
-        "synchronized",
-        "title",
-        "valid",
-        "validFrom",
-        "validTo",
-        "visibilitySet",
-        "visible",
-        "visibleFrom",
-        "visibleTo",
-        "yumpuId"
-      ],
-      "rawNode": {
-        "name": "2026_19_Superstore_Campania.pdf",
-        "pdfPath": "/content/dam/conad-common/volantini/pac/v2026-/2026_19_Superstore_Campania.pdf",
-        "creationDate": 1788732312831,
-        "title": "Campioni del Risparmio",
-        "slug": "Offerte19-Superstore-Campania",
-        "validFrom": 1788904800000,
-        "validTo": 1789855200000,
-        "visibleFrom": 1788732000000,
-        "visibleTo": 1789855200000,
-        "assetState": "processed",
-        "lastSync": 1788732302414,
-        "lastModified": 1788182266640,
-        "yumpuId": "71279715",
-        "reupload": false,
-        "priority": 0,
-        "attempts": 0,
-        "promotions": "promozioni-nazionali",
-        "catalogue": "",
-        "nationalPromo": "PPN19",
-        "localPromo": "",
-        "disabledDownload": false,
-        "seoRobots": "noindex",
-        "mainFlyer": false,
-        "hasDisaggregated": false,
-        "disTotalProducts": 0,
-        "meccanicaPromozione": {},
-        "disaggregatoCategories": {},
-        "synchronized": true,
-        "valid": true,
-        "visible": true,
-        "published": false,
-        "feTitle": "Campioni del Risparmio",
-        "visibilitySet": true,
-        "onYumpu": true,
-        "disaggregatedId": "202619SuperstoreCampania__d",
-        "hideDefaultFlyer": false,
-        "promoDetails": "PPN19",
-        "cooperative": "PAC",
-        "id": "v-1796946686",
-        "link": {
-          "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Offerte19-Superstore-Campania",
-          "name": "vlLink-Offerte19-Superstore-Campania",
-          "href": "https://www.conad.it/volantini/Offerte19-Superstore-Campania?anacanId=010548",
-          "plainHref": "https://www.conad.it/volantini/Offerte19-Superstore-Campania?anacanId=010548",
-          "uniqueId": "nt:unstructured-2029175525",
-          "customResourceType": "nt:unstructured"
-        },
-        "pdfUrl": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026_19_Superstore_Campania.pdf?_u=da4cc953febf1a8673afdbda4e9b6c93912115f7",
-        "image": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026_19_Superstore_Campania.pdf/renditions/previewvol.webp?_u=da4cc953febf1a8673afdbda4e9b6c93912115f7",
-        "imageAlt": "Campioni del Risparmio",
-        "externalizedVolantinoUrl": "https://www.conad.it/volantini/Offerte19-Superstore-Campania"
-      },
-      "pdf_extract": {
-        "bytes": 16405719,
-        "pages": 32,
-        "text_chars": 39902,
-        "price_tokens": 572,
-        "term_hits": {
-          "pasta": 10,
-          "riso": 10,
-          "farina": 3,
-          "latte": 8,
-          "uova": 2,
-          "formaggio": 4,
-          "mozzarella": 3,
-          "pomodoro": 6,
-          "passata": 3,
-          "pelati": 1,
-          "olio": 13,
-          "aglio": 7,
-          "patate": 2,
-          "peperoni": 2,
-          "piselli": 1,
-          "fagioli": 3,
-          "ceci": 2,
-          "manzo": 1,
-          "pollo": 7,
-          "salsiccia": 1,
-          "prosciutto": 4,
-          "salame": 1,
-          "tonno": 3,
-          "alici": 2,
-          "polpo": 2,
-          "capperi": 2,
-          "olive": 4,
-          "basilico": 1,
-          "ricotta": 1,
-          "limone": 6,
-          "gamber": 3,
-          "orata": 1
-        },
-        "target_contexts": {
-          "limone": [
-            {
-              "page": 4,
-              "context": "rik - 12x200ml 1,69 € 2,09 € 3,99 € 1,49 € 1,29 € 1,29 € 3,90 € BIRRA PERONI 3x33cl MASSIMO ACQUISTABILE 6 PEZZI OFFERTA VALIDA DA MERCOLEDÌ 9 A DOMENICA 20 SETTEMBRE 2026 ESTATHÈ limone/pesca classico/zero/deteinato 3x20cl 1,89 € OLIO EXTRA VERGINE DI OLIVA CIRIO 1L 4,49 € MASSIMO ACQUISTABILE 6 PEZZI"
-            },
-            {
-              "page": 14,
-              "context": "A 20 SETTEMBRE 2026 20,90 € al kg € ARROSTICINI DI OVINO 7,90 € al kg € PETTO DI POLLO INTERO 7 17,90 € al kg € BISTECCA CON OSSO DI BOVINO ADULTO I cosciotti di pollo al forno al limone sono un secondo piatto semplice e saporito, ideale per tutta la famiglia. Il limone e le erbe aromatiche rendono la carne profumata e succosa, mentre la cottura in forno crea una deliziosa doratura. Puoi accompagnarli c"
-            },
-            {
-              "page": 14,
-              "context": "LO INTERO 7 17,90 € al kg € BISTECCA CON OSSO DI BOVINO ADULTO I cosciotti di pollo al forno al limone sono un secondo piatto semplice e saporito, ideale per tutta la famiglia. Il limone e le erbe aromatiche rendono la carne profumata e succosa, mentre la cottura in forno crea una deliziosa doratura. Puoi accompagnarli con patate, verdure o una fresca insalata per un pasto completo e gustoso. Trovi la r"
-            },
-            {
-              "page": 14,
-              "context": "ovi la ricetta completa, ingredienti e quantità su gustour.it COSCIOTTO DI POLLO RICETTA COMPLETA 2,99 € 16,61 al kg € HAMBURGER GUSTO DELICATO 180g COSCIOTTI DI POLLO AL FORNO AL LIMONE ED ERBE AROMATICHE la ricetta"
-            },
-            {
-              "page": 20,
-              "context": "9 € 12,17 al Kg € INSALATA PER RISO PEPERLIZIA PONTI classico - 2x350g light senza olio - 2x350g/420g Sgocc 3,99 € SALSA TAHINI MIGHTY SESAME CO. 454g 4,49 € 9,89 al Kg € SUCCO DI LIMONE LIMMI con limoni di Siracusa IGP 250ml 1,29 € 5,16 al L € DADO STAR vari tipi 10 dadi - 100g 0,99 € 9,90 al Kg € CUORE DI BRODO KNORR vari tipi 112g 1,49 € 13,30 al Kg € OFFERTA VALIDA DA MERCOLEDÌ 9 A DOMENICA 20 SETTE"
-            },
-            {
-              "page": 24,
-              "context": "TZ 3x275ml 2,49 € OFFERTA VALIDA DA MERCOLEDÌ 9 A DOMENICA 20 SETTEMBRE 2026 BevandeBevande ANALCOLICO CRODINO biondo/arancia rossa 10cl 4,99 € BEVANDA ZERO PFANNER arancia carote limone/ multivitaminico/ frutti rossi pet - 1L 1,00 € ACQUA NATURALE SANT’ANNA pet - 12x50cl 2,49 € BEVANDA SENZA ZUCCHERI AGGIUNTI CONAD vari gusti brik - 1L 1,59 € BEVANDA SENZA ZUCCHERI AGGIUNTI vari tipi brik - 3x200ml 1,1"
-            }
-          ],
-          "gamber": [
-            {
-              "page": 9,
-              "context": "6,63 al Kg € BOCCONCINI RIPIENI VALLELATA con crema di latte 180g 2,99 € 16,61 al Kg € MOZZARELLA JULIENNE CONAD 200g 1,89 € 9,45 al Kg € CERTOSA GALBANI 165g 1,69 € 10,24 al Kg € GAMBERETTI IN SALAMOIA CONAD 230g/125g sgocc 3,39 € 27,12 al Kg Sgocc € 1,99 € 13,26 al Kg € PANCETTA A CUBETTI BERETTA dolce/aﬀ umicata 2x75g WÜRSTEL WUDY CLASSICO AIA 3 pezzi 300g 1,19 € 3,97 al Kg € FETTE CITTERIO guanciale"
-            },
-            {
-              "page": 11,
-              "context": "urgelati PREPARATI DI POLLO FINDUS vari tipi MINESTRONE LEGGEREZZA OROGEL 750g PIZZA RISTORANTE CAMEO vari tipi SUGO SAPORI&IDEE CONAD scampi e frutti di mare - 450g crostacei con gamberi argentini - 300g 4,49 € FAGOTTINO TRE MARIE al cioccolato 6 fagottini 390g 3,59 € 9,21 al Kg € CARTE D’OR ALGIDA vari gusti 500g 11 3,69 € 7,38 al Kg € FILETTI DI MERLUZZO D’ALASKA FROSTA 340g 4,79 € 14,09 al Kg € Bont"
-            },
-            {
-              "page": 15,
-              "context": "kg € 5,90 € al kg € TRIS DI MARE 220g TENTACOLI DI POLPO SAPORI&IDEE CONAD 200g 8,90 € 44,50 al kg € 4,90 € 22,27 al kg € TRIS DI MARE 220 g 4 ,90 € 6 € ,90 € al Kg 14,90 € al kg €GAMBERONI ARGENTINA DECONGELATI € SUPER OFFERTA SUPER OFFERTA del del GiornoGiorno VENERDÌ 18 SETTEMBRE FETTINE DI COSCIA DI BOVINO ADULTO 15,90 € al kg €"
-            }
-          ],
-          "pepe": [
-            {
-              "page": 13,
-              "context": " Categoria 0 2 1,79 € 14,32 al kg € FAGIOLINI BOBY CONAD PERCORSO QUALITÀ origine Italia 1a Categoria 500 g PRODOTTO ITALIANO PRODOTTO ITALIANO PRODOTTO ITALIANO PRODOTTO ITALIANO PEPERONI OLIVE E CAPPERI PAN CIABATTA CALZONE AL FORNO PROSCIUTTO COTTO E FIOR DI LATTE Nostra ProduzioneNostra Produzione 13 PEPERONI OLIVE E CAPPERI 1,05 € 10,50 al Kg € all'etto 0,29 € 2,90 al Kg € all'etto 1,30 € al pezz"
-            },
-            {
-              "page": 13,
-              "context": "PRODOTTO ITALIANO PRODOTTO ITALIANO PRODOTTO ITALIANO PEPERONI OLIVE E CAPPERI PAN CIABATTA CALZONE AL FORNO PROSCIUTTO COTTO E FIOR DI LATTE Nostra ProduzioneNostra Produzione 13 PEPERONI OLIVE E CAPPERI 1,05 € 10,50 al Kg € all'etto 0,29 € 2,90 al Kg € all'etto 1,30 € al pezzo € 1,20 € al pezzo € PASTE GRANDI ASSORTITE LA QUALITÀ, DA FILIERA CONTROLLATA LA QUALITÀ, DA FILIERA CONTROLLATA SUSINE NERE"
-            },
-            {
-              "page": 20,
-              "context": "IONESE CALVÈ vari tipi - 150ml 1,25 € 8,33 al L € PESTO BARILLA vari tipi 1,65 € PESTO DI BASILICO, RICOTTA E MANDORLE ROSSO DI SICILIA 180g 2,19 € 12,17 al Kg € INSALATA PER RISO PEPERLIZIA PONTI classico - 2x350g light senza olio - 2x350g/420g Sgocc 3,99 € SALSA TAHINI MIGHTY SESAME CO. 454g 4,49 € 9,89 al Kg € SUCCO DI LIMONE LIMMI con limoni di Siracusa IGP 250ml 1,29 € 5,16 al L € DADO STAR vari "
-            }
-          ],
-          "fagiolini": [
-            {
-              "page": 13,
-              "context": "g € UVA BIANCA SENZA SEMI BIO ALCE NERO origine Italia 1a Categoria - 750 g 1 MIRTILLI CONAD 125 g ANGURIE NERE MIDI KOKO MERO origine Italia 1a Categoria 0 2 1,79 € 14,32 al kg € FAGIOLINI BOBY CONAD PERCORSO QUALITÀ origine Italia 1a Categoria 500 g PRODOTTO ITALIANO PRODOTTO ITALIANO PRODOTTO ITALIANO PRODOTTO ITALIANO PEPERONI OLIVE E CAPPERI PAN CIABATTA CALZONE AL FORNO PROSCIUTTO COTTO E FIOR DI LAT"
-            }
-          ],
-          "basilico": [
-            {
-              "page": 20,
-              "context": "MAIONESE CALVÈ vari tipi - 150ml 1,25 € 8,33 al L € PESTO BARILLA vari tipi 1,65 € PESTO DI BASILICO, RICOTTA E MANDORLE ROSSO DI SICILIA 180g 2,19 € 12,17 al Kg € INSALATA PER RISO PEPERLIZIA PONTI classico - 2x350g light senza olio - 2x350g/420g Sgocc 3,99 € SALSA TAHINI MIGHTY SESAME CO. 454g 4,49 € 9,89 al Kg € SUC"
-            }
-          ],
-          "rosmarino": [
-            {
-              "page": 21,
-              "context": "A OMOGENEIZZATO NIPIOL a partire da 1,00 € la Dispensala Dispensa FILETTI DI SGOMBRO NOSTROMO all'olio di oliva 120g 1,99 € 16,58 al Kg € PETALI SNACK GUSTO IN LIBERTÀ SCOTTI mais/rosmarino 60g 0,99 € 16,50 al Kg € 1,59 € 2,84 al Kg € 1 CRACKER GRAN PAVESI salati/ non salati 560g 1,29 € 5,38 al Kg € TORTILLAS ROBERTO sottilissima e arrotolabile 4 tortillas - 240g PIADELLE MULINO BIANCO vari tipi 1,49 €"
-            }
-          ]
-        },
-        "page_stats": [
-          {
-            "page": 1,
-            "chars": 632,
-            "price_tokens": 7
-          },
-          {
-            "page": 2,
-            "chars": 690,
-            "price_tokens": 14
-          },
-          {
-            "page": 3,
-            "chars": 751,
-            "price_tokens": 17
-          },
-          {
-            "page": 4,
-            "chars": 614,
-            "price_tokens": 12
-          },
-          {
-            "page": 5,
-            "chars": 2328,
-            "price_tokens": 4
-          },
-          {
-            "page": 6,
-            "chars": 1015,
-            "price_tokens": 14
-          },
-          {
-            "page": 7,
-            "chars": 709,
-            "price_tokens": 4
-          },
-          {
-            "page": 8,
-            "chars": 1117,
-            "price_tokens": 21
-          },
-          {
-            "page": 9,
-            "chars": 1393,
-            "price_tokens": 22
-          },
-          {
-            "page": 10,
-            "chars": 670,
-            "price_tokens": 10
-          },
-          {
-            "page": 11,
-            "chars": 1231,
-            "price_tokens": 27
-          },
-          {
-            "page": 12,
-            "chars": 1132,
-            "price_tokens": 19
-          },
-          {
-            "page": 13,
-            "chars": 958,
-            "price_tokens": 16
-          },
-          {
-            "page": 14,
-            "chars": 1001,
-            "price_tokens": 9
-          },
-          {
-            "page": 15,
-            "chars": 768,
-            "price_tokens": 12
-          },
-          {
-            "page": 16,
-            "chars": 790,
-            "price_tokens": 18
-          },
-          {
-            "page": 17,
-            "chars": 1073,
-            "price_tokens": 8
-          },
-          {
-            "page": 18,
-            "chars": 1574,
-            "price_tokens": 12
-          },
-          {
-            "page": 19,
-            "chars": 898,
-            "price_tokens": 13
-          },
-          {
-            "page": 20,
-            "chars": 1054,
-            "price_tokens": 27
-          },
-          {
-            "page": 21,
-            "chars": 1086,
-            "price_tokens": 22
-          },
-          {
-            "page": 22,
-            "chars": 1053,
-            "price_tokens": 25
-          },
-          {
-            "page": 23,
-            "chars": 1778,
-            "price_tokens": 14
-          },
-          {
-            "page": 24,
-            "chars": 855,
-            "price_tokens": 12
-          },
-          {
-            "page": 25,
-            "chars": 788,
-            "price_tokens": 14
-          },
-          {
-            "page": 26,
-            "chars": 1091,
-            "price_tokens": 22
-          },
-          {
-            "page": 27,
-            "chars": 727,
-            "price_tokens": 13
-          },
-          {
-            "page": 28,
-            "chars": 1737,
-            "price_tokens": 16
-          },
-          {
-            "page": 29,
-            "chars": 1966,
-            "price_tokens": 11
-          },
-          {
-            "page": 30,
-            "chars": 2358,
-            "price_tokens": 4
-          },
-          {
-            "page": 31,
-            "chars": 5144,
-            "price_tokens": 128
-          },
-          {
-            "page": 32,
-            "chars": 921,
-            "price_tokens": 5
-          }
-        ],
-        "text_sample": "DA MERCOLEDÌ 9 A DOMENICA 20 SETTEMBRE 2026 NUTELLA FERRERO 750g € 5,99 al Kg 4,49 € BASTONCINI DI MERLUZZO FINDUS 18 pezzi - 450g € 7,53 al Kg 3,39 € MASSIMO ACQUISTABILE 6 PEZZI BIRRA HEINEKEN 66cl 0,89 € dal 9 al 20 S E T T E M B R E dal 9 al 20 su tutti i prodotti confezionati del LIBERO SERVIZIO SALUMI E FORMAGGI MASSIMO ACQUISTABILE 5 PEZZI MASSIMO ACQUISTABILE 5 PEZZI MASSIMO ACQUISTABILE 15 PEZZI MASSIMO ACQUISTABILE 15 PEZZI MASSIMO ACQUISTABILE 6 PEZZI *DETERSIVO LIQUIDO LAVATRICE DIXAN classico/color 3x19 dosi - 2,565L € 3,12 al L 7,99 € MASSIMO ACQUISTABILE 3 PEZZI ASSORTITI MASSIMO ACQUISTABILE 3 PEZZI ASSORTITI\nSOLO TITOLARI SOLO TITOLARI 2 STECCHI MAGNUM vari tipi MAXIBON NESTLE classic - 384g pistacchio - 369g 4 pezzi FRUTTOLO NESTLÈ assortito/fragola, pera e banana 6x50g € 4,30 al Kg YOGURT MÜLLER MIX vari tipi AFFETTATI AEQUILIBRIUM AIA vari tipi a partire da SOTTILETTE CLASSICHE 400g € 6,23 al Kg GALBANINO L’ORIGINALE GALBANI 270g € 10,67 al Kg PASTA FRESCA RIPIENA SFOGLIAVELO RANA vari tipi 250g € 9,56 al Kg BRESAOLA DELLA VALTELLINA I.G.P . PUNTA D’ANCA RIGAMONTI 100g € 39,90 al Kg 3,49 € 2,39 € 1,29 € 0,69 € 1,68 € 2,49 € 2,88 € 2,39 € 3,99 € MASSIMO ACQUISTABILE 6 PEZZI ASSORTITI MASSIMO ACQUISTABILE 6 PEZZI ASSORTITI 3 2 OFFERTA VALIDA DA MERCOLEDÌ 9 A DOMENICA 20 SETTEMBRE 2026\nSOLO TITOLARI SOLO TITOLARI SPECIAL K CLASSIC KELLOGG’S 450g € 4,42 al Kg MOZZARELLA NATURA SINCERA 4x100g € 6,23 al Kg FORMAGGIO FRESCO E CREMOSO PHILADELPHIA 250g € 9,56 al Kg LA ROBIOLA FATTORIE OSELLA 2x100g € 9,95 al Kg CAFFÈ IN CAPSULE LAVAZZA A MODO MIO passionale/qualità rossa/ crema e gusto 54 capsule - 405g € 24,67 al Kg 1,99 € 2,49 € 2,49 € 2,39 € 1,99 € 9,99 € 11,90 € BISCOTTI MULINO BIANCO rigoli/tarallucci/galletti/ macine/molinetti - 800g campagnole/biscottone/ primizie - 700g girotondi - 700g+100g CAFFÈ CREMA E GUSTO LAVAZZA 4x250g MASSIMO ACQUISTABILE 10 PEZZI ASSORTITI MASSIMO ACQUISTABILE 3 PEZZI 3 ORO SAIWA 1,25Kg € 3,19 al Kg PLUMCAKE MULINO BIANCO 10 merende - 330g € 3,61 al Kg 1,19 € MASSIMO ACQUISTABILE 5 PEZZI 3,99 €\nSOLO TITOLARI SOLO TITOLARI 4 RED BULL Energy Drink 4x25cl PAVESINI PAVESI classici/caﬀ è/cacao 200g € 8,45 al Kg POLPA DI POMODORO MUTTI 3x400g € 1,74 al Kg SALSE TOP DOWN CALVÈ vari tipi 250ml € 5,96 al L BEVANDE SKIPPER classiche/ senza zuccheri aggiunti vari tipi brik - 1L NETTARE YOGA OPTIMUM vari gusti brik - 12x200ml 1,69 € 2,09 € 3,99 € 1,49 € 1,29 € 1,29 € 3,90 € BIRRA PERONI 3x33cl MASSIMO ACQUISTABILE 6 PEZZI OFFERTA VALIDA DA MERCOLEDÌ 9 A DOMENICA 20 SETTEMBRE 2026 ESTATHÈ limone/pesca classico/zero/deteinato 3x20cl 1,89 € OLIO EXTRA VERGINE DI OLIVA CIRIO 1L 4,49 € MASSIMO ACQUISTABILE 6 PEZZI\nSOLO TITOLARI SOLO TITOLARI * CANDEGGINA DOPPIA CONVENIENZA ACE classica 2x5L € 0,45 al L LINEA SHAMPOO E BALSAMO PANTENE vari tipi 4,49 € 2,29 € MASSIMO ACQUISTABILE 3 PEZZI SCEGLI IL TUO PREMIO TRA: SOTTOSCRIVI CARTA INSIEME PIÙ CONAD CARD E PREMIATI! DAL 1° SETTEMBRE AL 30 NOVEMBRE 2026 CONAD CARD DAL 1° SETTEMBRE AL 30 NOVEMBRE 2026 CASSERUOLA OVALE IN GHISA FORNO A MICROONDE 20 LT SET ACCAPPATOIO + SET SPUGNA TROLLEY CABINA COMPLETO LETTO MATRIMONIALE ZAINO CABINA FRIGGITRICE AD ARIA DA 9 LT FORNO ‘O PIZZAROLO CON OBLÒ E 2 SPATOLE INOX PREMIO PREMIO TRA: FRIGGITRICE AD ARIA DA 9 LT Sottoscrivi Carta Insieme Più Conad CardSottoscrivi Carta Insieme Più Conad Card dal 1° settembre dal 1° settembre al 30 novembre 2026*, al 30 novembre 2026*, attivala entro il 31 gennaio 2027attivala entro il 31 gennaio 2027 e ricevi il premio scelto da te!**e ricevi il premio scelto da te!** Con Carta Insieme Più Conad Card paghi in sicurezza e comodità nei Con Carta Insieme Più Conad Card paghi in sicurezza e comodità nei nostri punti vendita, ottenendo sconti e vantaggi. Nessun costo di nostri punti vendita, ottenendo sconti e vantaggi. Nessun costo di attivazione né canone annuo. E paghi dal 10 del mese successivo! attivazione né canone annuo. E paghi dal 10 del mese successivo! Richiedila ora al box informazioni.Richiedila ora al box informazioni. INQUADRA IL QRCODE E SCOPRI I PREMI SU CONAD.IT PEPSI original/zero pet - 2L MASSIMO ACQUISTABILE 6 PEZZI ASSORTITI 1,29 € 5 * Iniziativa valida nei Punti Vendita che espongono il materiale informativo. * Iniziativa valida nei Punti Vendita che espongono il materiale informativo. Regolamento completo presso i Punti Vendita che aderiscono. Regolamento completo presso i Punti Vendita che aderiscono. ** Entro il 31/01/2027 attiva Carta Insieme Più Conad Card presso un punto di vendita Conad che gestisce ** Entro il 31/01/2027 attiva Carta Insieme Più Conad Card presso un punto di vendita Conad che gestisce il circuito di pagamento Conad Card.il circuito di pagamento Conad Card. In seguito, riceverai una comunicazione con l’invito a ritirare il premio scelto presso il punto vendita In seguito, riceverai una comunicazione con l’invito a ritirare il premio scelto presso il punto vendita di sottoscrizione entro il 31/03/2027.di sottoscrizione entro il 31/03/2027.\n6 SAPONE LIQUIDO FRESH&CLEAN vari tipi - 300ml 1,09 € 3,63 al L € LINEA DEODORANTE NIVEA a partire da 2,59 € LINEA DEODORANTI CONAD ESSENTIAE LINEA BON BONS MALIZIA a partire da 2,04 € OFFERTA VALIDA DA MERCOLEDÌ 9 A DOMENICA 20 SETTEMBRE 2026 CREMA MANI PROTETTIVA CONAD ESSENTIAE 100ml 1,50 € 15,00 al L € PROFUMO AROMATICO TESORI D’ORIENTE muschio bianco/ aegyptus/mirra 100ml 2,99 € 29,90 al L € 30 % LINEA BARBA INTESA a partire da 1,59 € LINEA CREME VISO E CORPO NIVEA LINEA CREME CORPO CONAD ESSENTIA LAB 20 % 40 % 20 LINEA INTIMA CHILLY1,99 € a partire da GLI INGREDIENTI PER UNA PELLE IDRATATA E RIMPOLPATA LINEA VISO CONAD ESSENTIAE LAB SCONTO 30 % LA GRANDE LA GRANDE BELLEZZABELLEZZA Come prenderti cura del tuo viso e del tuo corpo 5,49 € 20 % LINEA VISO L'OREAL 5,89 € 9,82 al L € DISINFETTANTE MANI GEL XGERM AMUCHINA 600ml SAPONE SOLIDO EXTRAFINO I PROVENZALI marsiglia - 150g/vegetale - 100g karitè - 250g 1,59 € a partire da RASOIO SISTEMA CONAD ESSENTIAE 1 manico + 2 testine/ ricariche - 4 pezzi\nDENTIFRICIO COLGATE vari tipi - 75ml 1,99 € 26,53 al L € FORCELLE O SCOVOLINO CONAD ESSENTIAE LAB vari tipi a partire da 95 € ,1 SPAZZOLINI CONAD ESSENTIAE LAB vari tipi 95 € ,0 PROTEZIONE COMPLETA PER OGNI SORRISO. 7 DENTIFRICIO BIOREPAIR CERAMIDI: UN NUTRIMENTO PER I RICCI. LA GRANDE BELLEZZALA GRANDE BELLEZZA Come prenderti cura del tuo viso e del tuo corpo LINEA PREMIUM E TRATTAMENTI PANTENE LINEA DISCHETTI LEVATRUCCO COTONEVE a partire da 1,39 € 1 DENTIFRICIO CONAD ESSENTIAE LAB vari tipi 75ml 19 € ,1 15,86 al L 30 % 30 % 30 % LINEA GUANTI E SPUGNE CONAD ESSENTIAE RICARICHE SPAZZOLINO ELETTRICO CONAD ESSENTIAE LAB vari tipi - 4 pezzi 49 € ,3 LINEA CAPELLI CONAD ESSENTIAE LAB a partire da 79 € ,2\ni Freschiss imii Freschiss imi 8 i Freschiss imii Freschiss imi OFFERTA VALIDA DA MERCOLEDÌ 9 A DOMENICA 20 SETTEMBRE 2026 FILETTI DI ALICI DISTESE IN OLIO DI OLIVA DELICIUS 90g 3,69 € 41,00 al Kg € LATTE INTERO SAPORI&DINTORNI CONAD prodotto di montagna microﬁ ltrato pet - 1L 1,59 € ACTIMEL DANONE vari tipi 6x100g MASCARPONE CONAD 500g 3,59 € 7,18 al Kg € PROVOLONE DOLCE AURICCHIO 200g PROVOLONE PICCANTE AURICCHIO 200g FORMAGGIO A FETTE LEERDAMMER original/lightlife 160g 2,39 € 14,94 al Kg € Eccellenza dal cuore cremoso. Per te che cerchi un’esperienza di gusto ricca e avvolgente, prova la Stracciatella con sfilacci di mozzarella pugliese Sapori&Dintorni Conad. Il sapore autentico di una antica tradizione casearia. STRACCIATELLA SAPORI&DINTORNI CONAD 250g 2,89 € 11,56 al Kg € FORMAGGIO CAMOSCIO D’ORO al taglio 1,49 € 14,90 al kg €all'etto 1 € 2,79 € € 13,95 al Kg 3,79 € € 18,95 al Kg 3 € 2,49 € 4,15 al Kg € SALSICCIA SCHETTINO dolce/piccante 400g circa 1 ,59 1 ,59 1,49 € 14,90 al Kg € all'etto GRANA TRENTINGRANA SAPORI&DINTORNI CONAD stagionatura minima 20 mesi al taglio 1,19 € 11,90 al kg €all'etto\n9 dal 9 al 20 SET TEMBRE PIÙ PUNTI PIÙ PREMI! sfoglia il catalogo completo inquadra il qr code o vai su: conad.it/catalogo-mi-premio REGOLAMENTO COMPLETO NEI PUNTI VENDITA SET TEMBRE dal 9 al 20 La promozione non è cumulabile con altre iniziative di raddoppio punti riservate ai possessori Conad Card Più o relative al martedì giorno di raddoppio sul totale spesa. Acquistando i prodotti confezionati del Libero Servizio Salumi e Formaggi, per ogni euro speso ricevi 1 PUNTO AGGIUNTIVO oltre quello base. su tutti i prodotti confezionati del LIBERO SERVIZIO SALUMI E FORMAGGI i Freschiss imii Freschiss imi UOVA FRESCHE LE NATURELLE da allevamento a terra 6 uova 2,19 € PRONTO DA BERE A BASE DI LATTE E CACAO SOLUBILE NESQUIK NESTLÈ classico/senza lattosio brik - 3x180ml 2,35 € 4,35 al L € 0,69 € 2,76 al Kg € MINI MUU MUU vaniglia/cioccolato 6x50g 1,99 € 6,63 al Kg € BOCCONCINI RIPIENI VALLELATA con crema di latte 180g 2,99 € 16,61 al Kg € MOZZARELLA JULIENNE CONAD 200g 1,89 € 9,45 al Kg € CERTOSA GALBANI 165g 1,69 € 10,24 al Kg € GAMBERETTI IN SALAMOIA CONAD 230g/125g sgocc 3,39 € 27,12 al Kg Sgocc € 1,99 € 13,26 al Kg € PANCETTA A CUBETTI BERETTA dolce/aﬀ umicata 2x75g WÜRSTEL WUDY CLASSICO AIA 3 pezzi 300g 1,19 € 3,97 al Kg € FETTE CITTERIO guanciale/bacon 2x40g 1,99 € 24,88 al Kg € 4 € ,99 € 24,95 al kg SALMONE AFFUMICATO POLE STAR 200g YOGURT INTERO VIPITENO vari gusti 2x125g\ni Freschiss imii Freschiss imi 10 MORTADELLA BOLOGNA IGP CONAD al taglio PROSCIUTTO COTTO FETTA GOLOSA GALBANI al taglio 1,29 € 12,90 al kg € all'etto 0,85 € 8,50 al kg € all'etto 0 PETTO DI TACCHINO ARROSTO CONAD PERCORSO QUALITÀ al taglio 1,89 € 18,90 al kg € all'etto i Freschiss imii Freschiss imi OFFERTA VALIDA DA MERCOLEDÌ 9 A DOMENICA 20 SETTEMBRE 2026 LA QUALITÀ CERTIFICATA DELLA FILIERA CONTROLLATA, IL GUSTO AUTENTICO DELLA CARNE ITALIANA LA QUALITÀ CERTIFICATA DELLA FILIERA CONTROLLATA, SALAME VILLANI milano/ungherese al taglio 1,69 € 16,90 al kg € all'etto PROSCIUTTO DI PARMA DOP CONAD stagionatura minima 16 mesi al taglio 2,49 all'etto € 24,90 al kg €\ni Surgelati PREPARATI DI POLLO FINDUS vari tipi MINESTRONE LEGGEREZZA OROGEL 750g PIZZA RISTORANTE CAMEO vari tipi SUGO SAPORI&IDEE CONAD scampi e frutti di mare - 450g crostacei con gamberi argentini - 300g 4,49 € FAGOTTINO TRE MARIE al cioccolato 6 fagottini 390g 3,59 € 9,21 al Kg € CARTE D’OR ALGIDA vari gusti 500g 11 3,69 € 7,38 al Kg € FILETTI DI MERLUZZO D’ALASKA FROSTA 340g 4,79 € 14,09 al Kg € Bontà irresistibile, zero compromessi. Senza zuccheri aggiunti* Senza lattosio Senza glutine Scopri gli altri gusti *Contiene naturalmente zuccheri Novità i Surgelatii Surgelati € 10,50 - 25% € 7,87 € al Kg € 17,90 - 22% € 13,96 € al Kg CUORI DI MERLUZZO DELL' ATLANTICO IWP 60/80 TRANCE DI PESCE SPADA GELO 150/300g i Surgelati i Surgelati SOLO TITOLARI 2,19 € 8,76 al Kg € SOFFICINI FINDUS vari tipi 4 pezzi - 250g 1,69 € 3,76 al Kg € 1,99 € 2,65 al Kg € 2,49 € 7 CUORI DI MERLUZZO € € 17,90 17,90 22 GELATO AL GUSTO DI VANIGLIA PRALINATO CONAD ripieno di amarena ricoperto di granella 6 stecchi - 360g 2,98 € 8,28 al Kg € 1,99 € 3,98 al Kg € PATATINE MC CAIN fry'n dip/ express 7 minuti/ chef gourmet 500g VERDURE BIOLOGICHE VERSO NATURA CONAD vari tipi 450g 2,69 € 2,49 € 9,96 al Kg € GELATO PIACERSI CONAD vari gusti 250g\n12 MELE ROYAL GALA VAL DI NON MELINDA origine Italia 1a Categoria cal. 75/80 - 750 g PATATINE AL FORNO BOCCONCÌ PATATE COPPOLA 1a Categoria 1kg 0,99 € PIANTA CICLAMINO MIX COLOR vaso da 10 cm 2,00 € al pezzo € 1,99 € 5,38 al kg € 2,89 € 11,56 al kg € 1,79 € 5,11 al kg € 0,59 € 5,90 al kg € PRUGNE DENOCCIOLATE CONAD 250g LUPINI IN SALAMOIA OROLÌ 350g MOUSSE MELINDA vari gusti 100g 1 € 1 € ,79 € 3,58 al kg POMODORO ROSSO CILIEGINO PERCORSO QUALITÀ CONAD Origine Italia 1a Categoria - 500g 1 POMODORO ROSSO QUALITÀ PRODOTTO ITALIANO € SUPER OFFERTA SUPER OFFERTA del del GiornoGiorno GIOVEDÌ 10 SETTEMBRE PIANTA FICUS ROBUSTA produzione italiana vaso da 18 cm 5,90 € al pezzo € PIANTA FICUS produzione italiana vaso da 18 cm 5 produzione italiana 5 CAVOLINI DI BRUXELLES CONAD Origine Olanda - 1a Categoria 370 g 0 0 PRODOTTO ITALIANO PRO"
       }
     },
     {
@@ -645,12 +256,12 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "feTitle": "Autunno dai sapori che scaldano",
-        "visibilitySet": true,
-        "onYumpu": true,
         "disaggregatedId": "CatalogoGourmetCampania__d",
         "hideDefaultFlyer": false,
         "promoDetails": "gourmet",
+        "feTitle": "Autunno dai sapori che scaldano",
+        "visibilitySet": true,
+        "onYumpu": true,
         "cooperative": "PAC",
         "id": "v-724033612",
         "link": {
@@ -868,12 +479,12 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "feTitle": "Catalogo Scuola",
-        "visibilitySet": true,
-        "onYumpu": true,
         "disaggregatedId": "202617BISScuolaMinuteria__d",
         "hideDefaultFlyer": false,
         "promoDetails": "scuola-2",
+        "feTitle": "Catalogo Scuola",
+        "visibilitySet": true,
+        "onYumpu": true,
         "cooperative": "PAC",
         "id": "v-568157624",
         "link": {
@@ -1057,12 +668,12 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "feTitle": "Spunta il Risparmio",
-        "visibilitySet": true,
-        "onYumpu": true,
         "disaggregatedId": "20264spuntacampania__d",
         "hideDefaultFlyer": false,
         "promoDetails": "",
+        "feTitle": "Spunta il Risparmio",
+        "visibilitySet": true,
+        "onYumpu": true,
         "cooperative": "PAC",
         "id": "v-452021323",
         "link": {
@@ -1215,12 +826,12 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "feTitle": "Catalogo Scuola",
-        "visibilitySet": true,
-        "onYumpu": true,
         "disaggregatedId": "202615BISScuolaCucito__d",
         "hideDefaultFlyer": false,
         "promoDetails": "scuola-1",
+        "feTitle": "Catalogo Scuola",
+        "visibilitySet": true,
+        "onYumpu": true,
         "cooperative": "PAC",
         "id": "v-1817826903",
         "link": {
@@ -1314,6 +925,118 @@
   ],
   "all_flyer_meta": [
     {
+      "title": "Grandi Marche fino al 50%",
+      "pdfUrl": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026_20_Superstore_Campania.pdf?_u=56ce0343be3bc48a3f32af9cecb4ae0f002ac7c4",
+      "validFrom": 1790114400000,
+      "validTo": 1791064800000,
+      "visible": true,
+      "valid": false,
+      "mainFlyer": false,
+      "promotions": "promozioni-locali",
+      "catalogue": "",
+      "hasDisaggregated": false,
+      "disTotalProducts": 0,
+      "rawKeys": [
+        "assetState",
+        "attempts",
+        "catalogue",
+        "cooperative",
+        "creationDate",
+        "disTotalProducts",
+        "disabledDownload",
+        "disaggregatedId",
+        "disaggregatoCategories",
+        "externalizedVolantinoUrl",
+        "feTitle",
+        "hasDisaggregated",
+        "hideDefaultFlyer",
+        "id",
+        "image",
+        "imageAlt",
+        "lastModified",
+        "lastSync",
+        "link",
+        "localPromo",
+        "mainFlyer",
+        "meccanicaPromozione",
+        "name",
+        "nationalPromo",
+        "onYumpu",
+        "pdfPath",
+        "pdfUrl",
+        "priority",
+        "promoDetails",
+        "promotions",
+        "published",
+        "reupload",
+        "seoRobots",
+        "slug",
+        "synchronized",
+        "title",
+        "valid",
+        "validFrom",
+        "validTo",
+        "visibilitySet",
+        "visible",
+        "visibleFrom",
+        "visibleTo",
+        "yumpuId"
+      ],
+      "rawNode": {
+        "name": "2026_20_Superstore_Campania.pdf",
+        "pdfPath": "/content/dam/conad-common/volantini/pac/v2026-/2026_20_Superstore_Campania.pdf",
+        "creationDate": 1789944424594,
+        "title": "Grandi Marche fino al 50%",
+        "slug": "Offerte20-Superstore-Campania",
+        "validFrom": 1790114400000,
+        "validTo": 1791064800000,
+        "visibleFrom": 1789941600000,
+        "visibleTo": 1791064800000,
+        "assetState": "processed",
+        "lastSync": 1789942849783,
+        "lastModified": 1789391316549,
+        "yumpuId": "71289757",
+        "reupload": false,
+        "priority": 0,
+        "attempts": 0,
+        "promotions": "promozioni-locali",
+        "catalogue": "",
+        "nationalPromo": "",
+        "localPromo": "",
+        "disabledDownload": false,
+        "seoRobots": "noindex",
+        "mainFlyer": false,
+        "hasDisaggregated": false,
+        "disTotalProducts": 0,
+        "meccanicaPromozione": {},
+        "disaggregatoCategories": {},
+        "synchronized": true,
+        "valid": false,
+        "visible": true,
+        "published": false,
+        "disaggregatedId": "202620SuperstoreCampania__d",
+        "hideDefaultFlyer": false,
+        "promoDetails": "",
+        "feTitle": "Grandi Marche fino al 50%",
+        "visibilitySet": true,
+        "onYumpu": true,
+        "cooperative": "PAC",
+        "id": "v-250911976",
+        "link": {
+          "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Offerte20-Superstore-Campania",
+          "name": "vlLink-Offerte20-Superstore-Campania",
+          "href": "https://www.conad.it/volantini/Offerte20-Superstore-Campania?anacanId=010548",
+          "plainHref": "https://www.conad.it/volantini/Offerte20-Superstore-Campania?anacanId=010548",
+          "uniqueId": "nt:unstructured-1911038981",
+          "customResourceType": "nt:unstructured"
+        },
+        "pdfUrl": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026_20_Superstore_Campania.pdf?_u=56ce0343be3bc48a3f32af9cecb4ae0f002ac7c4",
+        "image": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026_20_Superstore_Campania.pdf/renditions/previewvol.webp?_u=56ce0343be3bc48a3f32af9cecb4ae0f002ac7c4",
+        "imageAlt": "Grandi Marche fino al 50%",
+        "externalizedVolantinoUrl": "https://www.conad.it/volantini/Offerte20-Superstore-Campania"
+      }
+    },
+    {
       "title": "Convenienza Più",
       "pdfUrl": "https://www.conad.it/assets/common/volantini/pac/vinteg/Integrativa%2019%20Campania.pdf?_u=d7447b8f19cb6c123e7185827401b71a2ad9ed98",
       "validFrom": 1789509600000,
@@ -1403,12 +1126,12 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "feTitle": "Convenienza Più",
-        "visibilitySet": true,
-        "onYumpu": true,
         "disaggregatedId": "Integrativa19Campania__d",
         "hideDefaultFlyer": false,
         "promoDetails": "",
+        "feTitle": "Convenienza Più",
+        "visibilitySet": true,
+        "onYumpu": true,
         "cooperative": "PAC",
         "id": "v-1962687935",
         "link": {
@@ -1423,118 +1146,6 @@
         "image": "https://www.conad.it/assets/common/volantini/pac/vinteg/Integrativa%2019%20Campania.pdf/renditions/previewvol.webp?_u=d7447b8f19cb6c123e7185827401b71a2ad9ed98",
         "imageAlt": "Convenienza Più",
         "externalizedVolantinoUrl": "https://www.conad.it/volantini/Integrativa19-Campania"
-      }
-    },
-    {
-      "title": "Campioni del Risparmio",
-      "pdfUrl": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026_19_Superstore_Campania.pdf?_u=da4cc953febf1a8673afdbda4e9b6c93912115f7",
-      "validFrom": 1788904800000,
-      "validTo": 1789855200000,
-      "visible": true,
-      "valid": true,
-      "mainFlyer": false,
-      "promotions": "promozioni-nazionali",
-      "catalogue": "",
-      "hasDisaggregated": false,
-      "disTotalProducts": 0,
-      "rawKeys": [
-        "assetState",
-        "attempts",
-        "catalogue",
-        "cooperative",
-        "creationDate",
-        "disTotalProducts",
-        "disabledDownload",
-        "disaggregatedId",
-        "disaggregatoCategories",
-        "externalizedVolantinoUrl",
-        "feTitle",
-        "hasDisaggregated",
-        "hideDefaultFlyer",
-        "id",
-        "image",
-        "imageAlt",
-        "lastModified",
-        "lastSync",
-        "link",
-        "localPromo",
-        "mainFlyer",
-        "meccanicaPromozione",
-        "name",
-        "nationalPromo",
-        "onYumpu",
-        "pdfPath",
-        "pdfUrl",
-        "priority",
-        "promoDetails",
-        "promotions",
-        "published",
-        "reupload",
-        "seoRobots",
-        "slug",
-        "synchronized",
-        "title",
-        "valid",
-        "validFrom",
-        "validTo",
-        "visibilitySet",
-        "visible",
-        "visibleFrom",
-        "visibleTo",
-        "yumpuId"
-      ],
-      "rawNode": {
-        "name": "2026_19_Superstore_Campania.pdf",
-        "pdfPath": "/content/dam/conad-common/volantini/pac/v2026-/2026_19_Superstore_Campania.pdf",
-        "creationDate": 1788732312831,
-        "title": "Campioni del Risparmio",
-        "slug": "Offerte19-Superstore-Campania",
-        "validFrom": 1788904800000,
-        "validTo": 1789855200000,
-        "visibleFrom": 1788732000000,
-        "visibleTo": 1789855200000,
-        "assetState": "processed",
-        "lastSync": 1788732302414,
-        "lastModified": 1788182266640,
-        "yumpuId": "71279715",
-        "reupload": false,
-        "priority": 0,
-        "attempts": 0,
-        "promotions": "promozioni-nazionali",
-        "catalogue": "",
-        "nationalPromo": "PPN19",
-        "localPromo": "",
-        "disabledDownload": false,
-        "seoRobots": "noindex",
-        "mainFlyer": false,
-        "hasDisaggregated": false,
-        "disTotalProducts": 0,
-        "meccanicaPromozione": {},
-        "disaggregatoCategories": {},
-        "synchronized": true,
-        "valid": true,
-        "visible": true,
-        "published": false,
-        "feTitle": "Campioni del Risparmio",
-        "visibilitySet": true,
-        "onYumpu": true,
-        "disaggregatedId": "202619SuperstoreCampania__d",
-        "hideDefaultFlyer": false,
-        "promoDetails": "PPN19",
-        "cooperative": "PAC",
-        "id": "v-1796946686",
-        "link": {
-          "path": "/content/conad-corporate/it/it/jcr:content/vlLink-Offerte19-Superstore-Campania",
-          "name": "vlLink-Offerte19-Superstore-Campania",
-          "href": "https://www.conad.it/volantini/Offerte19-Superstore-Campania?anacanId=010548",
-          "plainHref": "https://www.conad.it/volantini/Offerte19-Superstore-Campania?anacanId=010548",
-          "uniqueId": "nt:unstructured-2029175525",
-          "customResourceType": "nt:unstructured"
-        },
-        "pdfUrl": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026_19_Superstore_Campania.pdf?_u=da4cc953febf1a8673afdbda4e9b6c93912115f7",
-        "image": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026_19_Superstore_Campania.pdf/renditions/previewvol.webp?_u=da4cc953febf1a8673afdbda4e9b6c93912115f7",
-        "imageAlt": "Campioni del Risparmio",
-        "externalizedVolantinoUrl": "https://www.conad.it/volantini/Offerte19-Superstore-Campania"
       }
     },
     {
@@ -1627,12 +1238,12 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "feTitle": "Autunno dai sapori che scaldano",
-        "visibilitySet": true,
-        "onYumpu": true,
         "disaggregatedId": "CatalogoGourmetCampania__d",
         "hideDefaultFlyer": false,
         "promoDetails": "gourmet",
+        "feTitle": "Autunno dai sapori che scaldano",
+        "visibilitySet": true,
+        "onYumpu": true,
         "cooperative": "PAC",
         "id": "v-724033612",
         "link": {
@@ -1739,12 +1350,12 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "feTitle": "Catalogo Scuola",
-        "visibilitySet": true,
-        "onYumpu": true,
         "disaggregatedId": "202617BISScuolaMinuteria__d",
         "hideDefaultFlyer": false,
         "promoDetails": "scuola-2",
+        "feTitle": "Catalogo Scuola",
+        "visibilitySet": true,
+        "onYumpu": true,
         "cooperative": "PAC",
         "id": "v-568157624",
         "link": {
@@ -1851,12 +1462,12 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "feTitle": "Spunta il Risparmio",
-        "visibilitySet": true,
-        "onYumpu": true,
         "disaggregatedId": "20264spuntacampania__d",
         "hideDefaultFlyer": false,
         "promoDetails": "",
+        "feTitle": "Spunta il Risparmio",
+        "visibilitySet": true,
+        "onYumpu": true,
         "cooperative": "PAC",
         "id": "v-452021323",
         "link": {
@@ -1963,12 +1574,12 @@
         "valid": true,
         "visible": true,
         "published": false,
-        "feTitle": "Catalogo Scuola",
-        "visibilitySet": true,
-        "onYumpu": true,
         "disaggregatedId": "202615BISScuolaCucito__d",
         "hideDefaultFlyer": false,
         "promoDetails": "scuola-1",
+        "feTitle": "Catalogo Scuola",
+        "visibilitySet": true,
+        "onYumpu": true,
         "cooperative": "PAC",
         "id": "v-1817826903",
         "link": {
@@ -1988,65 +1599,65 @@
   ],
   "errors": [],
   "summary": {
-    "active_count": 6,
-    "total_text_chars": 71865,
-    "total_price_tokens": 602,
-    "key_terms_covered": 32,
+    "active_count": 5,
+    "total_text_chars": 31963,
+    "total_price_tokens": 30,
+    "key_terms_covered": 5,
     "key_terms_total": 53,
     "covered_terms": [
+      "latte",
+      "manzo",
+      "olio",
+      "pasta",
+      "uova"
+    ],
+    "missing_terms": [
       "aglio",
       "alici",
+      "baccal",
       "basilico",
+      "branzino",
+      "burro",
+      "calamari",
       "capperi",
+      "carota",
       "ceci",
+      "cipolla",
+      "cozze",
       "fagioli",
       "farina",
       "formaggio",
+      "friarielli",
       "gamber",
-      "latte",
+      "lievito",
       "limone",
-      "manzo",
+      "melanzane",
       "mozzarella",
-      "olio",
       "olive",
       "orata",
+      "origano",
+      "pane",
+      "pangrattato",
+      "parmigiano",
       "passata",
-      "pasta",
       "patate",
+      "pecorino",
       "pelati",
       "peperoni",
       "piselli",
       "pollo",
       "polpo",
       "pomodoro",
+      "prezzemolo",
       "prosciutto",
+      "provola",
       "ricotta",
       "riso",
       "salame",
       "salsiccia",
-      "tonno",
-      "uova"
-    ],
-    "missing_terms": [
-      "baccal",
-      "branzino",
-      "burro",
-      "calamari",
-      "carota",
-      "cipolla",
-      "cozze",
-      "friarielli",
-      "lievito",
-      "melanzane",
-      "origano",
-      "pane",
-      "pangrattato",
-      "parmigiano",
-      "pecorino",
-      "prezzemolo",
-      "provola",
       "scarola",
       "sedano",
+      "tonno",
       "vongole",
       "zucchine"
     ]
