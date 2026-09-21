@@ -789,6 +789,44 @@ VISUAL_VERIFIED_OFFERS_V81 = [
         "source_url": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026-4-spunta-campania.pdf",
         "source_label": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81|SPUNTA_RISPARMIO_CAMPANIA|NO_OCR",
     },
+    {
+        # Catalogo Gourmet Campania, valido 09/09/2026-04/10/2026.
+        # Pagina 14 verificata visivamente, NON ottenuta con OCR.
+        "product_code": "VISUAL:GOURMET3_SALSICCIA_CURVA_PICCANTE_300G",
+        "product_name": "Salsiccia curva piccante Sapori&Dintorni Conad 300 g",
+        "brand": "Sapori&Dintorni Conad",
+        "category1": "Carne e salumi",
+        "category2": "Salsiccia",
+        "quantity_value": 0.300,
+        "quantity_unit": "KG",
+        "price_eur": 4.79,
+        "unit_price": 15.97,
+        "unit_price_unit": "EUR/KG",
+        "variable_weight": False,
+        "valid_from": "2026-09-09",
+        "valid_to": "2026-10-04",
+        "source_url": "https://www.conad.it/assets/common/volantini/pac/vcatal/Catalogo%20Gourmet%20Campania.pdf",
+        "source_label": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81|GOURMET3_CAMPANIA|PAGE14|NO_OCR",
+    },
+    {
+        # Catalogo Gourmet Campania, valido 09/09/2026-04/10/2026.
+        # Pagina 15 verificata visivamente, NON ottenuta con OCR.
+        "product_code": "VISUAL:GOURMET3_VONGOLE_ADRIATICO_450G",
+        "product_name": "Vongole dell'Adriatico Sapori&Idee Conad 450 g",
+        "brand": "Sapori&Idee Conad",
+        "category1": "Pesce",
+        "category2": "Molluschi",
+        "quantity_value": 0.450,
+        "quantity_unit": "KG",
+        "price_eur": 3.99,
+        "unit_price": 8.87,
+        "unit_price_unit": "EUR/KG",
+        "variable_weight": False,
+        "valid_from": "2026-09-09",
+        "valid_to": "2026-10-04",
+        "source_url": "https://www.conad.it/assets/common/volantini/pac/vcatal/Catalogo%20Gourmet%20Campania.pdf",
+        "source_label": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81|GOURMET3_CAMPANIA|PAGE15|NO_OCR",
+    },
 
 ]
 
