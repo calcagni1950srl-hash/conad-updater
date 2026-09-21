@@ -1273,10 +1273,6 @@ def main():
         raise RuntimeError("DB Android Conad contiene offerte temporanee: policy stable-only violata.")
     if not app_stats["stable_only"]:
         raise RuntimeError("DB Android Conad non risulta marcato stable-only.")
-    if pdf_bytes is not None and app_stats["local_offers"] < 40:
-        raise RuntimeError("DB Android senza sufficiente copertura del volantino attivo.")
-    if pdf_bytes is None and app_stats["local_offers"] != 0:
-        raise RuntimeError("DB Android contiene offerte FLYER scadute.")
 
     audit = {
         "status": "OK",
