@@ -21,6 +21,21 @@ CATEGORY_URLS = [
     "https://www.lidl.it/c/cibo-e-bevande/s10068374",
 ]
 
+# Lidl's internal search currently exposes a much larger result pool than
+# category landing pages. Multiple query URLs are intentionally used and
+# deduplicated, because the site can rank/rotate results differently.
+SEARCH_URLS = [
+    "https://www.lidl.it/q/query/italiamo",
+    "https://www.lidl.it/q/query/eridanous",
+    "https://www.lidl.it/q/query/pasta",
+    "https://www.lidl.it/q/query/pomodoro",
+    "https://www.lidl.it/q/query/carne",
+    "https://www.lidl.it/q/query/pesce",
+    "https://www.lidl.it/q/query/formaggio",
+    "https://www.lidl.it/q/query/verdura",
+    "https://www.lidl.it/q/query/legumi",
+]
+
 PRICE_RE = re.compile(r"(?<!\d)(\d{1,3}(?:[.,]\d{2}))\s*€")
 QTY_RE = re.compile(
     r"(?i)(?:(\d+)\s*[x×]\s*)?(\d+(?:[.,]\d+)?)\s*"
@@ -174,14 +189,14 @@ def main():
         )
         page = context.new_page()
 
-        for url in CATEGORY_URLS:
+        for url in CATEGORY_URLS + SEARCH_URLS:
             try:
                 links = expand_category(page, url)
                 category_stats[url] = len(links)
                 all_links.update(links)
             except Exception as e:
                 category_stats[url] = 0
-                errors.append({"url": url, "reason": "category: " + repr(e)})
+                errors.append({"url": url, "reason": "discovery: " + repr(e)})
 
         links = sorted(all_links)
         print("DISCOVERED", len(links), "unique product links")
