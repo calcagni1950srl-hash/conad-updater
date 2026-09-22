@@ -51,7 +51,7 @@ jobs:
           /tmp/kotlin/kotlinc/bin/kotlinc             qa_v81/SupermarketRepositoryStub.kt             qa_v81/ShoppingCalculator.kt             qa_v81/IngredientMatcher_V81_CONAD.kt             qa_v81/ConadV81Harness.kt             -include-runtime -d /tmp/lidl-v81-harness.jar
       - name: Run exact 157 recipe Lidl coverage
         run: |
-          java -jar /tmp/lidl-v81-harness.jar             qa_v81/products_lidl_api.tsv             qa_v81/recipes_v61_157.tsv 2             | tee lidl_v81_coverage_report.txt
+          java -jar /tmp/lidl-v81-harness.jar             qa_v81/products_lidl_api.tsv             qa_v81/recipes_v61_157.tsv 2 Lidl             | tee lidl_v81_coverage_report.txt
       - name: Coverage summary
         run: |
           python - <<'PY'
