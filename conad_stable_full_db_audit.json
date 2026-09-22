@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS",
+  "rows": 6841,
+  "positive_prices": 6841,
+  "variable_weight_rows": 67,
+  "store_code": "010548",
+  "catalog_complete": "true",
+  "source_unique_skus": 8877,
+  "food_rows": 6841,
+  "flyer_rows": 0,
+  "visual_rows": 0
+}
