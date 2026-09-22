@@ -43,9 +43,11 @@ for term in TERMS:
         req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
         with urllib.request.urlopen(req,timeout=30) as r:
             html=r.read().decode("utf-8","ignore")
+        urls=sorted(set(re.findall(r"/p/[^\\\"'<>\\s]+", html)))
         rows.append({"term":term,"param":"PAGE","status":200,"html_len":len(html),
                      "has_term":term.lower() in html.lower(),
-                     "product_urls":len(set(re.findall(r"/p/[^\\\"'<>\\s]+", html)))})
+                     "product_urls":len(urls),
+                     "urls":urls[:20]})
     except Exception as e:
         rows.append({"term":term,"param":"PAGE","error":repr(e)})
 with open("lidl_search_term_probe.json","w",encoding="utf-8") as f:
