@@ -11,6 +11,7 @@ on:
       - LIDL_SITEMAP_PROBE.py
       - LIDL_FRAGMENT_PROBE.py
       - LIDL_GRIDBOX_PROBE.py
+      - LIDL_GRIDBOX_V2_PROBE.py
       - qa_v81/**
       - .github/workflows/probe_lidl_api_catalog.yml
   workflow_dispatch:
@@ -32,6 +33,8 @@ jobs:
         run: python LIDL_API_CATALOG.py
       - name: Probe missing-staple search parameters
         run: python LIDL_SEARCH_TERM_PROBE.py
+      - name: Probe Lidl gridboxes v2
+        run: python LIDL_GRIDBOX_V2_PROBE.py | tee lidl_gridbox_v2_report.txt
       - name: Probe Lidl gridboxes endpoint
         run: python LIDL_GRIDBOX_PROBE.py | tee lidl_gridbox_report.txt
       - name: Inspect Lidl dynamic search fragments
