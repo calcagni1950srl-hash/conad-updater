@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - '.github/workflows/build_conad_stable_full_db.yml'
+      - 'prezzi_conad_capodrise_stable_full.db.gz'
 
 permissions:
   contents: write
@@ -17,147 +18,61 @@ jobs:
         with:
           ref: probe-conad-full-catalog
 
-      - name: Download committed full Conad catalog export
+      - name: Expand verified full Conad SQLite
         run: |
-          curl -L --fail --retry 3             https://raw.githubusercontent.com/calcagni1950srl-hash/conad-updater/main/qa_v81_real/catalog_conad.tsv.gz.b64             -o /tmp/catalog_conad.tsv.gz.b64
+          gzip -dc prezzi_conad_capodrise_stable_full.db.gz > prezzi_conad_capodrise_stable_full.db
 
-      - name: Rebuild stable Android SQLite
+      - name: Audit stable full DB
         run: |
           python - <<'PY'
-          import base64, csv, gzip, io, json, sqlite3
+          import json, sqlite3
           from pathlib import Path
 
-          raw = base64.b64decode(Path('/tmp/catalog_conad.tsv.gz.b64').read_text(encoding='ascii'))
-          text = gzip.decompress(raw).decode('utf-8')
-          rows = list(csv.DictReader(io.StringIO(text), delimiter='\t'))
-
-          if len(rows) != 6841:
-              raise SystemExit(f'ERROR expected 6841 Conad food rows, found {len(rows)}')
-
-          out = Path('prezzi_conad_capodrise_stable_full.db')
-          if out.exists():
-              out.unlink()
-
-          con = sqlite3.connect(out)
-          con.executescript('''
-          PRAGMA journal_mode=DELETE;
-          CREATE TABLE products_current (
-            supermarket TEXT,
-            store_code TEXT,
-            store_name TEXT,
-            store_address TEXT,
-            product_code TEXT,
-            product_name TEXT,
-            brand TEXT,
-            category1 TEXT,
-            category2 TEXT,
-            category3 TEXT,
-            quantity_value REAL,
-            quantity_unit TEXT,
-            price_eur REAL,
-            unit_price REAL,
-            unit_price_unit TEXT,
-            bassi_fissi INTEGER DEFAULT 0,
-            image_url TEXT,
-            source_queries TEXT,
-            checked_at TEXT,
-            variable_weight INTEGER DEFAULT 0,
-            regular_price_eur REAL,
-            promo_price_eur REAL,
-            promo_active_general INTEGER DEFAULT 0
-          );
-          CREATE INDEX idx_products_current_code ON products_current(product_code);
-          CREATE INDEX idx_products_current_name ON products_current(product_name);
-          CREATE INDEX idx_products_current_category ON products_current(category1);
-
-          CREATE TABLE metadata (
-            key TEXT PRIMARY KEY,
-            value TEXT
-          );
-          ''')
-
-          insert = '''INSERT INTO products_current (
-            supermarket,store_code,store_name,store_address,product_code,product_name,brand,
-            category1,category2,category3,quantity_value,quantity_unit,price_eur,unit_price,
-            unit_price_unit,bassi_fissi,image_url,source_queries,checked_at,variable_weight,
-            regular_price_eur,promo_price_eur,promo_active_general
-          ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'''
-
-          for r in rows:
-              key = r['key']
-              parts = key.split('|', 1)
-              store_code = parts[0] if parts else '010548'
-              product_code = parts[1] if len(parts) > 1 else key
-              qv = float(r['qv']) if r['qv'] else None
-              price = float(r['price'])
-              up = float(r['up']) if r['up'] else None
-              variable = 1 if str(r['variable']).strip() in {'1','true','True'} else 0
-              con.execute(insert, (
-                r['supermarket'] or 'Conad',
-                store_code or '010548',
-                r['store'] or 'Conad Superstore Capodrise',
-                'Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)',
-                product_code,
-                r['name'],
-                r['brand'] or None,
-                r['category'] or None,
-                None,
-                None,
-                qv,
-                r['qu'] or None,
-                price,
-                up,
-                r['upu'] or None,
-                0,
-                None,
-                'V81_REAL_FIVE_MARKET_CATALOG_EXPORT',
-                r['checked'] or None,
-                variable,
-                price,
-                None,
-                0
-              ))
-
-          metadata = {
-            'schema': 'SMART_CAMPANIA_CONAD_STABLE_ANDROID_V81',
-            'store_code': '010548',
-            'catalog_complete': 'true',
-            'food_rows': '6841',
-            'source_unique_skus': '8877',
-            'flyer_rows': '0',
-            'visual_rows': '0',
-            'source': 'qa_v81_real/catalog_conad.tsv.gz.b64'
-          }
-          con.executemany('INSERT INTO metadata(key,value) VALUES (?,?)', metadata.items())
-          con.commit()
-
-          total = con.execute('SELECT COUNT(*) FROM products_current').fetchone()[0]
-          positive = con.execute('SELECT COUNT(*) FROM products_current WHERE price_eur > 0').fetchone()[0]
-          variable = con.execute('SELECT COUNT(*) FROM products_current WHERE variable_weight = 1').fetchone()[0]
-          stores = con.execute('SELECT DISTINCT store_code FROM products_current').fetchall()
+          p=Path('prezzi_conad_capodrise_stable_full.db')
+          con=sqlite3.connect(p)
+          total=con.execute('SELECT COUNT(*) FROM products_current').fetchone()[0]
+          positive=con.execute('SELECT COUNT(*) FROM products_current WHERE price_eur > 0').fetchone()[0]
+          variable=con.execute('SELECT COUNT(*) FROM products_current WHERE variable_weight = 1').fetchone()[0]
+          stores=con.execute('SELECT DISTINCT store_code FROM products_current ORDER BY store_code').fetchall()
+          metadata=dict(con.execute('SELECT key,value FROM metadata').fetchall())
           con.close()
 
-          if total != 6841 or positive != 6841 or stores != [('010548',)]:
+          expected={
+            'total':6841,
+            'positive':6841,
+            'stores':[('010548',)],
+            'catalog_complete':'true',
+            'food_rows':'6841',
+            'source_unique_skus':'8877',
+            'flyer_rows':'0',
+            'visual_rows':'0'
+          }
+          if total != expected['total'] or positive != expected['positive'] or stores != expected['stores']:
               raise SystemExit(f'QA FAIL total={total} positive={positive} stores={stores}')
+          for k in ('catalog_complete','food_rows','source_unique_skus','flyer_rows','visual_rows'):
+              if metadata.get(k) != expected[k]:
+                  raise SystemExit(f'QA FAIL metadata {k}={metadata.get(k)!r} expected={expected[k]!r}')
 
-          Path('conad_stable_full_db_audit.json').write_text(json.dumps({
+          audit={
             'verdict':'PASS',
             'rows':total,
             'positive_prices':positive,
             'variable_weight_rows':variable,
             'store_code':'010548',
-            'source_unique_skus':8877,
-            'food_rows':6841,
-            'flyer_rows':0,
-            'visual_rows':0
-          }, indent=2), encoding='utf-8')
-          print('PASS', total, positive, variable, stores)
+            'catalog_complete':metadata.get('catalog_complete'),
+            'source_unique_skus':int(metadata['source_unique_skus']),
+            'food_rows':int(metadata['food_rows']),
+            'flyer_rows':int(metadata['flyer_rows']),
+            'visual_rows':int(metadata['visual_rows'])
+          }
+          Path('conad_stable_full_db_audit.json').write_text(json.dumps(audit,indent=2),encoding='utf-8')
+          print(json.dumps(audit,indent=2))
           PY
 
-      - name: Verify SQLite
+      - name: SQLite integrity check
         run: |
+          sqlite3 prezzi_conad_capodrise_stable_full.db "PRAGMA integrity_check;"
           sqlite3 prezzi_conad_capodrise_stable_full.db "SELECT COUNT(*), MIN(price_eur), MAX(price_eur) FROM products_current;"
-          sqlite3 prezzi_conad_capodrise_stable_full.db "SELECT key,value FROM metadata ORDER BY key;"
 
       - name: Commit stable full DB
         run: |
