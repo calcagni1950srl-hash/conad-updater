@@ -4,6 +4,8 @@ on:
     branches: [probe-lidl-catalog]
     paths:
       - LIDL_API_CATALOG.py
+      - LIDL_EXPORT_V81_TSV.py
+      - qa_v81/**
       - .github/workflows/probe_lidl_api_catalog.yml
   workflow_dispatch:
 jobs:
@@ -16,10 +18,45 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
       - name: Build API catalog
         run: python LIDL_API_CATALOG.py
       - name: SQLite integrity
         run: sqlite3 prezzi_lidl_api.db "PRAGMA integrity_check; SELECT COUNT(*) FROM products;"
+      - name: Export Lidl catalog for exact V81 matcher
+        run: python LIDL_EXPORT_V81_TSV.py
+      - name: Install Kotlin compiler 2.0.21
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip curl
+          curl -L -o /tmp/kotlin.zip https://github.com/JetBrains/kotlin/releases/download/v2.0.21/kotlin-compiler-2.0.21.zip
+          unzip -q /tmp/kotlin.zip -d /tmp/kotlin
+          echo "/tmp/kotlin/kotlinc/bin" >> "$GITHUB_PATH"
+      - name: Compile exact Smart Campania matcher
+        run: |
+          /tmp/kotlin/kotlinc/bin/kotlinc             qa_v81/SupermarketRepositoryStub.kt             qa_v81/ShoppingCalculator.kt             qa_v81/IngredientMatcher_V81_CONAD.kt             qa_v81/ConadV81Harness.kt             -include-runtime -d /tmp/lidl-v81-harness.jar
+      - name: Run exact 157 recipe Lidl coverage
+        run: |
+          java -jar /tmp/lidl-v81-harness.jar             qa_v81/products_lidl_api.tsv             qa_v81/recipes_v61_157.tsv 2             | tee lidl_v81_coverage_report.txt
+      - name: Coverage summary
+        run: |
+          python - <<'PY'
+          import re, json
+          from pathlib import Path
+          t=Path("lidl_v81_coverage_report.txt").read_text(encoding="utf-8")
+          keys=["products","recipes_total","recipes_testable","recipes_complete","recipes_failed",
+                "primi_complete","secondi_complete","contorni_complete","piatti_unici_complete","dolci_complete",
+                "threshold_primi","threshold_secondi","threshold_contorni"]
+          out={}
+          for k in keys:
+              m=re.search(rf"(?m)^{re.escape(k)}=(.+)$",t)
+              out[k]=m.group(1).strip() if m else None
+          Path("lidl_v81_coverage_summary.json").write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding="utf-8")
+          print(json.dumps(out,ensure_ascii=False))
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: lidl-api-catalog
@@ -27,3 +64,6 @@ jobs:
             prezzi_lidl_api.db
             lidl_api_products.json
             lidl_api_raw.json
+            qa_v81/products_lidl_api.tsv
+            lidl_v81_coverage_report.txt
+            lidl_v81_coverage_summary.json
