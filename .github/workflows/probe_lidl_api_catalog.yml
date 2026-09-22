@@ -1,0 +1,29 @@
+name: Probe Lidl API catalog
+on:
+  push:
+    branches: [probe-lidl-catalog]
+    paths:
+      - LIDL_API_CATALOG.py
+      - .github/workflows/probe_lidl_api_catalog.yml
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: probe-lidl-catalog
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build API catalog
+        run: python LIDL_API_CATALOG.py
+      - name: SQLite integrity
+        run: sqlite3 prezzi_lidl_api.db "PRAGMA integrity_check; SELECT COUNT(*) FROM products;"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lidl-api-catalog
+          path: |
+            prezzi_lidl_api.db
+            lidl_api_products.json
+            lidl_api_raw.json
