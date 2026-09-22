@@ -38,3 +38,5 @@ jobs:
           path: |
             prezzi_lidl_probe.db
             lidl_probe_audit.json
+
+# search-expansion trigger
