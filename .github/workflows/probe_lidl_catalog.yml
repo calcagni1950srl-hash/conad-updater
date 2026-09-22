@@ -1,0 +1,32 @@
+name: Probe Lidl public food catalog
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: probe-lidl-catalog
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Build Lidl probe catalog
+        run: python LIDL_PROBE.py
+
+      - name: SQLite integrity
+        run: sqlite3 prezzi_lidl_probe.db "PRAGMA integrity_check; SELECT COUNT(*) FROM products;"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lidl-probe-catalog
+          path: |
+            prezzi_lidl_probe.db
+            lidl_probe_audit.json
