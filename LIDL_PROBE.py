@@ -5,8 +5,7 @@ import time
 from datetime import datetime, timezone
 from urllib.parse import urljoin
 
-import requests
-from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 
 BASE = "https://www.lidl.it"
 OUT_DB = "prezzi_lidl_probe.db"
@@ -15,24 +14,12 @@ OUT_JSON = "lidl_probe_audit.json"
 CATEGORY_URLS = [
     "https://www.lidl.it/h/frutta-e-verdura/h10071012",
     "https://www.lidl.it/h/carne-e-pollame/h10095752",
-    "https://www.lidl.it/h/pesce-e-frutti-di-mare/h10095756",
     "https://www.lidl.it/h/formaggi-latticini-e-uova/h10095761",
-    "https://www.lidl.it/h/panetteria/h10095920",
     "https://www.lidl.it/h/dispensa/h10096095",
-    "https://www.lidl.it/h/olio-salse-e-condimenti/h10096110",
-    "https://www.lidl.it/h/piatti-pronti/h10096112",
-    "https://www.lidl.it/h/cereali-e-creme-spalmabili/h10096114",
-    "https://www.lidl.it/h/surgelati/h10096116",
-    "https://www.lidl.it/h/dolciumi-e-snack/h10096118",
-    "https://www.lidl.it/h/bevande/h10096120",
-    "https://www.lidl.it/h/caffe-te-e-cacao/h10096128",
+    "https://www.lidl.it/h/surgelati/h10071049",
+    "https://www.lidl.it/h/piatti-pronti/h10071020",
+    "https://www.lidl.it/c/cibo-e-bevande/s10068374",
 ]
-
-UA = {
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-                  "(KHTML, like Gecko) Chrome/128.0 Safari/537.36",
-    "Accept-Language": "it-IT,it;q=0.9,en;q=0.7",
-}
 
 PRICE_RE = re.compile(r"(?<!\d)(\d{1,3}(?:[.,]\d{2}))\s*€")
 QTY_RE = re.compile(
@@ -42,9 +29,6 @@ QTY_RE = re.compile(
 UNIT_PRICE_RE = re.compile(
     r"(?i)1\s*(kg|l|lt)\s*=\s*(\d+(?:[.,]\d+)?)\s*€"
 )
-
-session = requests.Session()
-session.headers.update(UA)
 
 def clean(s):
     return re.sub(r"\s+", " ", (s or "")).strip()
@@ -66,93 +50,81 @@ def canonical_unit(u):
         return "cl"
     return u
 
-def fetch(url):
-    r = session.get(url, timeout=30)
-    r.raise_for_status()
-    return r.text
+def expand_category(page, url):
+    print("OPEN", url)
+    page.goto(url, wait_until="domcontentloaded", timeout=60000)
+    page.wait_for_timeout(2500)
 
-def discover_product_links():
-    links = set()
-    category_stats = {}
-    for url in CATEGORY_URLS:
-        html = fetch(url)
-        soup = BeautifulSoup(html, "html.parser")
-        found = set()
-        for a in soup.find_all("a", href=True):
-            href = a["href"]
-            if "/p/" in href:
-                full = urljoin(BASE, href.split("?")[0])
-                found.add(full)
-                links.add(full)
-        category_stats[url] = len(found)
-        print(url, len(found))
-        time.sleep(0.3)
-    return sorted(links), category_stats
-
-def parse_jsonld(soup):
-    objs = []
-    for node in soup.find_all("script", attrs={"type": "application/ld+json"}):
-        txt = node.string or node.get_text(" ", strip=True)
-        if not txt:
-            continue
+    # Accept cookies if shown.
+    for label in ["Accetta tutti", "Accetta", "Consenti tutti"]:
         try:
-            data = json.loads(txt)
+            btn = page.get_by_role("button", name=re.compile(label, re.I))
+            if btn.count():
+                btn.first.click(timeout=1500)
+                page.wait_for_timeout(500)
+                break
         except Exception:
-            continue
-        if isinstance(data, list):
-            objs.extend(data)
-        else:
-            objs.append(data)
-    return objs
+            pass
 
-def walk(obj):
-    if isinstance(obj, dict):
-        yield obj
-        for v in obj.values():
-            yield from walk(v)
-    elif isinstance(obj, list):
-        for v in obj:
-            yield from walk(v)
+    # Repeatedly click load-more if present and scroll.
+    for _ in range(25):
+        clicked = False
+        for text in ["Visualizza altri prodotti", "Mostra altri prodotti", "Carica altri"]:
+            try:
+                btn = page.get_by_text(text, exact=False)
+                if btn.count():
+                    btn.last.scroll_into_view_if_needed()
+                    btn.last.click(timeout=2500)
+                    page.wait_for_timeout(1200)
+                    clicked = True
+                    break
+            except Exception:
+                pass
+        page.mouse.wheel(0, 5000)
+        page.wait_for_timeout(500)
+        if not clicked:
+            # one extra scroll cycle can still lazy-load cards
+            page.mouse.wheel(0, 8000)
+            page.wait_for_timeout(900)
+            break
 
-def parse_product(url):
-    html = fetch(url)
-    soup = BeautifulSoup(html, "html.parser")
-    text = clean(soup.get_text(" ", strip=True))
+    hrefs = page.eval_on_selector_all(
+        'a[href*="/p/"]',
+        "els => els.map(e => e.href)"
+    )
+    clean_links = sorted({h.split("?")[0] for h in hrefs if "/p/" in h})
+    print("FOUND", len(clean_links), "product links")
+    return clean_links
 
-    h1 = soup.find("h1")
-    name = clean(h1.get_text(" ", strip=True) if h1 else "")
-    if not name:
-        title = soup.find("title")
-        name = clean(title.get_text(" ", strip=True) if title else "").split("|")[0].strip()
+def parse_product(page, url):
+    page.goto(url, wait_until="domcontentloaded", timeout=60000)
+    page.wait_for_timeout(1200)
+    text = clean(page.locator("body").inner_text(timeout=15000))
+    title = ""
+    try:
+        title = clean(page.locator("h1").first.inner_text(timeout=4000))
+    except Exception:
+        pass
+    if not title:
+        title = clean(page.title()).split("|")[0].strip()
 
     brand = None
-    price = None
-    jsonld = parse_jsonld(soup)
-    for root in jsonld:
-        for obj in walk(root):
-            typ = obj.get("@type")
-            if typ == "Product" or (isinstance(typ, list) and "Product" in typ):
-                name = clean(obj.get("name")) or name
-                b = obj.get("brand")
-                if isinstance(b, dict):
-                    brand = clean(b.get("name"))
-                elif isinstance(b, str):
-                    brand = clean(b)
-                offers = obj.get("offers")
-                if isinstance(offers, dict):
-                    try:
-                        p = float(str(offers.get("price")).replace(",", "."))
-                        if p > 0:
-                            price = p
-                    except Exception:
-                        pass
+    # Lidl product pages commonly place brand immediately above product title.
+    try:
+        h1 = page.locator("h1").first
+        parent_text = clean(h1.locator("xpath=..").inner_text(timeout=3000))
+        bits = [clean(x) for x in parent_text.split("\n") if clean(x)]
+        if bits and bits[0].lower() != title.lower() and len(bits[0]) <= 60:
+            brand = bits[0]
+    except Exception:
+        pass
 
     prices = [parse_number(m.group(1)) for m in PRICE_RE.finditer(text)]
     prices = [p for p in prices if p and 0.01 <= p <= 500]
-    if price is None and prices:
-        # prefer the smallest plausible current selling price; crossed-out old prices
-        # often coexist in the page text.
-        price = min(prices)
+    # Current Lidl selling price appears after old crossed-out price; choosing the
+    # smallest positive value is conservative for promo pages and is rechecked by
+    # unit price where available.
+    price = min(prices) if prices else None
 
     qty = None
     qm = QTY_RE.search(text)
@@ -169,11 +141,14 @@ def parse_product(url):
         unit_price = (parse_number(um.group(2)), canonical_unit(um.group(1)))
 
     piece = bool(re.search(r"(?i)\bal\s+pezzo\b", text))
-    variable_kg = bool(re.search(r"(?i)\b(?:sfuso|sfusi|sfuse|al)\s+(?:al\s+)?kg\b", text))
+    variable_kg = bool(re.search(r"(?i)\b(?:sfuse?|sfusi|al\s+kg)\b", text))
+
+    if price is None:
+        return None
 
     return {
         "url": url,
-        "name": name,
+        "name": title,
         "brand": brand,
         "price_eur": price,
         "quantity_value": qty[0] if qty else (1.0 if piece else None),
@@ -186,23 +161,45 @@ def parse_product(url):
     }
 
 def main():
-    links, category_stats = discover_product_links()
-    print("discovered", len(links), "product links")
-
-    products = []
+    all_links = set()
+    category_stats = {}
     errors = []
-    for i, url in enumerate(links, 1):
-        try:
-            p = parse_product(url)
-            if p["name"] and p["price_eur"] and p["price_eur"] > 0:
-                products.append(p)
-            else:
-                errors.append({"url": url, "reason": "missing name or positive price"})
-        except Exception as e:
-            errors.append({"url": url, "reason": repr(e)})
-        if i % 25 == 0:
-            print(i, "/", len(links), "valid", len(products), "errors", len(errors))
-        time.sleep(0.15)
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context(
+            locale="it-IT",
+            user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                       "(KHTML, like Gecko) Chrome/128.0 Safari/537.36"
+        )
+        page = context.new_page()
+
+        for url in CATEGORY_URLS:
+            try:
+                links = expand_category(page, url)
+                category_stats[url] = len(links)
+                all_links.update(links)
+            except Exception as e:
+                category_stats[url] = 0
+                errors.append({"url": url, "reason": "category: " + repr(e)})
+
+        links = sorted(all_links)
+        print("DISCOVERED", len(links), "unique product links")
+
+        products = []
+        for i, url in enumerate(links, 1):
+            try:
+                prod = parse_product(page, url)
+                if prod and prod["name"] and prod["price_eur"] > 0:
+                    products.append(prod)
+                else:
+                    errors.append({"url": url, "reason": "missing name or positive price"})
+            except Exception as e:
+                errors.append({"url": url, "reason": "product: " + repr(e)})
+            if i % 25 == 0:
+                print(i, "/", len(links), "valid", len(products), "errors", len(errors))
+
+        browser.close()
 
     con = sqlite3.connect(OUT_DB)
     cur = con.cursor()
@@ -247,12 +244,11 @@ def main():
         "errors": len(errors),
         "category_link_counts": category_stats,
         "store_reference": "Lidl Caserta - Via Paolo Borsellino 4",
-        "note": "Probe catalog from public Lidl Italia food pages. Do not use in app until coverage and freshness audit pass.",
-        "error_samples": errors[:30],
+        "note": "Probe catalog rendered with Chromium. Do not use in app until recipe coverage and price/quantity audit pass.",
+        "error_samples": errors[:40],
     }
     with open(OUT_JSON, "w", encoding="utf-8") as f:
         json.dump(audit, f, ensure_ascii=False, indent=2)
-
     print(json.dumps(audit, ensure_ascii=False, indent=2))
 
 if __name__ == "__main__":
