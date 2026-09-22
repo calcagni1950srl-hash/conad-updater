@@ -43,7 +43,7 @@ for term in TERMS:
         req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
         with urllib.request.urlopen(req,timeout=30) as r:
             html=r.read().decode("utf-8","ignore")
-        urls=sorted(set(re.findall(r'href=["\\']([^"\\']+/p/[^"\\']+)["\\']', html, re.I)))
+        urls=sorted(set(re.findall(r'href=["\\\']([^"\\\']+/p/[^"\\\']+)["\\\']', html, re.I)))
         if not urls:
             urls=sorted(set(re.findall(r"/p/[^\\\"'<>\\s]+", html)))
         rows.append({"term":term,"param":"PAGE","status":200,"html_len":len(html),
