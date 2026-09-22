@@ -38,12 +38,14 @@ for term in TERMS:
         st,x=get(params)
         rows.append({"term":term,"param":p,"status":st,"numFound":x.get("numFound"),"names":names(x),"error":x.get("error")})
     # also test category-free query page HTML for embedded product hints
-    url="https://www.lidl.it/q/query/"+urllib.parse.quote(term)
+    url="https://www.lidl.it/q/search?"+urllib.parse.urlencode({"q":term})
     try:
         req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
         with urllib.request.urlopen(req,timeout=30) as r:
             html=r.read().decode("utf-8","ignore")
-        urls=sorted(set(re.findall(r"/p/[^\\\"'<>\\s]+", html)))
+        urls=sorted(set(re.findall(r'href=["\\']([^"\\']+/p/[^"\\']+)["\\']', html, re.I)))
+        if not urls:
+            urls=sorted(set(re.findall(r"/p/[^\\\"'<>\\s]+", html)))
         rows.append({"term":term,"param":"PAGE","status":200,"html_len":len(html),
                      "has_term":term.lower() in html.lower(),
                      "product_urls":len(urls),
