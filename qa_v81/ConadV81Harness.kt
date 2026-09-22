@@ -15,7 +15,7 @@ internal data class HarnessRecipe(
 private fun d(s: String): Double? = s.trim().takeIf { it.isNotEmpty() }?.toDoubleOrNull()
 private fun unescape(s: String): String = s.replace("\\n", " ").replace("\\t", " ").trim()
 
-private fun loadProducts(path: String): List<SupermarketRepository.Product> {
+private fun loadProducts(path: String, supermarketName: String, storeName: String?): List<SupermarketRepository.Product> {
     val lines = File(path).readLines(Charsets.UTF_8)
     require(lines.isNotEmpty()) { "products TSV vuoto" }
     return lines.drop(1).filter { it.isNotBlank() }.map { line ->
@@ -23,8 +23,8 @@ private fun loadProducts(path: String): List<SupermarketRepository.Product> {
         require(c.size >= 12) { "riga prodotti invalida: $line" }
         SupermarketRepository.Product(
             key = c[0],
-            supermarket = "Conad",
-            store = "010548",
+            supermarket = supermarketName,
+            store = storeName,
             name = unescape(c[1]),
             brand = c[2].ifBlank { null },
             category = c[3].ifBlank { null },
@@ -70,9 +70,11 @@ private fun loadRecipes(path: String, persons: Int): List<HarnessRecipe> {
 }
 
 fun main(args: Array<String>) {
-    require(args.size >= 2) { "uso: products.tsv recipes.tsv [persons]" }
+    require(args.size >= 2) { "uso: products.tsv recipes.tsv [persons] [supermarket] [store]" }
     val persons = args.getOrNull(2)?.toIntOrNull() ?: 2
-    val products = loadProducts(args[0])
+    val supermarketName = args.getOrNull(3)?.takeIf { it.isNotBlank() } ?: "Conad"
+    val storeName = args.getOrNull(4)?.takeIf { it.isNotBlank() }
+    val products = loadProducts(args[0], supermarketName, storeName)
     val recipes = loadRecipes(args[1], persons)
     IngredientMatcher.prepare(products)
 
@@ -101,6 +103,7 @@ fun main(args: Array<String>) {
 
     println("V81_CONAD_REAL_KOTLIN_HARNESS")
     println("persons=$persons")
+    println("supermarket=$supermarketName")
     println("products=${products.size}")
     println("recipes_total=${recipes.size}")
     println("recipes_testable=${testable.size}")
