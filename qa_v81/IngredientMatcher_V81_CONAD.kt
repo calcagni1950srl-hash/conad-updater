@@ -890,6 +890,7 @@ internal object IngredientMatcher {
         val isFamila = market.contains("famila")
         val isSole365 = market.contains("sole365") || market.contains("sole 365")
         val isConad = market.contains("conad")
+        val isLidl = market.contains("lidl")
         val isCosiComodoFood = isFamila || isSole365
 
         // CONAD V81: tassonomia del DB Capodrise validato. Ramo isolato:
@@ -972,6 +973,72 @@ internal object IngredientMatcher {
                     ingredient.contains("pollo") -> cat("carne e salumi")
                 ingredient in setOf("ceci", "fagioli", "fagioli cannellini", "fagioli borlotti", "lenticchie") ->
                     cat("condimenti e conserve")
+                else -> true
+            }
+        }
+
+
+        // LIDL QA: tassonomia ufficiale restituita dall'API lidl.it.
+        // Ramo isolato usato per validare il catalogo Lidl senza modificare
+        // le regole già collaudate degli altri supermercati.
+        if (isLidl) {
+            val name = normalize(product.name)
+            fun cat(vararg tokens: String): Boolean = tokens.any { token -> c.contains(token) }
+            fun hasAny(vararg tokens: String): Boolean = tokens.any { name.contains(it) }
+
+            return when {
+                ingredient == "pane" || ingredient == "pane raffermo" || ingredient == "mollica di pane" ->
+                    cat("panificio") && !hasAny("snack", "grissini", "cracker")
+                ingredient == "pasta" || ingredient == "pasta corta" || ingredient == "pasta mista" ||
+                    ingredient in setOf("spaghetti","linguine","paccheri","mezzi paccheri","scialatielli","ziti","lasagne") ->
+                    cat("riso pasta e legumi", "scorte alimentari")
+                ingredient == "uova" ->
+                    cat("uova") && (name.contains("uova") || name.contains("uovo")) &&
+                        !hasAny("albume", "tuorlo", "quaglia", "liquido", "pastorizzato")
+                ingredient in setOf("mela","pera","pesca","percoca","uva","albicocca","susina","melone","anguria","fico","kiwi") ->
+                    cat("frutta e verdura")
+                ingredient == "burro" || ingredient == "burro per besciamella" ->
+                    cat("formaggi latticini e uova")
+                ingredient == "latte" || ingredient == "latte intero" || ingredient.startsWith("latte ") ->
+                    cat("latte e panna") && name.contains("latte") &&
+                        !hasAny("yogurt","dessert","biscott","merend","burro","panna","uova","mousse")
+                ingredient == "ricotta" || ingredient.contains("formaggio") || ingredient.contains("parmigiano") ||
+                    ingredient.contains("grana") || ingredient.contains("pecorino") || ingredient.contains("mozzarella") ||
+                    ingredient.contains("provola") || ingredient.contains("fiordilatte") || ingredient.contains("caciocavallo") ->
+                    cat("formaggi latticini e uova", "formaggio")
+                ingredient in setOf("pomodoro","pomodori","pomodorini","pomodorini pizzutelli","carciofi",
+                    "zucchine","melanzane","patate","patate a pasta gialla","peperoni","peperone rosso",
+                    "cavolfiore","fagiolini","verza","lattuga","friggitelli","scarola","friarielli",
+                    "broccoli","cicoria","finocchi","finocchio","zucca","carota","sedano") ->
+                    cat("frutta e verdura")
+                ingredient == "aglio" || ingredient == "cipolla" || ingredient.startsWith("cipolla") || ingredient.startsWith("cipolle") ||
+                    ingredient == "limone" || ingredient == "limone amalfitano" ->
+                    cat("frutta e verdura")
+                ingredient in setOf("basilico","prezzemolo","rosmarino","origano","pepe","pepe nero","sale","menta","peperoncino","noce moscata") ->
+                    cat("oli spezie e salse", "erbe aromatiche e spezie")
+                ingredient.contains("olio") ->
+                    cat("oli spezie e salse", "oli e grassi")
+                ingredient == "aceto" || ingredient == "aceto di vino bianco" ->
+                    cat("oli spezie e salse") && name.contains("aceto")
+                ingredient.contains("vino") ->
+                    cat("vino birra e liquori", "vino")
+                ingredient.contains("acciug") || ingredient.startsWith("alici") ||
+                    ingredient in setOf("cozze","vongole","vongole veraci","polpo","polpo verace","calamari","calamaretti",
+                        "gamberi","gamberi o calamaretti","scampi","seppie pulite","seppioline","totani","anelli di totano",
+                        "moscardini","pesce spada","filetto di pesce spada","tonno fresco","filetto di tonno","sgombro pulito",
+                        "tranci di spigola","orata","filetti di orata","branzino","filetto di branzino","frutti di mare misti",
+                        "tonno al naturale","sgombro al naturale") ->
+                    cat("pesce e frutti di mare", "pesce e frutti di mare surgelati")
+                ingredient == "carne macinata" || ingredient.contains("manzo") || ingredient.contains("bovino") ||
+                    ingredient.contains("vitello") || ingredient.contains("maiale") || ingredient.contains("salsic") ||
+                    ingredient.contains("agnello") || ingredient.contains("coniglio") || ingredient.contains("trippa") ||
+                    ingredient.contains("pollo") ->
+                    cat("carne e pollame") && !cat("salumi e affettati")
+                ingredient in setOf("ceci","ceci cotti","fagioli","fagioli cotti","fagioli lessi","fagioli cannellini cotti","lenticchie","piselli") ->
+                    cat("riso pasta e legumi", "scorte alimentari")
+                ingredient == "farina" || ingredient == "farina 00" || ingredient == "zucchero bianco" ||
+                    ingredient == "cioccolato fondente" || ingredient == "pangrattato" ->
+                    cat("scorte alimentari", "dolciumi e snack", "panificio")
                 else -> true
             }
         }
