@@ -1,6 +1,12 @@
 name: Probe Lidl public food catalog
 
 on:
+  push:
+    branches:
+      - probe-lidl-catalog
+    paths:
+      - "LIDL_PROBE.py"
+      - ".github/workflows/probe_lidl_catalog.yml"
   workflow_dispatch:
 
 jobs:
