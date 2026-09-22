@@ -8,6 +8,7 @@ on:
       - LIDL_SEARCH_TERM_PROBE.py
       - LIDL_RECIPE_CATALOG.py
       - LIDL_STAPLE_DETAIL_PROBE.py
+      - LIDL_SITEMAP_PROBE.py
       - qa_v81/**
       - .github/workflows/probe_lidl_api_catalog.yml
   workflow_dispatch:
@@ -29,6 +30,8 @@ jobs:
         run: python LIDL_API_CATALOG.py
       - name: Probe missing-staple search parameters
         run: python LIDL_SEARCH_TERM_PROBE.py
+      - name: Probe official Lidl sitemap
+        run: python LIDL_SITEMAP_PROBE.py | tee lidl_sitemap_report.txt
       - name: Inspect staple result details
         run: python LIDL_STAPLE_DETAIL_PROBE.py | tee lidl_staple_detail_report.txt
       - name: Build recipe-driven Lidl catalog
