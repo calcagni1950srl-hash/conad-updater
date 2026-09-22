@@ -42,14 +42,14 @@ jobs:
             'positive':6841,
             'stores':[('010548',)],
             'catalog_complete':'true',
-            'food_rows':'6841',
-            'source_unique_skus':'8877',
+            'saved_food_products':'6841',
+            'source_unique':'8877',
             'flyer_rows':'0',
             'visual_rows':'0'
           }
           if total != expected['total'] or positive != expected['positive'] or stores != expected['stores']:
               raise SystemExit(f'QA FAIL total={total} positive={positive} stores={stores}')
-          for k in ('catalog_complete','food_rows','source_unique_skus','flyer_rows','visual_rows'):
+          for k in ('catalog_complete','saved_food_products','source_unique','flyer_rows','visual_rows'):
               if metadata.get(k) != expected[k]:
                   raise SystemExit(f'QA FAIL metadata {k}={metadata.get(k)!r} expected={expected[k]!r}')
 
@@ -60,8 +60,8 @@ jobs:
             'variable_weight_rows':variable,
             'store_code':'010548',
             'catalog_complete':metadata.get('catalog_complete'),
-            'source_unique_skus':int(metadata['source_unique_skus']),
-            'food_rows':int(metadata['food_rows']),
+            'source_unique_skus':int(metadata['source_unique']),
+            'food_rows':int(metadata['saved_food_products']),
             'flyer_rows':int(metadata['flyer_rows']),
             'visual_rows':int(metadata['visual_rows'])
           }
