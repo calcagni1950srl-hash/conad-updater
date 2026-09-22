@@ -1,5 +1,12 @@
+V81_QA_DIAGNOSTIC
+commit=9f5aba29d585ac06f7f55b69e986ddd9559afac0
+started_at=2026-09-22T16:10:33Z
+info: kotlinc-jvm 2.0.21 (JRE 21.0.12.1+1-LTS)
+kotlin_install_exit=0
+compile_exit=0
 V81_CONAD_REAL_KOTLIN_HARNESS
 persons=2
+supermarket=Conad
 products=617
 recipes_total=157
 recipes_testable=137
@@ -271,3 +278,4 @@ FAIL	secondo	uova_occhio_bue_v47_4	Uova all'occhio di bue	Olio extravergine di o
 FAIL	secondo	uova_camicia_v47_4	Uova in camicia	Aceto di vino bianco:Nessun prodotto sicuro trovato
 FAIL	secondo	uova_purgatorio_v47_4	Uova in purgatorio	Olio extravergine di oliva:Nessun prodotto sicuro trovato
 FAIL	secondo	zucchine_pomodoro_v60	Zucchine al pomodoro	Olio extravergine di oliva:Nessun prodotto sicuro trovato | Zucchine:Nessun prodotto sicuro trovato
+run_exit=0
