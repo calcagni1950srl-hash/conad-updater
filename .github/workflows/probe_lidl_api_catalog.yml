@@ -6,6 +6,7 @@ on:
       - LIDL_API_CATALOG.py
       - LIDL_EXPORT_V81_TSV.py
       - LIDL_SEARCH_TERM_PROBE.py
+      - LIDL_RECIPE_CATALOG.py
       - qa_v81/**
       - .github/workflows/probe_lidl_api_catalog.yml
   workflow_dispatch:
@@ -27,6 +28,10 @@ jobs:
         run: python LIDL_API_CATALOG.py
       - name: Probe missing-staple search parameters
         run: python LIDL_SEARCH_TERM_PROBE.py
+      - name: Build recipe-driven Lidl catalog
+        run: python LIDL_RECIPE_CATALOG.py
+      - name: Recipe catalog SQLite integrity
+        run: sqlite3 prezzi_lidl_recipe.db "PRAGMA integrity_check; SELECT COUNT(*) FROM products;"
       - name: SQLite integrity
         run: sqlite3 prezzi_lidl_api.db "PRAGMA integrity_check; SELECT COUNT(*) FROM products;"
       - name: Export Lidl catalog for exact V81 matcher
@@ -65,9 +70,13 @@ jobs:
           name: lidl-api-catalog
           path: |
             prezzi_lidl_api.db
+            prezzi_lidl_recipe.db
             lidl_api_products.json
             lidl_api_raw.json
             lidl_search_term_probe.json
+            lidl_recipe_products.json
+            lidl_recipe_catalog_summary.json
+            lidl_recipe_query_errors.json
             qa_v81/products_lidl_api.tsv
             lidl_v81_coverage_report.txt
             lidl_v81_coverage_summary.json
