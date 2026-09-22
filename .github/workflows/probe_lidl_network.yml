@@ -1,0 +1,35 @@
+name: Probe Lidl network APIs
+
+on:
+  push:
+    branches:
+      - probe-lidl-catalog
+    paths:
+      - "LIDL_NETWORK_PROBE.py"
+      - ".github/workflows/probe_lidl_network.yml"
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: probe-lidl-catalog
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Chromium
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Capture Lidl network
+        run: python LIDL_NETWORK_PROBE.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lidl-network-probe
+          path: lidl_network_probe.json
