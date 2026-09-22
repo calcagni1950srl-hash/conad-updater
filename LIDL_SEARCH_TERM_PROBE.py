@@ -45,7 +45,7 @@ for term in TERMS:
             html=r.read().decode("utf-8","ignore")
         rows.append({"term":term,"param":"PAGE","status":200,"html_len":len(html),
                      "has_term":term.lower() in html.lower(),
-                     "product_urls":len(set(re.findall(r'/p/[^"\\'<> ]+',html)))})
+                     "product_urls":len(set(re.findall(r"/p/[^\\\"'<>\\s]+", html)))})
     except Exception as e:
         rows.append({"term":term,"param":"PAGE","error":repr(e)})
 with open("lidl_search_term_probe.json","w",encoding="utf-8") as f:
