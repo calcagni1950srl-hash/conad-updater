@@ -1,7 +1,7 @@
 import json, re
 from pathlib import Path
 
-SRC=Path("lidl_api_products.json")
+SRC=Path("lidl_recipe_products.json") if Path("lidl_recipe_products.json").exists() else Path("lidl_api_products.json")
 OUT=Path("qa_v81/products_lidl_api.tsv")
 
 def clean(v):
