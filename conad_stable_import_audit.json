@@ -1,0 +1,20 @@
+{
+  "source_unique": 8877,
+  "saved_food_products": 6841,
+  "excluded_non_food": {
+    "Animali domestici": 266,
+    "Articoli per la casa": 695,
+    "Cura persona": 891,
+    "Prima infanzia": 150,
+    "Tempo libero e outdoor": 2,
+    "Cancelleria e cartoleria": 32
+  },
+  "zero_price": 0,
+  "invalid": 0,
+  "variable_weight_rows": 67,
+  "general_promo_overlays": 443,
+  "flyer_or_visual_rows": 0,
+  "db_blob_sha": "11841d119e1983720b2704f00221d1c2d7eb6b59",
+  "db_size_bytes": 3620864,
+  "store_code": "010548"
+}
