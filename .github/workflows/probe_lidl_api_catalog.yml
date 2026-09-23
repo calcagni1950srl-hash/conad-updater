@@ -4,6 +4,7 @@ on:
     branches: [probe-lidl-catalog]
     paths:
       - LIDL_API_CATALOG.py
+      - LIDL_EVERLI_PROBE.py
       - LIDL_EXPORT_V81_TSV.py
       - LIDL_SEARCH_TERM_PROBE.py
       - LIDL_RECIPE_CATALOG.py
@@ -29,6 +30,8 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+      - name: Probe Lidl Everli catalog
+        run: python LIDL_EVERLI_PROBE.py
       - name: Build API catalog
         run: python LIDL_API_CATALOG.py
       - name: Probe missing-staple search parameters
@@ -85,6 +88,7 @@ jobs:
           name: lidl-api-catalog
           path: |
             prezzi_lidl_api.db
+            lidl_everli_probe.json
             prezzi_lidl_recipe.db
             lidl_api_products.json
             lidl_api_raw.json
