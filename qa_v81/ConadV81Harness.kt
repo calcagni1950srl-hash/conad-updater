@@ -136,7 +136,26 @@ fun main(args: Array<String>) {
         val roleOrder = List(7) { listOf("primo", "secondo", "contorno") }.flatten()
         for (role in roleOrder) {
             val candidates = completeByRole[role].orEmpty().filter { cand -> selected.none { it.id == cand.id } }
+            fun family(r: HarnessRecipe): String {
+                val s = IngredientMatcher.normalize(r.name + " " + r.ingredients.joinToString(" ") { it.name })
+                return when {
+                    s.contains("uova") || s.contains("uovo") -> "uova"
+                    s.contains("fagiol") -> "fagioli"
+                    s.contains("ceci") -> "ceci"
+                    s.contains("lenticch") -> "lenticchie"
+                    s.contains("patat") -> "patate"
+                    s.contains("zucchin") -> "zucchine"
+                    s.contains("melanzan") -> "melanzane"
+                    s.contains("riso") -> "riso"
+                    else -> r.id
+                }
+            }
             val best = candidates.mapNotNull { cand ->
+                val fam = family(cand)
+                val famCount = selected.count { family(it) == fam }
+                // QA varietà: evita concentrazioni artificiali create dal solo minimo costo.
+                // Uova/legumi/patate max 1 ricetta per famiglia nella settimana.
+                if (fam in setOf("uova","fagioli","ceci","lenticchie","patate") && famCount >= 1) return@mapNotNull null
                 val calc = basketCalc(selected + cand)
                 if (calc.unresolved.isEmpty()) cand to calc.totalCost else null
             }.minByOrNull { it.second }
@@ -148,7 +167,22 @@ fun main(args: Array<String>) {
             "secondo" to selected.count { it.category == "secondo" || it.roles.split(',').any { x -> x == "secondo" } },
             "contorno" to selected.count { it.category == "contorno" || it.roles.split(',').any { x -> x == "contorno" } }
         )
-        val feasible = counts.values.all { it >= 7 } && basket.unresolved.isEmpty() && basket.totalCost <= 50.0
+        val familyNames = selected.map {
+            val s = IngredientMatcher.normalize(it.name + " " + it.ingredients.joinToString(" ") { x -> x.name })
+            when {
+                s.contains("uova") || s.contains("uovo") -> "uova"
+                s.contains("fagiol") -> "fagioli"
+                s.contains("ceci") -> "ceci"
+                s.contains("lenticch") -> "lenticchie"
+                s.contains("patat") -> "patate"
+                s.contains("zucchin") -> "zucchine"
+                s.contains("melanzan") -> "melanzane"
+                s.contains("riso") -> "riso"
+                else -> it.id
+            }
+        }
+        val varietyOk = listOf("uova","fagioli","ceci","lenticchie","patate").all { fam -> familyNames.count { it == fam } <= 1 }
+        val feasible = counts.values.all { it >= 7 } && basket.unresolved.isEmpty() && basket.totalCost <= 50.0 && varietyOk
         println("--- LIDL_EUR50_FEASIBILITY ---")
         println("eur50_persons=$persons")
         println("eur50_days=7")
@@ -158,6 +192,7 @@ fun main(args: Array<String>) {
         println("eur50_unique_recipes=${selected.map { it.id }.distinct().size}")
         println("eur50_unresolved=${basket.unresolved.size}")
         println("eur50_total=%.4f".format(Locale.US, basket.totalCost))
+        println("eur50_variety_ok=$varietyOk")
         println("eur50_feasible=$feasible")
         selected.forEach { println("EUR50_RECIPE\\t${it.category}\\t${it.id}\\t${it.name}") }
         basket.lines.sortedBy { it.ingredientName }.forEach {
