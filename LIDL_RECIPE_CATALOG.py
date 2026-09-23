@@ -83,7 +83,7 @@ def extract_candidates(data, seen, query):
         pid=pid_from_url(link) or pick(d,"erpNumber","productId","product_id","sku","id")
         if not (name and (pid or link)): continue
         if "/p/" not in json.dumps(d,ensure_ascii=False): continue
-        cat=str((d.get("keyfacts") or {}).get("wonCategoryPrimary") or d.get("categoryPath") or "")
+        cat=str((d.get("keyfacts") or {}).get("wonCategoryPrimary") or d.get("categoryPath") or d.get("category") or "")
         if any(x in cat.lower() for x in EXCLUDED): continue
         pr=price_fields(d.get("price") or {})
         key=str(pid or link)
