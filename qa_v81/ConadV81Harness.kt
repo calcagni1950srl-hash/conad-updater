@@ -161,7 +161,7 @@ fun main(args: Array<String>) {
         println("eur50_feasible=$feasible")
         selected.forEach { println("EUR50_RECIPE\\t${it.category}\\t${it.id}\\t${it.name}") }
         basket.lines.sortedBy { it.ingredientName }.forEach {
-            println("EUR50_CART\\t${it.ingredientName}\\t${it.product.name}\\t${it.packs}\\t%.4f".format(Locale.US, it.totalCost))
+            println("EUR50_CART\\t${it.ingredientName}\\t${it.product.name}\\t${it.packs}\\t${"%.4f".format(Locale.US, it.totalCost)}")
         }
     }
 
