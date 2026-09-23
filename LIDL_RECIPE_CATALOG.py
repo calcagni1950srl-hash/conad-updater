@@ -80,7 +80,7 @@ def extract_candidates(data, seen, query):
     for d in walk(data):
         name=pick(d,"title","name","productName")
         link=pick(d,"url","canonicalUrl","canonical_url","productUrl")
-        pid=pick(d,"id","productId","product_id","sku") or pid_from_url(link)
+        pid=pid_from_url(link) or pick(d,"erpNumber","productId","product_id","sku","id")
         if not (name and (pid or link)): continue
         if "/p/" not in json.dumps(d,ensure_ascii=False): continue
         cat=str((d.get("keyfacts") or {}).get("wonCategoryPrimary") or d.get("categoryPath") or "")
