@@ -1,6 +1,6 @@
 V81_QA_DIAGNOSTIC
-commit=9db87d3a51cb539366a066a5b7bec3e8e032e23b
-started_at=2026-09-23T15:07:49Z
+commit=d1a464570d4df1987e6bf8436a025e78cebc7863
+started_at=2026-09-23T15:20:45Z
 info: kotlinc-jvm 2.0.21 (JRE 21.0.12.1+1-LTS)
 kotlin_install_exit=0
 compile_exit=0
