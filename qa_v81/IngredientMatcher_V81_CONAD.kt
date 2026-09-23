@@ -1005,7 +1005,7 @@ internal object IngredientMatcher {
                 ingredient == "ricotta" || ingredient.contains("formaggio") || ingredient.contains("parmigiano") ||
                     ingredient.contains("grana") || ingredient.contains("pecorino") || ingredient.contains("mozzarella") ||
                     ingredient.contains("provola") || ingredient.contains("fiordilatte") || ingredient.contains("caciocavallo") ->
-                    cat("formaggi latticini e uova", "formaggio", "mozzarella", "ricotta", "latticini")
+                    cat("formaggi latticini e uova", "formaggio", "formaggi", "mozzarella", "ricotta", "latticini", "grana e parmigiano", "grattugiati", "fusi e a fette")
                 ingredient in setOf("pomodoro","pomodori","pomodorini","pomodorini pizzutelli","carciofi",
                     "zucchine","melanzane","patate","patate a pasta gialla","peperoni","peperone rosso",
                     "cavolfiore","fagiolini","verza","lattuga","friggitelli","scarola","friarielli",
@@ -1035,10 +1035,10 @@ internal object IngredientMatcher {
                     ingredient.contains("pollo") ->
                     cat("carne e pollame", "carne", "pollo", "bovino", "suino") && !cat("salumi e affettati")
                 ingredient in setOf("ceci","ceci cotti","fagioli","fagioli cotti","fagioli lessi","fagioli cannellini cotti","lenticchie","piselli") ->
-                    cat("riso pasta e legumi", "scorte alimentari")
+                    cat("riso pasta e legumi", "scorte alimentari", "legumi", "legumi in scatola", "piselli surgelati", "verdure surgelate")
                 ingredient == "farina" || ingredient == "farina 00" || ingredient == "zucchero bianco" ||
                     ingredient == "cioccolato fondente" || ingredient == "pangrattato" ->
-                    cat("scorte alimentari", "dolciumi e snack", "panificio", "farina", "zucchero", "cioccolato", "pangrattato", "preparati per dolci")
+                    cat("scorte alimentari", "dolciumi e snack", "panificio", "pane e pasticceria", "pane grattugiato", "farina", "zucchero", "cioccolato", "pangrattato", "preparati per dolci")
                 else -> true
             }
         }
