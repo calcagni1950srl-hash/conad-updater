@@ -192,7 +192,24 @@ fun main(args: Array<String>) {
         println("eur50_unique_recipes=${selected.map { it.id }.distinct().size}")
         println("eur50_unresolved=${basket.unresolved.size}")
         println("eur50_total=%.4f".format(Locale.US, basket.totalCost))
+        val corpus = selected.joinToString(" ") { r -> IngredientMatcher.normalize(r.name + " " + r.ingredients.joinToString(" ") { it.name }) }
+        fun hasAny(vararg terms: String): Boolean = terms.any { corpus.contains(it) }
+        val hasLegumes = hasAny("fagiol", "ceci", "lenticch", "pisell")
+        val hasFish = hasAny("vongol", "cozz", "gamber", "calamar", "seppi", "polpo", "baccala", "merluzz", "tonno", "sgombr", "alici", "acciugh", "salmone", "orata", "spigola", "pesce", "scampi")
+        val hasMeat = hasAny("pollo", "manzo", "vitello", "maiale", "salsic", "coniglio", "agnello", "bovino", "carne")
+        val primoCorpus = selected.filter { it.category == "primo" || it.roles.split(',').any { x -> x == "primo" } }
+            .joinToString(" ") { r -> IngredientMatcher.normalize(r.name + " " + r.ingredients.joinToString(" ") { it.name }) }
+        fun primoHasAny(vararg terms: String): Boolean = terms.any { primoCorpus.contains(it) }
+        val hasFishPrimo = primoHasAny("vongol", "cozz", "gamber", "calamar", "seppi", "polpo", "baccala", "merluzz", "tonno", "sgombr", "alici", "acciugh", "salmone", "orata", "spigola", "pesce", "scampi")
+        val hasMeatPrimo = primoHasAny("pollo", "manzo", "vitello", "maiale", "salsic", "coniglio", "agnello", "bovino", "carne")
+        val semanticVarietyOk = varietyOk && hasLegumes && hasFish && hasMeat
         println("eur50_variety_ok=$varietyOk")
+        println("eur50_has_legumes=$hasLegumes")
+        println("eur50_has_fish=$hasFish")
+        println("eur50_has_meat=$hasMeat")
+        println("eur50_has_fish_primo=$hasFishPrimo")
+        println("eur50_has_meat_primo=$hasMeatPrimo")
+        println("eur50_semantic_variety_ok=$semanticVarietyOk")
         println("eur50_feasible=$feasible")
         selected.forEach { println("EUR50_RECIPE\\t${it.category}\\t${it.id}\\t${it.name}") }
         basket.lines.sortedBy { it.ingredientName }.forEach {
