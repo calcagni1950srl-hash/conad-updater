@@ -130,36 +130,61 @@ fun main(args: Array<String>) {
             "secondo" to complete.filter { (r, _) -> r.category == "secondo" || r.roles.split(',').any { it == "secondo" } }.map { it.first },
             "contorno" to complete.filter { (r, _) -> r.category == "contorno" || r.roles.split(',').any { it == "contorno" } }.map { it.first }
         )
-        val selected = mutableListOf<HarnessRecipe>()
         fun basketCalc(rs: List<HarnessRecipe>): ShoppingCalculation =
             ShoppingCalculator.calculate(rs.flatMap { it.ingredients }, products)
-        val roleOrder = List(7) { listOf("primo", "secondo", "contorno") }.flatten()
-        for (role in roleOrder) {
-            val candidates = completeByRole[role].orEmpty().filter { cand -> selected.none { it.id == cand.id } }
-            fun family(r: HarnessRecipe): String {
-                val s = IngredientMatcher.normalize(r.name + " " + r.ingredients.joinToString(" ") { it.name })
-                return when {
-                    s.contains("uova") || s.contains("uovo") -> "uova"
-                    s.contains("fagiol") -> "fagioli"
-                    s.contains("ceci") -> "ceci"
-                    s.contains("lenticch") -> "lenticchie"
-                    s.contains("patat") -> "patate"
-                    s.contains("zucchin") -> "zucchine"
-                    s.contains("melanzan") -> "melanzane"
-                    s.contains("riso") -> "riso"
-                    else -> r.id
-                }
+        fun recipeText(r: HarnessRecipe): String =
+            IngredientMatcher.normalize(r.name + " " + r.ingredients.joinToString(" ") { it.name })
+        fun family(r: HarnessRecipe): String {
+            val s = recipeText(r)
+            return when {
+                s.contains("uova") || s.contains("uovo") -> "uova"
+                s.contains("fagiol") -> "fagioli"
+                s.contains("ceci") -> "ceci"
+                s.contains("lenticch") -> "lenticchie"
+                s.contains("patat") -> "patate"
+                s.contains("zucchin") -> "zucchine"
+                s.contains("melanzan") -> "melanzane"
+                s.contains("riso") -> "riso"
+                else -> r.id
             }
-            val best = candidates.mapNotNull { cand ->
-                val fam = family(cand)
-                val famCount = selected.count { family(it) == fam }
-                // QA varietà: evita concentrazioni artificiali create dal solo minimo costo.
-                // Uova/legumi/patate max 1 ricetta per famiglia nella settimana.
-                if (fam in setOf("uova","fagioli","ceci","lenticchie","patate") && famCount >= 1) return@mapNotNull null
-                val calc = basketCalc(selected + cand)
-                if (calc.unresolved.isEmpty()) cand to calc.totalCost else null
-            }.minByOrNull { it.second }
+        }
+        fun hasTerms(r: HarnessRecipe, terms: List<String>): Boolean {
+            val s = recipeText(r)
+            return terms.any { s.contains(it) }
+        }
+        val fishTerms = listOf("vongol","cozz","gamber","calamar","seppi","polpo","baccala","merluzz","tonno","sgombr","alici","acciugh","salmone","orata","spigola","pesce","scampi")
+        val meatTerms = listOf("pollo","manzo","vitello","maiale","salsic","coniglio","agnello","bovino","carne")
+        val legumeTerms = listOf("fagiol","ceci","lenticch","pisell")
+
+        // Seed the weekly search with the semantic requirements that the real app needs.
+        // Each seed is chosen by the lowest resulting aggregate basket cost, not by standalone recipe price.
+        val selected = mutableListOf<HarnessRecipe>()
+        fun addCheapest(role: String, predicate: (HarnessRecipe) -> Boolean): Boolean {
+            val best = completeByRole[role].orEmpty()
+                .filter { predicate(it) && selected.none { s -> s.id == it.id } }
+                .mapNotNull { cand ->
+                    val fam = family(cand)
+                    if (fam in setOf("uova","fagioli","ceci","lenticchie","patate") && selected.count { family(it) == fam } >= 1) null
+                    else {
+                        val calc = basketCalc(selected + cand)
+                        if (calc.unresolved.isEmpty()) cand to calc.totalCost else null
+                    }
+                }.minByOrNull { it.second }
             if (best != null) selected += best.first
+            return best != null
+        }
+        val seededFishPrimo = addCheapest("primo") { hasTerms(it, fishTerms) }
+        val seededMeatPrimo = addCheapest("primo") { hasTerms(it, meatTerms) }
+        val seededLegume = addCheapest("primo") { hasTerms(it, legumeTerms) }
+        if (!seededLegume) addCheapest("secondo") { hasTerms(it, legumeTerms) }
+        if (!seededFishPrimo) addCheapest("secondo") { hasTerms(it, fishTerms) }
+        if (!seededMeatPrimo) addCheapest("secondo") { hasTerms(it, meatTerms) }
+
+        val target = mapOf("primo" to 7, "secondo" to 7, "contorno" to 7)
+        for (role in listOf("primo","secondo","contorno")) {
+            while (selected.count { it.category == role || it.roles.split(',').any { x -> x == role } } < target.getValue(role)) {
+                if (!addCheapest(role) { true }) break
+            }
         }
         val basket = basketCalc(selected)
         val counts = mapOf(
