@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-22T09:28:08Z",
+  "checked_at": "2026-09-23T09:28:47Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -11,12 +11,11 @@
     "has_pac": true
   },
   "flyer": {
-    "url": null,
-    "bytes": 0,
-    "pages": 0,
-    "valid_from": null,
-    "valid_to": null,
-    "status": "NO_ACTIVE_SUPERSTORE_FLYER"
+    "url": "https://www.conad.it/assets/common/volantini/pac/v2026-/2026_20_Superstore_Campania.pdf?_u=56ce0343be3bc48a3f32af9cecb4ae0f002ac7c4",
+    "bytes": 18900915,
+    "pages": 32,
+    "valid_from": "2026-09-23",
+    "valid_to": "2026-10-04"
   },
   "flyer_candidates": [
     {
@@ -28,11 +27,17 @@
     }
   ],
   "parser": {
-    "status": "NO_ACTIVE_SUPERSTORE_FLYER",
-    "raw_price_cards": 0,
-    "accepted_before_dedup": 0,
-    "accepted_unique": 0,
-    "rejected": {}
+    "raw_price_cards": 349,
+    "accepted_before_dedup": 111,
+    "accepted_unique": 111,
+    "rejected": {
+      "quantity_ambiguous": 90,
+      "not_food_or_not_useful": 108,
+      "starting_from": 24,
+      "bad_description": 8,
+      "unit_price_mismatch": 4,
+      "price_out_of_range": 4
+    }
   },
   "visual_verified_offers": {
     "inserted": [
@@ -44,66 +49,6 @@
         "quantity_unit": "L",
         "valid_from": "2026-08-01",
         "valid_to": "2026-09-30",
-        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
-      },
-      {
-        "product_code": "VISUAL:INTEGRATIVA19_MALDON_SALE_MARINO_125G",
-        "product_name": "Sale marino Maldon 125 g",
-        "price_eur": 3.19,
-        "quantity_value": 0.125,
-        "quantity_unit": "KG",
-        "valid_from": "2026-09-16",
-        "valid_to": "2026-09-22",
-        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
-      },
-      {
-        "product_code": "VISUAL:INTEGRATIVA19_PASSATA_VALFRUTTA_700G",
-        "product_name": "Passata di pomodoro Valfrutta al Vapore 700 g",
-        "price_eur": 0.79,
-        "quantity_value": 0.7,
-        "quantity_unit": "KG",
-        "valid_from": "2026-09-16",
-        "valid_to": "2026-09-22",
-        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
-      },
-      {
-        "product_code": "VISUAL:INTEGRATIVA19_PASTA_DECECCO_1KG",
-        "product_name": "Pasta di semola De Cecco vari tipi 1 kg",
-        "price_eur": 1.49,
-        "quantity_value": 1.0,
-        "quantity_unit": "KG",
-        "valid_from": "2026-09-16",
-        "valid_to": "2026-09-22",
-        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
-      },
-      {
-        "product_code": "VISUAL:INTEGRATIVA19_OLIO_EVO_FARCHIONI_1L",
-        "product_name": "Olio extra vergine di oliva Farchioni 100% Italiano 1 L",
-        "price_eur": 7.9,
-        "quantity_value": 1.0,
-        "quantity_unit": "L",
-        "valid_from": "2026-09-16",
-        "valid_to": "2026-09-22",
-        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
-      },
-      {
-        "product_code": "VISUAL:INTEGRATIVA19_RISO_CURTIRISO_1KG",
-        "product_name": "Riso per risotto Curtiriso 1 kg",
-        "price_eur": 1.9,
-        "quantity_value": 1.0,
-        "quantity_unit": "KG",
-        "valid_from": "2026-09-16",
-        "valid_to": "2026-09-22",
-        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
-      },
-      {
-        "product_code": "VISUAL:INTEGRATIVA19_FIORDILATTE_VALLELATA_4X180G",
-        "product_name": "Fior di latte Vallelata 4 x 180 g",
-        "price_eur": 5.9,
-        "quantity_value": 0.72,
-        "quantity_unit": "KG",
-        "valid_from": "2026-09-16",
-        "valid_to": "2026-09-22",
         "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
       },
       {
@@ -159,9 +104,39 @@
     ],
     "expired": [
       {
+        "product_code": "VISUAL:INTEGRATIVA19_MALDON_SALE_MARINO_125G",
+        "valid_from": "2026-09-16",
+        "valid_to": "2026-09-22"
+      },
+      {
         "product_code": "VISUAL:OFF19_POMODORO_CILIEGINO_PQ_500G",
         "valid_from": "2026-09-09",
         "valid_to": "2026-09-20"
+      },
+      {
+        "product_code": "VISUAL:INTEGRATIVA19_PASSATA_VALFRUTTA_700G",
+        "valid_from": "2026-09-16",
+        "valid_to": "2026-09-22"
+      },
+      {
+        "product_code": "VISUAL:INTEGRATIVA19_PASTA_DECECCO_1KG",
+        "valid_from": "2026-09-16",
+        "valid_to": "2026-09-22"
+      },
+      {
+        "product_code": "VISUAL:INTEGRATIVA19_OLIO_EVO_FARCHIONI_1L",
+        "valid_from": "2026-09-16",
+        "valid_to": "2026-09-22"
+      },
+      {
+        "product_code": "VISUAL:INTEGRATIVA19_RISO_CURTIRISO_1KG",
+        "valid_from": "2026-09-16",
+        "valid_to": "2026-09-22"
+      },
+      {
+        "product_code": "VISUAL:INTEGRATIVA19_FIORDILATTE_VALLELATA_4X180G",
+        "valid_from": "2026-09-16",
+        "valid_to": "2026-09-22"
       }
     ]
   },
@@ -218,10 +193,10 @@
     "scope": "FIXED_MARKET_AVERAGE_V81"
   },
   "full_db": {
-    "rows": 806,
-    "positive": 806,
+    "rows": 911,
+    "positive": 911,
     "bassi_fissi": 789,
-    "local_offers": 0,
+    "local_offers": 111,
     "reference_fallbacks": 5,
     "store_codes": [
       "010548"
@@ -233,11 +208,432 @@
     "reference_fallbacks": 5,
     "local_offers": 0,
     "visual_offers": 0,
-    "temporary_offers_excluded": 12,
+    "temporary_offers_excluded": 117,
     "stable_only": true,
     "stores": [
       "010548"
     ]
   },
-  "offer_samples": []
+  "offer_samples": [
+    {
+      "product_code": "FLYER:C6E4E32F6E54A59DD7BA",
+      "product_name": "€ 8,50 TONNO MAREBLÙ naturale/meno olio 8x60g",
+      "category1": "Pesce",
+      "quantity_value": 0.48,
+      "quantity_unit": "KG",
+      "price_eur": 5.49,
+      "unit_price": 11.44,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 1,
+      "quantity_reason": "8x60g",
+      "unit_text": "€ 11,44 al Kg"
+    },
+    {
+      "product_code": "FLYER:2743C576618EC29DC223",
+      "product_name": "OLIO EXTRA VERGINE DI OLIVA 100% ITALIANO CASA CORICELLI 1L € 11,90",
+      "category1": "Condimenti e conserve",
+      "quantity_value": 1.0,
+      "quantity_unit": "L",
+      "price_eur": 6.99,
+      "unit_price": 6.99,
+      "unit_price_unit": "EUR/L",
+      "variable_weight": false,
+      "page": 2,
+      "quantity_reason": "1l",
+      "unit_text": null
+    },
+    {
+      "product_code": "FLYER:77420CAE576D44D9A514",
+      "product_name": "GNOCCHETTI/ GNOCCHI DI PATATE RANA 500g € 2,99",
+      "category1": "Pasta e riso",
+      "quantity_value": 0.5,
+      "quantity_unit": "KG",
+      "price_eur": 1.79,
+      "unit_price": 3.58,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 2,
+      "quantity_reason": "500g",
+      "unit_text": "€ 3,58 al Kg"
+    },
+    {
+      "product_code": "FLYER:95E518161B8132F8D40F",
+      "product_name": "PROSCIUTTO COTTO DI ALTA QUALITÀ FRESCA SALUMERIA BERETTA 2x120g € 6,59",
+      "category1": "Carne e salumi",
+      "quantity_value": 0.24,
+      "quantity_unit": "KG",
+      "price_eur": 3.95,
+      "unit_price": 16.46,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 2,
+      "quantity_reason": "2x120g",
+      "unit_text": "€ 16,46 al Kg"
+    },
+    {
+      "product_code": "FLYER:C163B0B1E12E15BCF002",
+      "product_name": "CREMA YOGURT MÜLLER € 4,65 frutti frullati/gusti golosi/ frutta a pezzi 8x125g",
+      "category1": "Formaggi, latte e uova",
+      "quantity_value": 1.0,
+      "quantity_unit": "KG",
+      "price_eur": 2.79,
+      "unit_price": 2.79,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 2,
+      "quantity_reason": "8x125g",
+      "unit_text": null
+    },
+    {
+      "product_code": "FLYER:63E2894024D0962E0B5B",
+      "product_name": "€ 9,90 SALMONE AFFUMICATO RIUNIONE 250g",
+      "category1": "Pesce",
+      "quantity_value": 0.25,
+      "quantity_unit": "KG",
+      "price_eur": 5.89,
+      "unit_price": 23.56,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 2,
+      "quantity_reason": "250g",
+      "unit_text": "€ 23,56 al Kg"
+    },
+    {
+      "product_code": "FLYER:5A41B3CDDA097336C8D3",
+      "product_name": "SALMONE ARGENTATO COHO DELLA PATAGONIA THE ICELANDER aﬀ umicato con legno di faggio 100g € 4,89",
+      "category1": "Pesce",
+      "quantity_value": 0.1,
+      "quantity_unit": "KG",
+      "price_eur": 2.44,
+      "unit_price": 24.4,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 2,
+      "quantity_reason": "100g",
+      "unit_text": "€ 24,40 al Kg"
+    },
+    {
+      "product_code": "FLYER:6E8A71B8A8BAF8D69117",
+      "product_name": "COCO POPS KELLOGG’S barchette/ palline 330g € 3,39",
+      "category1": "Bevande e preparati",
+      "quantity_value": 0.33,
+      "quantity_unit": "KG",
+      "price_eur": 1.99,
+      "unit_price": 6.03,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 2,
+      "quantity_reason": "330g",
+      "unit_text": "€ 6,03 al Kg"
+    },
+    {
+      "product_code": "FLYER:59B19674919691687BA6",
+      "product_name": "PRODOTTO SURGELATO MINESTRONE TRADIZIONE FINDUS 1Kg € 4,49",
+      "category1": "Surgelati e gelati",
+      "quantity_value": 1.0,
+      "quantity_unit": "KG",
+      "price_eur": 2.69,
+      "unit_price": 2.69,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 2,
+      "quantity_reason": "1kg",
+      "unit_text": null
+    },
+    {
+      "product_code": "FLYER:CEA45209AFE14018A86A",
+      "product_name": "€ 1,79 NETTARE E BEVANDE SANTAL vari tipi brik - 3x200ml",
+      "category1": "Bevande e preparati",
+      "quantity_value": 0.6,
+      "quantity_unit": "L",
+      "price_eur": 0.99,
+      "unit_price": 1.65,
+      "unit_price_unit": "EUR/L",
+      "variable_weight": false,
+      "page": 2,
+      "quantity_reason": "3x200ml",
+      "unit_text": null
+    },
+    {
+      "product_code": "FLYER:2372B735739E4640BABE",
+      "product_name": "PASTA DI SEMOLA DI GRANO DURO FRESCA CONAD vari tipi 500g",
+      "category1": "Pasta e riso",
+      "quantity_value": 0.5,
+      "quantity_unit": "KG",
+      "price_eur": 1.39,
+      "unit_price": 2.78,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 3,
+      "quantity_reason": "500g",
+      "unit_text": "€ 2,78 al Kg"
+    },
+    {
+      "product_code": "FLYER:AE3A1F39D1A9A41377DA",
+      "product_name": "PASSATA DI POMODORO LA TORRENTE tradizionale/basilico 700g € 1,19",
+      "category1": "Condimenti e conserve",
+      "quantity_value": 0.7,
+      "quantity_unit": "KG",
+      "price_eur": 0.85,
+      "unit_price": 1.21,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 3,
+      "quantity_reason": "700g",
+      "unit_text": "€ 1,21 al Kg"
+    },
+    {
+      "product_code": "FLYER:70708CE3EE5E6A01600B",
+      "product_name": "LATTE UHT PARZIALMENTE SCREMATO PARMALAT brik - 1L",
+      "category1": "Formaggi, latte e uova",
+      "quantity_value": 1.0,
+      "quantity_unit": "L",
+      "price_eur": 0.89,
+      "unit_price": 0.89,
+      "unit_price_unit": "EUR/L",
+      "variable_weight": false,
+      "page": 3,
+      "quantity_reason": "1l",
+      "unit_text": null
+    },
+    {
+      "product_code": "FLYER:6B32C7BEF2582457BF33",
+      "product_name": "PRODOTTO SURGELATO € 5,49 FILETTI DI MERLUZZO GRATINATI FINDUS vari tipi - 380g",
+      "category1": "Pesce",
+      "quantity_value": 0.38,
+      "quantity_unit": "KG",
+      "price_eur": 3.59,
+      "unit_price": 9.4474,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 4,
+      "quantity_reason": "380g",
+      "unit_text": null
+    },
+    {
+      "product_code": "FLYER:605CD0EFF3D8D2012A8B",
+      "product_name": "PRODOTTO SURGELATO € 2,39 BASTONCINI FROSTA verdure/spinaci 10 bastoncini - 300g",
+      "category1": "Frutta e verdura",
+      "quantity_value": 0.3,
+      "quantity_unit": "KG",
+      "price_eur": 1.67,
+      "unit_price": 5.57,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 4,
+      "quantity_reason": "300g",
+      "unit_text": "€ 5,57 al Kg"
+    },
+    {
+      "product_code": "FLYER:6A20BB638D792BB7CB36",
+      "product_name": "PRODOTTO SURGELATO FUNGO PORCINO E PATATA ITALIANA PETRUCCI conditi e pronti 300g € 3,99",
+      "category1": "Surgelati e gelati",
+      "quantity_value": 0.3,
+      "quantity_unit": "KG",
+      "price_eur": 1.99,
+      "unit_price": 6.63,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 4,
+      "quantity_reason": "300g",
+      "unit_text": "€ 6,63 al Kg"
+    },
+    {
+      "product_code": "FLYER:661557BB9B2ADB97E6A5",
+      "product_name": "PASTA SENZA GLUTINE DE CECCO vari formati 400g € 2,09",
+      "category1": "Pasta e riso",
+      "quantity_value": 0.4,
+      "quantity_unit": "KG",
+      "price_eur": 1.39,
+      "unit_price": 3.48,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 4,
+      "quantity_reason": "400g",
+      "unit_text": "€ 3,48 al Kg"
+    },
+    {
+      "product_code": "FLYER:86C80BB50FAC99AAC009",
+      "product_name": "PASTA SENZA GLUTINE DE CECCO gnocchi di patate 500g € 2,19",
+      "category1": "Pasta e riso",
+      "quantity_value": 0.5,
+      "quantity_unit": "KG",
+      "price_eur": 1.49,
+      "unit_price": 2.98,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 4,
+      "quantity_reason": "500g",
+      "unit_text": "€ 2,98 al Kg"
+    },
+    {
+      "product_code": "FLYER:34DF9A51C588EC3E5058",
+      "product_name": "PASTA DI SEMOLA LA MOLISANA formati normali 500g € 1,19",
+      "category1": "Pasta e riso",
+      "quantity_value": 0.5,
+      "quantity_unit": "KG",
+      "price_eur": 0.79,
+      "unit_price": 1.58,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 4,
+      "quantity_reason": "500g",
+      "unit_text": "€ 1,58 al Kg"
+    },
+    {
+      "product_code": "FLYER:77935974A2CFE80907B3",
+      "product_name": "RISO ORO SCOTTI classico - 1Kg € 3,39",
+      "category1": "Pasta e riso",
+      "quantity_value": 1.0,
+      "quantity_unit": "KG",
+      "price_eur": 1.99,
+      "unit_price": 1.99,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 4,
+      "quantity_reason": "1kg",
+      "unit_text": null
+    },
+    {
+      "product_code": "FLYER:7157FE6D3B202D3952C5",
+      "product_name": "CHICCHE/GNOCCHI DI PATATE LA MOLISANA 500g € 1,75",
+      "category1": "Pasta e riso",
+      "quantity_value": 0.5,
+      "quantity_unit": "KG",
+      "price_eur": 0.99,
+      "unit_price": 1.98,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 4,
+      "quantity_reason": "500g",
+      "unit_text": "€ 1,98 al Kg"
+    },
+    {
+      "product_code": "FLYER:5B2ADF49D4C8C931F4A0",
+      "product_name": "€ 4,15 PICK UP BAHLSEN choco/latte 8 pezzi - 224g",
+      "category1": "Formaggi, latte e uova",
+      "quantity_value": 0.224,
+      "quantity_unit": "KG",
+      "price_eur": 2.49,
+      "unit_price": 11.12,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 5,
+      "quantity_reason": "224g",
+      "unit_text": "€ 11,12 al Kg"
+    },
+    {
+      "product_code": "FLYER:49FA41A270B51D91FEB1",
+      "product_name": "FUSION NOODLES MAGGI gusto curry/ gusto pollo 71g € 0,89",
+      "category1": "Carne e salumi",
+      "quantity_value": 0.071,
+      "quantity_unit": "KG",
+      "price_eur": 0.59,
+      "unit_price": 8.31,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 5,
+      "quantity_reason": "71g",
+      "unit_text": "€ 8,31 al Kg"
+    },
+    {
+      "product_code": "FLYER:4533CA78EA9B8A5D82FF",
+      "product_name": "GRAN PURÈ DI PATATE KNORR 3 buste - 225g € 1,95",
+      "category1": "Frutta e verdura",
+      "quantity_value": 0.225,
+      "quantity_unit": "KG",
+      "price_eur": 1.29,
+      "unit_price": 5.73,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 5,
+      "quantity_reason": "225g",
+      "unit_text": "€ 5,73 al Kg"
+    },
+    {
+      "product_code": "FLYER:FE642594B43AC74AD9F0",
+      "product_name": "€ 3,29 TAVOLETTA DI CIOCCOLATO GRAN BLOCCO PERUGINA latte/fondente 50%/ fondente 70% 150g",
+      "category1": "Formaggi, latte e uova",
+      "quantity_value": 0.15,
+      "quantity_unit": "KG",
+      "price_eur": 2.29,
+      "unit_price": 15.27,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 5,
+      "quantity_reason": "150g",
+      "unit_text": "€ 15,27 al Kg"
+    },
+    {
+      "product_code": "FLYER:FBAF120E661812EE5B94",
+      "product_name": "PASSATA AI 6 POMODORI PETTI 500g € 1,35",
+      "category1": "Condimenti e conserve",
+      "quantity_value": 0.5,
+      "quantity_unit": "KG",
+      "price_eur": 0.89,
+      "unit_price": 1.78,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 5,
+      "quantity_reason": "500g",
+      "unit_text": "€ 1,78 al Kg"
+    },
+    {
+      "product_code": "FLYER:AB0243F48C0FAC90DE63",
+      "product_name": "PESTO FATTORIA DEI SAPORI vari tipi 180g € 2,95",
+      "category1": "Condimenti e conserve",
+      "quantity_value": 0.18,
+      "quantity_unit": "KG",
+      "price_eur": 1.75,
+      "unit_price": 9.72,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 5,
+      "quantity_reason": "180g",
+      "unit_text": "€ 9,72 al Kg"
+    },
+    {
+      "product_code": "FLYER:20C03CB0EEB60936145E",
+      "product_name": "BIBITE SAN BENEDETTO vari tipi pet - 1,5L € 0,99",
+      "category1": "Bevande e preparati",
+      "quantity_value": 5.0,
+      "quantity_unit": "L",
+      "price_eur": 0.69,
+      "unit_price": 0.138,
+      "unit_price_unit": "EUR/L",
+      "variable_weight": false,
+      "page": 6,
+      "quantity_reason": "5l",
+      "unit_text": null
+    },
+    {
+      "product_code": "FLYER:0B602BD7425A34DFCA99",
+      "product_name": "LAMBRUSCO EMILIA IGT RIUNITE amabile/secco 75cl € 3,70",
+      "category1": "Bevande e preparati",
+      "quantity_value": 0.75,
+      "quantity_unit": "L",
+      "price_eur": 1.85,
+      "unit_price": 2.4667,
+      "unit_price_unit": "EUR/L",
+      "variable_weight": false,
+      "page": 6,
+      "quantity_reason": "75cl",
+      "unit_text": null
+    },
+    {
+      "product_code": "FLYER:1DBAAE76E9B85A17A7ED",
+      "product_name": "3 SNACK CONAD PETFRIENDS con salmone/con pollo 3x5g € 0,65",
+      "category1": "Carne e salumi",
+      "quantity_value": 0.015,
+      "quantity_unit": "KG",
+      "price_eur": 0.45,
+      "unit_price": 30.0,
+      "unit_price_unit": "EUR/KG",
+      "variable_weight": false,
+      "page": 6,
+      "quantity_reason": "3x5g",
+      "unit_text": "€ 30,00 al Kg"
+    }
+  ]
 }
