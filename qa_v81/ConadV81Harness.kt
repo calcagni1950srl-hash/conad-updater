@@ -121,6 +121,50 @@ fun main(args: Array<String>) {
     for ((r, calc) in complete.sortedWith(compareBy({ it.first.category }, { it.first.name }))) {
         println("OK\t${r.category}\t${r.id}\t${r.name}\t%.4f".format(Locale.US, calc.totalCost))
     }
+    // Lidl €50 feasibility: build a real 7-day basket with 7 unique primi,
+    // 7 unique secondi and 7 unique contorni. Cost is recalculated on the
+    // aggregate ingredient demand, so shared packs/leftovers are counted once.
+    if (supermarketName.lowercase().contains("lidl")) {
+        val completeByRole = mapOf(
+            "primo" to complete.filter { (r, _) -> r.category == "primo" || r.roles.split(',').any { it == "primo" } }.map { it.first },
+            "secondo" to complete.filter { (r, _) -> r.category == "secondo" || r.roles.split(',').any { it == "secondo" } }.map { it.first },
+            "contorno" to complete.filter { (r, _) -> r.category == "contorno" || r.roles.split(',').any { it == "contorno" } }.map { it.first }
+        )
+        val selected = mutableListOf<HarnessRecipe>()
+        fun basketCalc(rs: List<HarnessRecipe>): ShoppingCalculation =
+            ShoppingCalculator.calculate(rs.flatMap { it.ingredients }, products)
+        val roleOrder = List(7) { listOf("primo", "secondo", "contorno") }.flatten()
+        for (role in roleOrder) {
+            val candidates = completeByRole[role].orEmpty().filter { cand -> selected.none { it.id == cand.id } }
+            val best = candidates.mapNotNull { cand ->
+                val calc = basketCalc(selected + cand)
+                if (calc.unresolved.isEmpty()) cand to calc.totalCost else null
+            }.minByOrNull { it.second }
+            if (best != null) selected += best.first
+        }
+        val basket = basketCalc(selected)
+        val counts = mapOf(
+            "primo" to selected.count { it.category == "primo" || it.roles.split(',').any { x -> x == "primo" } },
+            "secondo" to selected.count { it.category == "secondo" || it.roles.split(',').any { x -> x == "secondo" } },
+            "contorno" to selected.count { it.category == "contorno" || it.roles.split(',').any { x -> x == "contorno" } }
+        )
+        val feasible = counts.values.all { it >= 7 } && basket.unresolved.isEmpty() && basket.totalCost <= 50.0
+        println("--- LIDL_EUR50_FEASIBILITY ---")
+        println("eur50_persons=$persons")
+        println("eur50_days=7")
+        println("eur50_primi=${counts["primo"]}")
+        println("eur50_secondi=${counts["secondo"]}")
+        println("eur50_contorni=${counts["contorno"]}")
+        println("eur50_unique_recipes=${selected.map { it.id }.distinct().size}")
+        println("eur50_unresolved=${basket.unresolved.size}")
+        println("eur50_total=%.4f".format(Locale.US, basket.totalCost))
+        println("eur50_feasible=$feasible")
+        selected.forEach { println("EUR50_RECIPE\\t${it.category}\\t${it.id}\\t${it.name}") }
+        basket.lines.sortedBy { it.ingredientName }.forEach {
+            println("EUR50_CART\\t${it.ingredientName}\\t${it.product.name}\\t${it.packs}\\t%.4f".format(Locale.US, it.totalCost))
+        }
+    }
+
     println("--- UNRESOLVED_FREQUENCY ---")
     for ((ingredient, count) in unresolvedCount.entries.sortedByDescending { it.value }) {
         val reasons = unresolvedReason[ingredient].orEmpty().entries.joinToString(" | ") { "${it.key}=${it.value}" }
