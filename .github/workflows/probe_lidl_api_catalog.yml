@@ -66,7 +66,8 @@ jobs:
           /tmp/kotlin/kotlinc/bin/kotlinc             qa_v81/SupermarketRepositoryStub.kt             qa_v81/ShoppingCalculator.kt             qa_v81/IngredientMatcher_V81_CONAD.kt             qa_v81/ConadV81Harness.kt             -include-runtime -d /tmp/lidl-v81-harness.jar
       - name: Run exact 157 recipe Lidl coverage
         run: |
-          java -jar /tmp/lidl-v81-harness.jar             qa_v81/products_lidl_api.tsv             qa_v81/recipes_v61_157.tsv 2 Lidl             | tee lidl_v81_coverage_report.txt
+          set -o pipefail
+          java -jar /tmp/lidl-v81-harness.jar qa_v81/products_lidl_api.tsv qa_v81/recipes_v61_157.tsv 2 Lidl | tee lidl_v81_coverage_report.txt
       - name: Coverage summary
         run: |
           python - <<'PY'
@@ -75,7 +76,9 @@ jobs:
           t=Path("lidl_v81_coverage_report.txt").read_text(encoding="utf-8")
           keys=["products","recipes_total","recipes_testable","recipes_complete","recipes_failed",
                 "primi_complete","secondi_complete","contorni_complete","piatti_unici_complete","dolci_complete",
-                "threshold_primi","threshold_secondi","threshold_contorni"]
+                "threshold_primi","threshold_secondi","threshold_contorni",
+                "eur50_persons","eur50_days","eur50_primi","eur50_secondi","eur50_contorni",
+                "eur50_unique_recipes","eur50_unresolved","eur50_total","eur50_feasible"]
           out={}
           for k in keys:
               m=re.search(rf"(?m)^{re.escape(k)}=(.+)$",t)
@@ -88,7 +91,10 @@ jobs:
           name: lidl-api-catalog
           path: |
             prezzi_lidl_api.db
-            lidl_everli_probe.json
+            prezzi_lidl_everli.db
+            lidl_everli_raw.json
+            lidl_everli_products.json
+            lidl_everli_errors.json
             prezzi_lidl_recipe.db
             lidl_api_products.json
             lidl_api_raw.json
