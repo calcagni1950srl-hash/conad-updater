@@ -1,4 +1,6 @@
 name: Probe Lidl API catalog
+permissions:
+  contents: write
 on:
   push:
     branches: [probe-lidl-catalog]
