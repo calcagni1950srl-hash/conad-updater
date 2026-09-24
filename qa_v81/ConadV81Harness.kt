@@ -233,10 +233,12 @@ fun main(args: Array<String>) {
         }
         println("eur50_optimized=true")
         val basket = basketCalc(selected)
+        // Count each selected recipe in exactly one weekly slot. A recipe may advertise
+        // multiple menu_roles, but its primary category is the slot used by this QA.
         val counts = mapOf(
-            "primo" to selected.count { it.category == "primo" || it.roles.split(',').any { x -> x == "primo" } },
-            "secondo" to selected.count { it.category == "secondo" || it.roles.split(',').any { x -> x == "secondo" } },
-            "contorno" to selected.count { it.category == "contorno" || it.roles.split(',').any { x -> x == "contorno" } }
+            "primo" to selected.count { roleOf(it) == "primo" },
+            "secondo" to selected.count { roleOf(it) == "secondo" },
+            "contorno" to selected.count { roleOf(it) == "contorno" }
         )
         val familyNames = selected.map {
             val s = IngredientMatcher.normalize(it.name + " " + it.ingredients.joinToString(" ") { x -> x.name })
