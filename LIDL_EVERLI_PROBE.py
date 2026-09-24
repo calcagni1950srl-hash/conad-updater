@@ -83,6 +83,24 @@ db.execute("""CREATE TABLE products(
 db.executemany("""INSERT INTO products VALUES(
  :id,:name,:brand,:price,:short_description,:type,:value,:category,:categories,:main_category,:store_id,:image)""",rows)
 db.commit()
+# Android V80 consumes the same Product model as the other supermarkets.
+# Keep the raw Everli table above for audit, and expose a normalized view with
+# real price/pack/category fields so Android needs no Lidl-specific menu logic.
+db.execute("DROP VIEW IF EXISTS products_android")
+db.execute("""CREATE VIEW products_android AS
+SELECT id AS product_id,
+       name AS product_name,
+       brand,
+       trim(COALESCE(main_category,'') || CASE WHEN main_category<>'' AND category<>'' THEN ' > ' ELSE '' END || COALESCE(category,'')) AS category_name,
+       price AS price_eur,
+       value AS quantity_value,
+       lower(type) AS quantity_unit_raw,
+       short_description AS quantity_text,
+       store_id,
+       image
+FROM products
+WHERE price > 0""")
+db.commit()
 ok=db.execute("PRAGMA integrity_check").fetchone()[0]
 db.close()
 print("EVERLI_SUMMARY",json.dumps({"store_id":STORE_ID,"queries":len(queries),"products_positive":len(rows),"errors":len(errors),"sqlite_integrity":ok},ensure_ascii=False))
