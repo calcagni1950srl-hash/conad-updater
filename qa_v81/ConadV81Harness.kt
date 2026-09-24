@@ -244,9 +244,12 @@ fun main(args: Array<String>) {
                 .mapNotNull { r -> basketCalc(listOf(r)).let { if (it.unresolved.isEmpty()) r to it.totalCost else null } }
                 .sortedBy { it.second }.take(limit).map { it.first }
 
-        val fishPrimi = cheapestCandidates("primo", fishTerms, 5)
-        val meatPrimi = cheapestCandidates("primo", meatTerms, 5)
-        val legumeAny = (cheapestCandidates("primo", legumeTerms, 6) + cheapestCandidates("secondo", legumeTerms, 4))
+        // Broaden semantic seed space. Standalone-cheapest recipes are not always
+        // cheapest in the final basket because shared ingredients and pack rounding
+        // can reverse the ordering.
+        val fishPrimi = cheapestCandidates("primo", fishTerms, 12)
+        val meatPrimi = cheapestCandidates("primo", meatTerms, 12)
+        val legumeAny = (cheapestCandidates("primo", legumeTerms, 12) + cheapestCandidates("secondo", legumeTerms, 10))
             .distinctBy { it.id }
         var bestWeek: MutableList<HarnessRecipe>? = null
         var bestWeekCost = Double.POSITIVE_INFINITY
