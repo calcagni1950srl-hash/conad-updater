@@ -186,6 +186,52 @@ fun main(args: Array<String>) {
                 if (!addCheapest(role) { true }) break
             }
         }
+        // Local combinatorial improvement: swap recipes within the same role while
+        // preserving all weekly constraints. Aggregate basket cost is the objective,
+        // so pack sharing is respected. Iterate to a local minimum.
+        fun roleOf(r: HarnessRecipe): String = when {
+            r.category == "primo" || r.roles.split(',').any { it == "primo" } -> "primo"
+            r.category == "secondo" || r.roles.split(',').any { it == "secondo" } -> "secondo"
+            else -> "contorno"
+        }
+        fun constraintsOk(rs: List<HarnessRecipe>): Boolean {
+            if (rs.map { it.id }.distinct().size != 21) return false
+            if (listOf("primo","secondo","contorno").any { role -> rs.count { roleOf(it) == role } != 7 }) return false
+            val fams = rs.map { family(it) }
+            if (listOf("uova","fagioli","ceci","lenticchie","patate").any { fam -> fams.count { it == fam } > 1 }) return false
+            val corpus = rs.joinToString(" ") { recipeText(it) }
+            val primi = rs.filter { roleOf(it) == "primo" }
+            return legumeTerms.any { corpus.contains(it) } &&
+                fishTerms.any { corpus.contains(it) } &&
+                meatTerms.any { corpus.contains(it) } &&
+                primi.any { r -> hasTerms(r, fishTerms) } &&
+                primi.any { r -> hasTerms(r, meatTerms) }
+        }
+        var improved = true
+        while (improved) {
+            improved = false
+            val currentCost = basketCalc(selected).totalCost
+            var bestCost = currentCost
+            var bestSwap: Pair<Int,HarnessRecipe>? = null
+            for (i in selected.indices) {
+                val role = roleOf(selected[i])
+                for (cand in completeByRole[role].orEmpty()) {
+                    if (selected.any { it.id == cand.id }) continue
+                    val trial = selected.toMutableList().also { it[i] = cand }
+                    if (!constraintsOk(trial)) continue
+                    val calc = basketCalc(trial)
+                    if (calc.unresolved.isEmpty() && calc.totalCost + 0.0001 < bestCost) {
+                        bestCost = calc.totalCost
+                        bestSwap = i to cand
+                    }
+                }
+            }
+            if (bestSwap != null) {
+                selected[bestSwap.first] = bestSwap.second
+                improved = true
+            }
+        }
+        println("eur50_optimized=true")
         val basket = basketCalc(selected)
         val counts = mapOf(
             "primo" to selected.count { it.category == "primo" || it.roles.split(',').any { x -> x == "primo" } },
