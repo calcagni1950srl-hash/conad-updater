@@ -78,7 +78,7 @@ jobs:
                 "primi_complete","secondi_complete","contorni_complete","piatti_unici_complete","dolci_complete",
                 "threshold_primi","threshold_secondi","threshold_contorni",
                 "eur50_persons","eur50_days","eur50_primi","eur50_secondi","eur50_contorni",
-                "eur50_unique_recipes","eur50_unresolved","eur50_total","eur50_variety_ok","eur50_has_legumes","eur50_has_fish","eur50_has_meat","eur50_has_fish_primo","eur50_has_meat_primo","eur50_semantic_variety_ok","eur50_feasible"]
+                "eur50_unique_recipes","eur50_unresolved","eur50_total","eur50_optimized","eur50_variety_ok","eur50_has_legumes","eur50_has_fish","eur50_has_meat","eur50_has_fish_primo","eur50_has_meat_primo","eur50_semantic_variety_ok","eur50_feasible"]
           out={}
           for k in keys:
               m=re.search(rf"(?m)^{re.escape(k)}=(.+)$",t)
