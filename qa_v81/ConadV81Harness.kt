@@ -186,9 +186,10 @@ fun main(args: Array<String>) {
                 if (!addCheapest(role) { true }) break
             }
         }
-        // Local combinatorial improvement: swap recipes within the same role while
-        // preserving all weekly constraints. Aggregate basket cost is the objective,
-        // so pack sharing is respected. Iterate to a local minimum.
+        // Multi-start constrained search. The old single-swap descent could get
+        // trapped in a local minimum. Start from several semantic seed combinations,
+        // fill all 21 slots by aggregate basket cost, then apply local descent and
+        // retain the cheapest fully valid weekly basket.
         fun roleOf(r: HarnessRecipe): String = when {
             r.category == "primo" || r.roles.split(',').any { it == "primo" } -> "primo"
             r.category == "secondo" || r.roles.split(',').any { it == "secondo" } -> "secondo"
@@ -207,29 +208,75 @@ fun main(args: Array<String>) {
                 primi.any { r -> hasTerms(r, fishTerms) } &&
                 primi.any { r -> hasTerms(r, meatTerms) }
         }
-        var improved = true
-        while (improved) {
-            improved = false
-            val currentCost = basketCalc(selected).totalCost
-            var bestCost = currentCost
-            var bestSwap: Pair<Int,HarnessRecipe>? = null
-            for (i in selected.indices) {
-                val role = roleOf(selected[i])
-                for (cand in completeByRole[role].orEmpty()) {
-                    if (selected.any { it.id == cand.id }) continue
-                    val trial = selected.toMutableList().also { it[i] = cand }
-                    if (!constraintsOk(trial)) continue
-                    val calc = basketCalc(trial)
-                    if (calc.unresolved.isEmpty() && calc.totalCost + 0.0001 < bestCost) {
-                        bestCost = calc.totalCost
-                        bestSwap = i to cand
+        fun familyAllowed(rs: List<HarnessRecipe>, cand: HarnessRecipe): Boolean {
+            val fam = family(cand)
+            return fam !in setOf("uova","fagioli","ceci","lenticchie","patate") || rs.none { family(it) == fam }
+        }
+        fun descend(seed: List<HarnessRecipe>): MutableList<HarnessRecipe> {
+            val out = seed.toMutableList()
+            var changed = true
+            while (changed) {
+                changed = false
+                var bestCost = basketCalc(out).totalCost
+                var bestSwap: Pair<Int,HarnessRecipe>? = null
+                for (i in out.indices) {
+                    val role = roleOf(out[i])
+                    for (cand in completeByRole[role].orEmpty()) {
+                        if (out.any { it.id == cand.id }) continue
+                        val trial = out.toMutableList().also { it[i] = cand }
+                        if (!constraintsOk(trial)) continue
+                        val calc = basketCalc(trial)
+                        if (calc.unresolved.isEmpty() && calc.totalCost + 0.0001 < bestCost) {
+                            bestCost = calc.totalCost
+                            bestSwap = i to cand
+                        }
                     }
                 }
+                if (bestSwap != null) {
+                    out[bestSwap.first] = bestSwap.second
+                    changed = true
+                }
             }
-            if (bestSwap != null) {
-                selected[bestSwap.first] = bestSwap.second
-                improved = true
+            return out
+        }
+        fun cheapestCandidates(role: String, terms: List<String>, limit: Int): List<HarnessRecipe> =
+            completeByRole[role].orEmpty().filter { hasTerms(it, terms) }
+                .mapNotNull { r -> basketCalc(listOf(r)).let { if (it.unresolved.isEmpty()) r to it.totalCost else null } }
+                .sortedBy { it.second }.take(limit).map { it.first }
+
+        val fishPrimi = cheapestCandidates("primo", fishTerms, 5)
+        val meatPrimi = cheapestCandidates("primo", meatTerms, 5)
+        val legumeAny = (cheapestCandidates("primo", legumeTerms, 6) + cheapestCandidates("secondo", legumeTerms, 4))
+            .distinctBy { it.id }
+        var bestWeek: MutableList<HarnessRecipe>? = null
+        var bestWeekCost = Double.POSITIVE_INFINITY
+        for (fp in fishPrimi) for (mp in meatPrimi) for (lp in legumeAny) {
+            val trial = mutableListOf(fp,mp,lp).distinctBy { it.id }.toMutableList()
+            if (trial.size < 3 || !trial.all { familyAllowed(trial.filter { x -> x.id != it.id }, it) }) continue
+            var valid = true
+            for (role in listOf("primo","secondo","contorno")) {
+                while (trial.count { roleOf(it) == role } < 7) {
+                    val cand = completeByRole[role].orEmpty()
+                        .filter { r -> trial.none { it.id == r.id } && familyAllowed(trial,r) }
+                        .mapNotNull { r ->
+                            val calc = basketCalc(trial + r)
+                            if (calc.unresolved.isEmpty()) r to calc.totalCost else null
+                        }.minByOrNull { it.second }?.first
+                    if (cand == null) { valid = false; break } else trial += cand
+                }
+                if (!valid) break
             }
+            if (!valid || trial.size != 21 || !constraintsOk(trial)) continue
+            val optimized = descend(trial)
+            val cost = basketCalc(optimized).totalCost
+            if (cost < bestWeekCost) {
+                bestWeekCost = cost
+                bestWeek = optimized
+            }
+        }
+        if (bestWeek != null) {
+            selected.clear()
+            selected.addAll(bestWeek!!)
         }
         println("eur50_optimized=true")
         val basket = basketCalc(selected)
