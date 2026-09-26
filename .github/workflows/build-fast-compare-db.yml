@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'build_fast_compare_db.py'
+      - 'benchmark_fast_db.py'
       - '.github/workflows/build-fast-compare-db.yml'
   schedule:
     - cron: '15 */6 * * *'
@@ -43,6 +44,9 @@ jobs:
           assert db.execute('pragma integrity_check').fetchone()[0] == 'ok'
           assert db.execute('select count(distinct market) from products').fetchone()[0] == 6
           PY
+
+      - name: Benchmark indexed lookups
+        run: python benchmark_fast_db.py prezzi_confronto_fast.db
 
       - name: Commit database if changed
         run: |
