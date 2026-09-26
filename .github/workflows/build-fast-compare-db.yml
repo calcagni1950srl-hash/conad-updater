@@ -2,6 +2,10 @@ name: Build fast comparison database
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'build_fast_compare_db.py'
+      - '.github/workflows/build-fast-compare-db.yml'
   schedule:
     - cron: '15 */6 * * *'
 
