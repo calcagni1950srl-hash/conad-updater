@@ -26,6 +26,29 @@ ANDROID_CODES = {
 }
 
 
+def extract_image_url(raw):
+    """Return one real product image URL from CosìComodo OCC raw JSON."""
+    if not isinstance(raw, dict):
+        return ""
+    images = raw.get("productImages") or []
+    if not isinstance(images, list):
+        return ""
+    for item in images:
+        if not isinstance(item, dict):
+            continue
+        value = str(item.get("value") or "")
+        for size in ("300x300", "350x350", "150x150", "80x80"):
+            marker = size + "="
+            pos = value.find(marker)
+            if pos < 0:
+                continue
+            url = value[pos + len(marker):]
+            url = url.split(",", 1)[0].split("}", 1)[0].strip()
+            if url.startswith("https://") or url.startswith("http://"):
+                return url
+    return ""
+
+
 def write_full_db(path, unique, metadata, site, store):
     path.unlink(missing_ok=True)
     con = sqlite3.connect(path)
@@ -86,7 +109,8 @@ def write_android_db(path, unique, metadata):
       product_url TEXT,
       source_url TEXT,
       store_alias_id TEXT,
-      detected_at TEXT
+      detected_at TEXT,
+      image_url TEXT
     );
     CREATE TABLE metadata(key TEXT PRIMARY KEY,value TEXT);
     """)
@@ -101,11 +125,12 @@ def write_android_db(path, unique, metadata):
             float(p["price_eur"]), p.get("unit_price"), str(p.get("unit_price_unit") or ""),
             str(p.get("product_url") or ""), str(p.get("source_url") or ""),
             str(p.get("store_alias_id") or metadata["store_alias_id"]), str(p.get("detected_at") or ""),
+            extract_image_url(p.get("raw_json") or {}),
         ))
-    con.executemany("INSERT INTO products VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", rows)
+    con.executemany("INSERT INTO products VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)", rows)
     android_metadata = dict(metadata)
     android_metadata.update({
-        "variant": "android-food-only",
+        "variant": "android-food-images-v2",
         "food_categories": str(len(ANDROID_CODES)),
         "products_positive_price": str(len(rows)),
     })
