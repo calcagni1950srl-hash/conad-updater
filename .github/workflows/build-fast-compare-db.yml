@@ -1,0 +1,53 @@
+name: Build fast comparison database
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 */6 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fast-comparison-db
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build optimized database
+        run: python build_fast_compare_db.py --output prezzi_confronto_fast.db
+
+      - name: Validate optimized database
+        run: |
+          python - <<'PY'
+          import sqlite3
+          db=sqlite3.connect('prezzi_confronto_fast.db')
+          print('products', db.execute('select count(*) from products').fetchone()[0])
+          print('tokens', db.execute('select count(*) from product_tokens').fetchone()[0])
+          print('markets', db.execute('select market,count(*) from products group by market order by market').fetchall())
+          assert db.execute('pragma integrity_check').fetchone()[0] == 'ok'
+          assert db.execute('select count(distinct market) from products').fetchone()[0] == 6
+          PY
+
+      - name: Commit database if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add prezzi_confronto_fast.db
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Update fast comparison database"
+            git push
+          fi
