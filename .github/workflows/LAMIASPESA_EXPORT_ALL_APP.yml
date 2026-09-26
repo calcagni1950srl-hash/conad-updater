@@ -1,0 +1,203 @@
+name: La Mia Spesa - export cataloghi Android completi
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/LAMIASPESA_EXPORT_ALL_APP.yml'
+      - 'prezzi_famila.db'
+      - 'prezzi_sole365.db'
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build compact full-market Android DBs with real image URLs
+        run: |
+          python - <<'PY'
+          import json
+          import re
+          import sqlite3
+          from pathlib import Path
+
+          SOURCES = [
+              (Path('prezzi_famila.db'), Path('prezzi_famila_all_app.db'), 'Famila'),
+              (Path('prezzi_sole365.db'), Path('prezzi_sole365_all_app.db'), 'Sole365'),
+          ]
+
+          def extract_image_url(raw_json):
+              if not raw_json:
+                  return None
+              try:
+                  data = json.loads(raw_json)
+              except Exception:
+                  return None
+              images = data.get('productImages')
+              if not isinstance(images, list):
+                  return None
+              for size in ('300x300', '350x350', '150x150', '80x80'):
+                  for item in images:
+                      if not isinstance(item, dict):
+                          continue
+                      value = str(item.get('value') or '')
+                      match = re.search(re.escape(size) + r'=([^,}]+)', value)
+                      if match:
+                          url = match.group(1).strip()
+                          if url.startswith(('https://', 'http://')):
+                              return url
+              return None
+
+          def build(source, target, market):
+              if not source.exists():
+                  raise SystemExit(f'Missing source DB: {source}')
+
+              temp = target.with_suffix(target.suffix + '.tmp')
+              temp.unlink(missing_ok=True)
+
+              src = sqlite3.connect(source)
+              src.row_factory = sqlite3.Row
+              dst = sqlite3.connect(temp)
+              rows = []
+              image_rows = 0
+
+              try:
+                  dst.executescript('''
+                      PRAGMA journal_mode=OFF;
+                      PRAGMA synchronous=OFF;
+                      CREATE TABLE products(
+                          product_id TEXT PRIMARY KEY,
+                          product_name TEXT NOT NULL,
+                          brand TEXT,
+                          category_name TEXT,
+                          price_eur REAL NOT NULL,
+                          unit_price REAL,
+                          unit_price_unit TEXT,
+                          product_url TEXT,
+                          source_url TEXT,
+                          store_alias_id TEXT,
+                          detected_at TEXT,
+                          image_url TEXT
+                      );
+                      CREATE INDEX idx_products_name
+                          ON products(product_name COLLATE NOCASE);
+                      CREATE INDEX idx_products_brand
+                          ON products(brand COLLATE NOCASE);
+                      CREATE INDEX idx_products_category
+                          ON products(category_name COLLATE NOCASE);
+                      CREATE TABLE metadata(
+                          key TEXT PRIMARY KEY,
+                          value TEXT
+                      );
+                  ''')
+
+                  for r in src.execute('''
+                      SELECT product_id, product_name, brand, category_name, price_eur,
+                             unit_price, unit_price_unit, product_url, source_url,
+                             store_alias_id, detected_at, raw_json
+                      FROM products
+                      WHERE price_eur > 0
+                  '''):
+                      image_url = extract_image_url(r['raw_json'])
+                      if image_url:
+                          image_rows += 1
+                      rows.append((
+                          r['product_id'], r['product_name'], r['brand'], r['category_name'],
+                          r['price_eur'], r['unit_price'], r['unit_price_unit'],
+                          r['product_url'], r['source_url'], r['store_alias_id'],
+                          r['detected_at'], image_url,
+                      ))
+
+                  dst.executemany(
+                      'INSERT INTO products VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',
+                      rows,
+                  )
+                  metadata = {
+                      'market': market,
+                      'source_db': source.name,
+                      'catalog_complete': 'true',
+                      'rows': str(len(rows)),
+                      'image_rows': str(image_rows),
+                      'schema_version': 'lamiaspesa-all-app-v1',
+                  }
+                  dst.executemany(
+                      'INSERT INTO metadata(key,value) VALUES(?,?)',
+                      metadata.items(),
+                  )
+                  dst.commit()
+                  dst.execute('VACUUM')
+                  dst.commit()
+              finally:
+                  dst.close()
+                  src.close()
+
+              if len(rows) < 9000:
+                  temp.unlink(missing_ok=True)
+                  raise SystemExit(f'{market}: too few rows: {len(rows)}')
+              if image_rows < int(len(rows) * 0.90):
+                  temp.unlink(missing_ok=True)
+                  raise SystemExit(
+                      f'{market}: image coverage too low: {image_rows}/{len(rows)}'
+                  )
+
+              check = sqlite3.connect(temp)
+              try:
+                  integrity = check.execute('PRAGMA integrity_check').fetchone()[0]
+                  positive = check.execute(
+                      'SELECT COUNT(*) FROM products WHERE price_eur > 0'
+                  ).fetchone()[0]
+              finally:
+                  check.close()
+
+              if integrity != 'ok' or positive != len(rows):
+                  temp.unlink(missing_ok=True)
+                  raise SystemExit(
+                      f'{market}: QA failed integrity={integrity!r} '
+                      f'positive={positive} rows={len(rows)}'
+                  )
+
+              temp.replace(target)
+              return {
+                  'market': market,
+                  'rows': len(rows),
+                  'image_rows': image_rows,
+                  'image_coverage_pct': round(image_rows * 100.0 / len(rows), 2),
+                  'bytes': target.stat().st_size,
+                  'target': target.name,
+              }
+
+          report = [build(source, target, market) for source, target, market in SOURCES]
+          Path('lamiaspesa_all_app_audit.json').write_text(
+              json.dumps(report, ensure_ascii=False, indent=2),
+              encoding='utf-8',
+          )
+          print(json.dumps(report, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Final SQLite QA
+        run: |
+          set -euo pipefail
+          for db in prezzi_famila_all_app.db prezzi_sole365_all_app.db; do
+            test "$(sqlite3 "$db" "PRAGMA integrity_check;")" = "ok"
+            sqlite3 "$db" "SELECT COUNT(*), COUNT(image_url) FROM products WHERE price_eur > 0;"
+          done
+          cat lamiaspesa_all_app_audit.json
+
+      - name: Publish compact catalogs
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f             prezzi_famila_all_app.db             prezzi_sole365_all_app.db             lamiaspesa_all_app_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish full La Mia Spesa Android catalogs [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main
