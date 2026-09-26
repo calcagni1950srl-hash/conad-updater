@@ -5,106 +5,106 @@
   "store": "teverola",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 10085,
-  "android_food_products_positive_price": 7162,
+  "unique_products_positive_price": 9870,
+  "android_food_products_positive_price": 7012,
   "android_food_categories": 11,
   "categories": {
     "10001": {
       "name": "Amici animali",
-      "totalResults": 336,
-      "received": 336,
-      "positive_price_products": 336
+      "totalResults": 328,
+      "received": 328,
+      "positive_price_products": 328
     },
     "10002": {
       "name": "Acqua, bevande, vino e alcolici",
-      "totalResults": 984,
-      "received": 984,
-      "positive_price_products": 984
+      "totalResults": 998,
+      "received": 998,
+      "positive_price_products": 998
     },
     "10003": {
       "name": "Carne",
-      "totalResults": 153,
-      "received": 153,
-      "positive_price_products": 153
+      "totalResults": 150,
+      "received": 150,
+      "positive_price_products": 150
     },
     "10004": {
       "name": "Colazione, merenda e dolci",
-      "totalResults": 1402,
-      "received": 1402,
-      "positive_price_products": 1402
+      "totalResults": 1431,
+      "received": 1431,
+      "positive_price_products": 1431
     },
     "10005": {
       "name": "Cura della persona",
-      "totalResults": 1263,
-      "received": 1263,
-      "positive_price_products": 1263
+      "totalResults": 1239,
+      "received": 1239,
+      "positive_price_products": 1238
     },
     "10006": {
       "name": "Frutta e verdura",
-      "totalResults": 410,
-      "received": 410,
-      "positive_price_products": 410
+      "totalResults": 412,
+      "received": 412,
+      "positive_price_products": 412
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
-      "totalResults": 163,
-      "received": 163,
-      "positive_price_products": 163
+      "totalResults": 136,
+      "received": 136,
+      "positive_price_products": 136
     },
     "10008": {
       "name": "Gelati e surgelati",
-      "totalResults": 452,
-      "received": 452,
-      "positive_price_products": 452
+      "totalResults": 413,
+      "received": 413,
+      "positive_price_products": 413
     },
     "10009": {
       "name": "Latte, burro, uova e yogurt",
-      "totalResults": 705,
-      "received": 705,
-      "positive_price_products": 705
+      "totalResults": 632,
+      "received": 632,
+      "positive_price_products": 632
     },
     "10010": {
       "name": "Pane e pasticceria",
-      "totalResults": 419,
-      "received": 419,
-      "positive_price_products": 419
+      "totalResults": 411,
+      "received": 411,
+      "positive_price_products": 411
     },
     "10011": {
       "name": "Pesce",
-      "totalResults": 72,
-      "received": 72,
-      "positive_price_products": 72
+      "totalResults": 69,
+      "received": 69,
+      "positive_price_products": 68
     },
     "10012": {
       "name": "Prodotti alimentari",
-      "totalResults": 1969,
-      "received": 1969,
-      "positive_price_products": 1968
+      "totalResults": 1951,
+      "received": 1951,
+      "positive_price_products": 1950
     },
     "10013": {
       "name": "Salumi e formaggi",
-      "totalResults": 436,
-      "received": 436,
-      "positive_price_products": 436
+      "totalResults": 412,
+      "received": 412,
+      "positive_price_products": 412
     },
     "10014": {
       "name": "Tempo libero",
-      "totalResults": 96,
-      "received": 96,
-      "positive_price_products": 96
+      "totalResults": 91,
+      "received": 91,
+      "positive_price_products": 91
     },
     "10015": {
       "name": "Tutto per il bambino",
-      "totalResults": 220,
-      "received": 220,
-      "positive_price_products": 220
+      "totalResults": 221,
+      "received": 221,
+      "positive_price_products": 221
     },
     "10016": {
       "name": "Tutto per la casa",
-      "totalResults": 1008,
-      "received": 1008,
-      "positive_price_products": 1008
+      "totalResults": 980,
+      "received": 980,
+      "positive_price_products": 980
     }
   },
-  "merged_at": "2026-09-15T09:53:17.745857+00:00"
+  "merged_at": "2026-09-26T08:28:09.037910+00:00"
 }
