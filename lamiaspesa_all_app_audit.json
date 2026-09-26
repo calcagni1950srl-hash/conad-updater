@@ -1,0 +1,18 @@
+[
+  {
+    "market": "Famila",
+    "rows": 9870,
+    "image_rows": 9856,
+    "image_coverage_pct": 99.86,
+    "bytes": 7020544,
+    "target": "prezzi_famila_all_app.db"
+  },
+  {
+    "market": "Sole365",
+    "rows": 9832,
+    "image_rows": 9813,
+    "image_coverage_pct": 99.81,
+    "bytes": 7114752,
+    "target": "prezzi_sole365_all_app.db"
+  }
+]
