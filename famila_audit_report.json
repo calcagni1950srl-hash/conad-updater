@@ -1,6 +1,6 @@
 {
   "status": "VALID",
-  "checked_at": "2026-09-26T10:22:10.566221+00:00",
+  "checked_at": "2026-09-27T10:53:55.128800+00:00",
   "store": {
     "site": "familasud",
     "alias": "teverola",
@@ -16,7 +16,7 @@
   "empty_name": 0,
   "duplicate_product_key": 0,
   "quantity_text_missing": 9870,
-  "unit_price_present": 9838,
+  "unit_price_present": 9864,
   "saleable_false": 1,
   "distinct_categories": 385,
   "failed_pages": 0,
