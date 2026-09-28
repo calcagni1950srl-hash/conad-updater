@@ -6,7 +6,7 @@ db=sqlite3.connect(src); db.row_factory=sqlite3.Row
 aliases=[dict(r) for r in db.execute("select alias_norm,canonical_category,product_type from canonical_aliases order by length(alias_norm) desc")]
 products=[]
 sql="""select id,market,name,brand,category,price_eur,unit_price_eur,unit_price_unit,
-              variable_weight,quantity_text,quantity_unit,canonical_category,product_type,
+              variable_weight,quantity_text,quantity_value,quantity_unit,canonical_category,product_type,
               norm_name,norm_brand,norm_category
        from products"""
 for r in db.execute(sql):
