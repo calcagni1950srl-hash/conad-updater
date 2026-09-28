@@ -1,0 +1,21 @@
+name: Probe Lidl Everli full catalog
+on:
+  workflow_dispatch:
+  push:
+    branches: [probe-lidl-catalog]
+    paths:
+      - LIDL_EVERLI_FULL_PROBE.py
+      - .github/workflows/lidl_everli_full_probe.yml
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: probe-lidl-catalog
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probe empty-query pagination
+        run: python LIDL_EVERLI_FULL_PROBE.py
