@@ -1,7 +1,7 @@
 import requests,re,json,html
 from urllib.parse import quote_plus
 
-terms=["aglio","prezzemolo","cipolla","peperoncino","pangrattato","origano","paccheri","melanzane","burro","sedano","pepe nero","vongole","cozze","calamari","provola","friarielli","broccoli","cavolfiore","finocchi","ziti","scialatielli"]
+terms=["carta igienica","scottex","carta wc","rotoli bagno","acqua lete"]
 rx=re.compile(r'data-product="([^"]+)"')
 s=requests.Session()
 s.headers.update({"User-Agent":"Mozilla/5.0","Accept-Language":"it-IT,it;q=0.9"})
