@@ -1,0 +1,20 @@
+name: Probe Lidl alphabet catalog
+on:
+  workflow_dispatch:
+  push:
+    branches: [probe-lidl-catalog]
+    paths:
+      - LIDL_ALPHABET_CATALOG_PROBE.py
+      - .github/workflows/lidl_alphabet_catalog_probe.yml
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: probe-lidl-catalog
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python LIDL_ALPHABET_CATALOG_PROBE.py
