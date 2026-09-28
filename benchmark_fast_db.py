@@ -119,3 +119,15 @@ for typ in ("zucchine","patate"):
       limit 50
     """,(typ,)):
         print(r)
+
+
+print("\nCONAD PENNE CANDIDATES USER")
+for r in db.execute("""
+  select name,brand,category,quantity_text,quantity_value,quantity_unit,
+         price_eur,unit_price_eur,unit_price_unit,variable_weight,product_type
+  from products
+  where market='Conad' and lower(name) like '%penne%'
+  order by price_eur
+  limit 100
+"""):
+    print(r)
