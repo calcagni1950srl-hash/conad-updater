@@ -374,7 +374,34 @@ def build(output):
       token TEXT NOT NULL, product_id INTEGER NOT NULL,
       PRIMARY KEY(token, product_id)
     ) WITHOUT ROWID;
+    CREATE TABLE canonical_aliases(
+      alias_norm TEXT PRIMARY KEY,
+      canonical_category TEXT NOT NULL,
+      product_type TEXT
+    ) WITHOUT ROWID;
     """)
+    # Dizionario piccolo che l'app usa per interpretare nomi alternativi.
+    alias_rows = {}
+    for canonical, subtype, aliases in CANONICAL_RULES:
+        for alias in aliases:
+            alias_rows[norm(alias)] = (canonical, subtype)
+    # sinonimi d'uso comune non necessariamente presenti nei nomi catalogo
+    alias_rows.update({
+        "carta wc": ("CARTA_IGIENICA", "carta_igienica"),
+        "carta toilette": ("CARTA_IGIENICA", "carta_igienica"),
+        "rotoli bagno": ("CARTA_IGIENICA", "carta_igienica"),
+        "rotoloni bagno": ("CARTA_IGIENICA", "carta_igienica"),
+        "crudo": ("PROSCIUTTO_CRUDO", "prosciutto_crudo"),
+        "cotto": ("PROSCIUTTO_COTTO", "prosciutto_cotto"),
+        "acqua minerale": ("ACQUA", "acqua"),
+        "acqua naturale": ("ACQUA", "acqua"),
+        "acqua frizzante": ("ACQUA", "acqua"),
+        "acqua effervescente": ("ACQUA", "acqua"),
+        "coca cola": ("COLA", "cola"),
+        "coca-cola": ("COLA", "cola"),
+    })
+    con.executemany("INSERT OR REPLACE INTO canonical_aliases(alias_norm,canonical_category,product_type) VALUES(?,?,?)",
+                    [(a,v[0],v[1]) for a,v in alias_rows.items()])
     counts = {}
     with tempfile.TemporaryDirectory(prefix="fastcompare_") as td:
         for market, url in SOURCES:
@@ -403,7 +430,7 @@ def build(output):
     CREATE INDEX idx_tokens_product ON product_tokens(product_id);
     CREATE INDEX idx_products_canonical_market ON products(canonical_category, market);
     CREATE INDEX idx_products_type_market ON products(product_type, market);
-    INSERT INTO meta(key,value) VALUES('schema_version','2');
+    INSERT INTO meta(key,value) VALUES('schema_version','3');
     """)
     con.execute("INSERT INTO meta(key,value) VALUES('built_at',datetime('now'))")
     con.execute("INSERT INTO meta(key,value) VALUES('markets',?)", (','.join(m for m,_ in SOURCES),))
