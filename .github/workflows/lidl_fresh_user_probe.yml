@@ -1,0 +1,41 @@
+name: Lidl Fresh User Probe
+permissions:
+  contents: read
+on:
+  workflow_dispatch:
+  push:
+    branches: [probe-lidl-catalog]
+    paths:
+      - .github/workflows/lidl_fresh_user_probe.yml
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probe zucchini potatoes water
+        run: |
+          python - <<'PY'
+          import json, urllib.request
+          from urllib.parse import urlencode
+          BASE="https://lidl.everli.com/api/search"
+          H={"User-Agent":"Mozilla/5.0","Accept":"application/json"}
+          for q in ["zucchine","patate","acqua"]:
+              url=BASE+"?"+urlencode({"keyword":q,"skip":0,"take":100,"brands":"","tags":"","store_ids":"9240"})
+              req=urllib.request.Request(url,headers=H)
+              data=json.load(urllib.request.urlopen(req,timeout=45))
+              stores=data.get("stores") or []
+              ps=(stores[0].get("products") or []) if stores else []
+              print("QUERY",q,"COUNT",len(ps))
+              for p in ps:
+                  if str(p.get("store_id"))!="9240": continue
+                  print("ITEM",q,json.dumps({
+                      "id":p.get("id"),"name":p.get("name"),"brand":p.get("brand"),
+                      "short_description":p.get("short_description"),"type":p.get("type"),
+                      "selling_type":p.get("selling_type"),"price":p.get("price"),
+                      "price_per_type":p.get("price_per_type"),"value":p.get("value"),
+                      "variable_weight":p.get("variable_weight"),"minimum_quantity":p.get("minimum_quantity"),
+                      "category_name":p.get("category_name")
+                  },ensure_ascii=False))
+          PY
