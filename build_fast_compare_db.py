@@ -116,9 +116,9 @@ CANONICAL_RULES = [
 ]
 
 CATEGORY_HINTS = [
-    ("CARTA_IGIENICA", ["carta e plastica", "carta monouso", "igiene casa"]),
+    ("CARTA_MONOUSO", ["carta e plastica", "carta monouso", "igiene casa"]),
     ("SALUMI", ["salumi", "affettati", "carne e salumi"]),
-    ("ACQUA", ["acqua"]),
+    ("BEVANDE", ["acqua, bevande, vino e alcolici", "acqua bevande vino e alcolici"]),
     ("BIBITE", ["bibite", "bevande analcoliche"]),
     ("PASTA", ["pasta e riso", "pasta pane", "pasta secca"]),
     ("PASTA_FRESCA", ["pasta fresca", "gastronomia e pasta fresca", "ravioli e tortellini"]),
@@ -138,8 +138,8 @@ CATEGORY_HINTS = [
     ("CONSERVE", ["conserve", "sottoli", "sottaceti"]),
     ("DISPENSA", ["dispensa", "prodotti alimentari"]),
     ("CAFFE_INFUSI", ["caffe ed infusi", "caffe e infusi", "te infuso", "tisane"]),
-    ("VINO", ["vino", "prosecco", "spumanti", "champagne"]),
-    ("BIRRA", ["birra", "aperitivi e birra"]),
+    ("VINO", ["prosecco", "spumanti", "champagne"]),
+    ("ALCOLICI", ["aperitivi e birra"]),
     ("ALCOLICI", ["vino amari e distillati", "liquori", "distillati"]),
     ("CASA_PULIZIA", ["pulizia", "cura casa", "detersivi", "lavastoviglie", "bucato"]),
     ("IGIENE_PERSONALE", ["cura del corpo", "igiene personale", "capelli", "igiene orale"]),
@@ -156,6 +156,55 @@ NEGATIVE_BY_CANONICAL = {
     "ZUCCHINE_FRESCHE": ["tortino", "burger", "grigliat", "surgelat", "ripien", "minestrone", "vellutata"],
     "CARTA_IGIENICA": ["salviette", "umidificata"],
 }
+
+def precise_type(name, brand, category):
+    n = norm(name)
+    b = norm(brand)
+    c = norm(category)
+
+    # Carta igienica: mai dedotta dalla sola categoria generica "carta e plastica".
+    if (
+        "carta igienica" in n or
+        re.search(r"(^| )c igienica( |$)", n) or
+        ("igienica" in n and ("rotol" in n or "carta" in n)) or
+        "carta igienica" in c or "toilet paper" in n or "toilet paper" in c
+    ) and not any(x in n for x in ["salviette", "umidificata"]):
+        return ("CARTA_IGIENICA", "carta_igienica", 100)
+
+    # Prosciutto: richiede contesto salumi oppure nome che identifica chiaramente il prodotto.
+    salumi_ctx = any(x in c for x in ["salumi", "affettati", "prosciutto crudo"])
+    pasta_ctx = any(x in c for x in ["pasta", "ravioli", "tortellini", "gastronomia"])
+    if (
+        ("prosciutto crudo" in n or "prosciutto di parma" in n or "san daniele" in n) and
+        not pasta_ctx and
+        not any(x in n for x in ["tortell", "raviol", "cappellett", "sfoglia", "pizza", "panino", "sandwich", "stick"])
+    ):
+        return ("PROSCIUTTO_CRUDO", "prosciutto_crudo", 100)
+    if ("prosciutto cotto" in n and not pasta_ctx and not any(x in n for x in ["tortell", "raviol", "pizza", "panino"])):
+        return ("PROSCIUTTO_COTTO", "prosciutto_cotto", 100)
+
+    # Acqua: deve essere davvero una bevanda/acqua, non "pesce di acqua dolce" o "tonno in acqua".
+    water_cat = (
+        c == "acqua" or
+        c.startswith("acqua ") or
+        " > acqua > " in (" " + c + " ") or
+        "bevande e preparati acqua" in c
+    )
+    water_name = n.startswith("acqua ") or " acqua minerale " in (" " + n + " ")
+    if (water_cat or water_name) and not any(x in c for x in ["pesce", "tonno"]) and not any(x in n for x in ["tonno", "filetti", "pesce"]):
+        return ("ACQUA", "acqua", 100)
+
+    # Cola: solo bibita/cola, mai caramelle o dolci al gusto cola.
+    cola_ctx = c == "cola" or "bibite" in c or "bevande gassate" in c
+    cola_name = (
+        "coca cola" in n or "coca-cola" in n or "pepsi" in n or
+        n.startswith("cola ") or n == "cola" or
+        b in {"coca cola", "coca-cola", "pepsi", "freeway"}
+    )
+    if (cola_ctx or cola_name) and not any(x in c for x in ["caramelle", "dolci", "pasticceria"]) and not "caramell" in n:
+        return ("COLA", "cola", 100)
+
+    return None
 
 def canonicalize(name, brand, category):
     n = norm(name)
@@ -419,6 +468,12 @@ def build(output):
                 price=safe_float(p.get("price"))
                 if not p.get("name") or not price or price <= 0: continue
                 canonical, product_type, confidence = canonicalize(p["name"], p.get("brand"), p.get("category"))
+                precise = precise_type(p["name"], p.get("brand"), p.get("category"))
+                if precise is not None:
+                    canonical, product_type, confidence = precise
+                elif product_type in {"carta_igienica","prosciutto_crudo","prosciutto_cotto","acqua","cola"}:
+                    # Per i tipi più sensibili non manteniamo un subtype ricavato da una sola parola.
+                    product_type = None
                 cur=con.execute("""INSERT OR IGNORE INTO products(market,product_key,store,name,norm_name,brand,norm_brand,category,norm_category,quantity_text,quantity_value,quantity_unit,price_eur,unit_price_eur,unit_price_unit,variable_weight,source_url,checked_at,canonical_category,product_type,classification_confidence)
                                   VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                                 (market,str(p.get("key") or ""),p.get("store"),p["name"],norm(p["name"]),p.get("brand"),norm(p.get("brand")),p.get("category"),norm(p.get("category")),p.get("quantity_text"),safe_float(p.get("quantity_value")),p.get("quantity_unit"),price,safe_float(p.get("unit_price")),p.get("unit_price_unit"),safe_int(p.get("variable")),p.get("source"),p.get("checked"),canonical,product_type,confidence))
