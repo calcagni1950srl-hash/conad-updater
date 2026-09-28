@@ -6,6 +6,7 @@ DB=sys.argv[1] if len(sys.argv)>1 else "prezzi_confronto_fast.db"
 STOP={"di","da","dal","dalla","dello","della","dei","degli","delle","il","lo","la","i","gli","le","un","uno","una","e","con","per","al","alla","allo","ai","alle","del","dell","in","x"}
 SHAPES={"penne","spaghetti","rigatoni","fusilli","farfalle","linguine","bucatini","paccheri","ziti","tortiglioni"}
 FRESH={"zucchine","patate","pomodori","melanzane","peperoni","cipolle","carote","mele","banane","insalata"}
+DELI_WEIGHT={"prosciutto_crudo","prosciutto_cotto","mortadella","salame"}
 GENERIC={
  "pasta":("PASTA_SECCA","pasta_secca"),"riso":("RISO","riso"),"latte":("LATTE","latte"),
  "uova":("UOVA","uova"),"burro":("BURRO","burro"),"olio":("OLIO","olio"),"farina":("FARINA","farina"),
@@ -164,12 +165,22 @@ class MemoryResolver:
             if p["pieces"]!=req["pieces"]: return -9999
             score+=90
         if req["qty_g"]:
-            if p["variable"]: score+=120
+            if p["variable"]:
+                score+=140
             elif p["g"]:
+                # For deli/fresh products requested by weight, do not simulate multiple packs.
+                # A fixed pack must be reasonably close to the requested weight.
+                if p["product_type"] in DELI_WEIGHT:
+                    ratio=p["g"]/max(req["qty_g"],1)
+                    if ratio < 0.70 or ratio > 1.35:
+                        return -9999
                 diff=abs(p["g"]-req["qty_g"])/max(req["qty_g"],1)
-                score+=60-120*diff
-                if p["g"]<req["qty_g"]: score-=45
-            else: score-=30
+                score+=70-140*diff
+            else:
+                if p["product_type"] in DELI_WEIGHT:
+                    score-=55
+                else:
+                    score-=30
         if req["qty_ml"] and p["ml"]:
             total=p["ml"]*(p["pieces"] or 1)
             score+=50-90*abs(total-req["qty_ml"])/max(req["qty_ml"],1)
