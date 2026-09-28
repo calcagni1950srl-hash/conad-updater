@@ -1,0 +1,41 @@
+name: Fast publish expanded Lidl Everli catalog
+permissions:
+  contents: write
+on:
+  workflow_dispatch:
+  push:
+    branches: [probe-lidl-catalog]
+    paths:
+      - LIDL_EVERLI_PROBE.py
+      - .github/workflows/lidl_everli_expanded_fast_publish.yml
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: probe-lidl-catalog
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build expanded Lidl catalog
+        run: python LIDL_EVERLI_PROBE.py
+      - name: Validate and publish
+        run: |
+          set -euo pipefail
+          test -s prezzi_lidl_everli.db
+          test "$(sqlite3 prezzi_lidl_everli.db "PRAGMA integrity_check;")" = "ok"
+          COUNT="$(sqlite3 prezzi_lidl_everli.db "SELECT COUNT(*) FROM products_android WHERE price_eur > 0;")"
+          echo "LIDL_PRODUCTS=$COUNT"
+          test "$COUNT" -ge 1300
+          echo "CARTA_IGIENICA=$(sqlite3 prezzi_lidl_everli.db "SELECT COUNT(*) FROM products_android WHERE lower(product_name) LIKE '%carta igienica%' OR lower(category_name) LIKE '%carta igienica%';")"
+          echo "ACQUA=$(sqlite3 prezzi_lidl_everli.db "SELECT COUNT(*) FROM products_android WHERE lower(category_name) LIKE '%acqua%' OR lower(product_name) LIKE 'acqua %';")"
+          echo "DETERSIVO=$(sqlite3 prezzi_lidl_everli.db "SELECT COUNT(*) FROM products_android WHERE lower(product_name) LIKE '%detersiv%';")"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f prezzi_lidl_everli.db
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish expanded Lidl Everli Android catalog [skip ci]"
+            git push origin HEAD:probe-lidl-catalog
+          fi
