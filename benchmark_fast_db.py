@@ -51,3 +51,15 @@ for label,toks in cases.items():
         if n<8:
             print("   ",r[1:])
             n+=1
+
+
+print("\nTOP ALTRO SOURCE CATEGORIES")
+for row in db.execute("""
+SELECT market, norm_category, count(*) n
+FROM products
+WHERE canonical_category='ALTRO'
+GROUP BY market,norm_category
+ORDER BY n DESC
+LIMIT 100
+"""):
+    print(row)
