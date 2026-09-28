@@ -88,10 +88,11 @@ jobs:
           Path("lidl_v81_coverage_summary.json").write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding="utf-8")
           print(json.dumps(out,ensure_ascii=False))
           PY
-      - name: Publish validated Lidl Everli Android DB on probe branch
+      - name: Publish validated Lidl API Android DB on probe branch
         if: success()
         run: |
           set -euo pipefail
+          cp prezzi_lidl_api.db prezzi_lidl_everli.db
           test -s prezzi_lidl_everli.db
           test "$(sqlite3 prezzi_lidl_everli.db "PRAGMA integrity_check;")" = "ok"
           COUNT="$(sqlite3 prezzi_lidl_everli.db "SELECT COUNT(*) FROM products_android WHERE price_eur > 0;")"
@@ -100,7 +101,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f prezzi_lidl_everli.db
           if ! git diff --cached --quiet; then
-            git commit -m "Update validated Lidl Everli Android catalog [skip ci]"
+            git commit -m "Update validated Lidl API Android catalog [skip ci]"
             git push origin HEAD:probe-lidl-catalog
           fi
       - uses: actions/upload-artifact@v4
