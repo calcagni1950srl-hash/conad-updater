@@ -13,7 +13,7 @@ jobs:
         run: |
           set -euo pipefail
           URL='https://bbvxhepsyuejltglojtf.supabase.co/functions/v1/la-mia-spesa-resolver-v1'
-          BODY='{"mode":"both","items":["acqua Lete 6 bottiglie","zucchine 1 kg","patate 1 kg","penne 500 g"]}'
+          BODY='{"mode":"both","items":["acqua Lete 6 bottiglie","carta igienica"]}'
           curl -sS --fail --max-time 30             -H 'Content-Type: application/json'             -H 'x-app-key: 2eAqeSBaqR3HY8I4Pywluw7a77193q7Uldd0ptSjaw0'             --data "$BODY"             -w '\nHTTP=%{http_code} TOTAL=%{time_total}\n'             "$URL"
 
 # fallback-v15
@@ -41,3 +41,5 @@ jobs:
 # pasta-filter-v26
 
 # pasta-filter-v27
+
+# water-paper-v24
