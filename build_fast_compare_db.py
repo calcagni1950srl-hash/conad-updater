@@ -49,6 +49,129 @@ STOP = {
 
 PASTA_FORMATS = {"penne", "spaghetti", "rigatoni", "fusilli", "farfalle", "linguine", "bucatini", "paccheri", "mezze", "ziti", "tortiglioni"}
 
+
+# Tassonomia canonica usata dall'app. Le regole vengono applicate a TUTTI i prodotti.
+CANONICAL_RULES = [
+    ("CARTA_IGIENICA", "carta_igienica", ["carta igienica", "carta wc", "toilet paper", "rotoli igienici"]),
+    ("PROSCIUTTO_CRUDO", "prosciutto_crudo", ["prosciutto crudo", "prosciutto di parma", "san daniele", "crudo stagionato"]),
+    ("PROSCIUTTO_COTTO", "prosciutto_cotto", ["prosciutto cotto"]),
+    ("MORTADELLA", "mortadella", ["mortadella"]),
+    ("SALAME", "salame", ["salame", "soppressata"]),
+    ("ACQUA", "acqua", ["acqua minerale", "acqua naturale", "acqua frizzante", "acqua effervescente", "acqua"]),
+    ("COLA", "cola", ["coca cola", "coca-cola", "pepsi", "cola"]),
+    ("PASTA_SECCA", "pasta_secca", ["spaghetti", "penne", "rigatoni", "fusilli", "farfalle", "linguine", "bucatini", "paccheri", "ziti", "tortiglioni", "pasta di semola"]),
+    ("PASTA_FRESCA_RIPIENA", "pasta_fresca_ripiena", ["tortellini", "tortelloni", "ravioli", "cappelletti", "agnolotti"]),
+    ("GNOCCHI", "gnocchi", ["gnocchi"]),
+    ("PANE", "pane", ["pane", "panini", "baguette", "rosetta"]),
+    ("PIZZA_FOCACCIA", "pizza_focaccia", ["pizza", "focaccia"]),
+    ("LATTE", "latte", ["latte"]),
+    ("YOGURT", "yogurt", ["yogurt"]),
+    ("MOZZARELLA", "mozzarella", ["mozzarella", "fiordilatte", "fior di latte"]),
+    ("FORMAGGIO", "formaggio", ["parmigiano", "grana", "pecorino", "provolone", "emmental", "formaggio"]),
+    ("UOVA", "uova", ["uova", "uovo"]),
+    ("BURRO", "burro", ["burro"]),
+    ("OLIO", "olio", ["olio extravergine", "olio evo", "olio di oliva", "olio oliva", "olio di semi"]),
+    ("FARINA", "farina", ["farina"]),
+    ("ZUCCHERO", "zucchero", ["zucchero"]),
+    ("SALE", "sale", ["sale fino", "sale grosso", "sale marino", "sale"]),
+    ("RISO", "riso", ["riso"]),
+    ("PASSATA", "passata_pomodoro", ["passata di pomodoro", "passata pomodoro"]),
+    ("PELATI", "pomodori_pelati", ["pomodori pelati", "pelati"]),
+    ("TONNO_CONSERVA", "tonno_conserva", ["tonno sott olio", "tonno sott'olio", "tonno al naturale", "tonno in scatola"]),
+    ("LEGUMI", "legumi", ["fagioli", "ceci", "lenticchie", "piselli", "legumi"]),
+    ("BISCOTTI", "biscotti", ["biscotti"]),
+    ("CEREALI_COLAZIONE", "cereali_colazione", ["cereali colazione", "corn flakes", "muesli"]),
+    ("CAFFE", "caffe", ["caffe", "caffè"]),
+    ("SUCCO", "succo", ["succo", "nettare"]),
+    ("BIRRA", "birra", ["birra"]),
+    ("VINO", "vino", ["vino"]),
+    ("DETERSIVO_LAVATRICE", "detersivo_lavatrice", ["detersivo lavatrice", "capsule lavatrice", "pods lavatrice"]),
+    ("AMMORBIDENTE", "ammorbidente", ["ammorbidente"]),
+    ("DETERSIVO_PIATTI", "detersivo_piatti", ["detersivo piatti", "detergente piatti"]),
+    ("LAVASTOVIGLIE", "lavastoviglie", ["lavastoviglie", "tabs lavastoviglie", "pastiglie lavastoviglie"]),
+    ("SGRASSATORE", "sgrassatore", ["sgrassatore"]),
+    ("CANDEGGINA", "candeggina", ["candeggina"]),
+    ("SHAMPOO", "shampoo", ["shampoo"]),
+    ("BAGNOSCHIUMA", "bagnoschiuma", ["bagnoschiuma", "docciaschiuma"]),
+    ("DENTIFRICIO", "dentifricio", ["dentifricio"]),
+    ("DEODORANTE", "deodorante", ["deodorante"]),
+    ("FAZZOLETTI", "fazzoletti", ["fazzoletti"]),
+    ("TOVAGLIOLI", "tovaglioli", ["tovaglioli"]),
+    ("CARTA_CUCINA", "carta_cucina", ["carta cucina", "rotoloni cucina", "asciugatutto", "scottex"]),
+    ("PELLICOLA", "pellicola", ["pellicola"]),
+    ("ALLUMINIO", "alluminio", ["alluminio"]),
+    ("PANNOLINI", "pannolini", ["pannolini"]),
+    ("CIBO_CANE", "cibo_cane", ["crocchette cane", "cibo cane", "dog food"]),
+    ("CIBO_GATTO", "cibo_gatto", ["crocchette gatto", "cibo gatto", "cat food"]),
+    ("PATATE_FRESCHE", "patate", ["patate", "patata"]),
+    ("ZUCCHINE_FRESCHE", "zucchine", ["zucchine", "zucchina"]),
+    ("POMODORI_FRESCHI", "pomodori", ["pomodori", "pomodoro"]),
+    ("MELANZANE_FRESCHE", "melanzane", ["melanzane", "melanzana"]),
+    ("PEPERONI_FRESCHI", "peperoni", ["peperoni", "peperone"]),
+    ("CIPOLLE_FRESCHE", "cipolle", ["cipolle", "cipolla"]),
+    ("CAROTE_FRESCHE", "carote", ["carote", "carota"]),
+    ("MELE_FRESCHE", "mele", ["mele", "mela"]),
+    ("BANANE_FRESCHE", "banane", ["banane", "banana"]),
+    ("INSALATA_FRESCA", "insalata", ["lattuga", "insalata"]),
+]
+
+CATEGORY_HINTS = [
+    ("CARTA_IGIENICA", ["carta e plastica", "carta monouso", "igiene casa"]),
+    ("SALUMI", ["salumi", "affettati", "carne e salumi"]),
+    ("ACQUA", ["acqua", "bevande"]),
+    ("PASTA", ["pasta e riso", "pasta pane", "pasta secca"]),
+    ("PASTA_FRESCA", ["pasta fresca", "gastronomia e pasta fresca", "ravioli e tortellini"]),
+    ("LATTICINI", ["latticini", "latte e derivati"]),
+    ("ORTOFRUTTA", ["ortofrutta", "frutta e verdura", "verdura fresca", "frutta fresca"]),
+    ("CASA_PULIZIA", ["pulizia", "cura casa", "detersivi"]),
+    ("IGIENE_PERSONALE", ["cura del corpo", "igiene personale"]),
+    ("BEVANDE", ["bevande"]),
+    ("DISPENSA", ["dispensa", "alimentari"]),
+]
+
+NEGATIVE_BY_CANONICAL = {
+    "PROSCIUTTO_CRUDO": ["tortellini", "tortelloni", "ravioli", "cappelletti", "sfoglia", "pizza", "panino", "sandwich", "stick", "snack"],
+    "PROSCIUTTO_COTTO": ["tortellini", "tortelloni", "ravioli", "cappelletti", "pizza", "panino", "sandwich", "snack"],
+    "PATATE_FRESCHE": ["gnocchi", "chips", "patatine", "pure", "purè", "surgelat", "fritte", "crocchette"],
+    "ZUCCHINE_FRESCHE": ["tortino", "burger", "grigliat", "surgelat", "ripien", "minestrone", "vellutata"],
+    "CARTA_IGIENICA": ["salviette", "umidificata"],
+}
+
+def canonicalize(name, brand, category):
+    n = norm(name)
+    c = norm(category)
+    whole = f" {n} "
+    # prima regole forti sul nome
+    for canonical, subtype, aliases in CANONICAL_RULES:
+        matched = None
+        for alias in aliases:
+            a = norm(alias)
+            if re.search(r"(^| )" + re.escape(a) + r"( |$)", n):
+                matched = a
+                break
+        if not matched:
+            continue
+        negatives = NEGATIVE_BY_CANONICAL.get(canonical, [])
+        if any(norm(x) in n for x in negatives):
+            continue
+        # ortofrutta: richiede categoria fresca oppure nome che inizia/è quasi puro
+        if canonical.endswith("_FRESCHE") or canonical == "INSALATA_FRESCA":
+            fresh_cat = any(x in c for x in ["ortofrutta", "frutta", "verdura", "vegetali", "ortaggi", "fresco"])
+            words = n.split()
+            aliases_norm = {norm(x) for x in aliases}
+            first_match = next((i for i,w in enumerate(words) if w in aliases_norm), -1)
+            if not fresh_cat and first_match > 1:
+                continue
+        return canonical, subtype, 100
+
+    # poi fallback controllato dalla categoria sorgente
+    for canonical, hints in CATEGORY_HINTS:
+        if any(norm(h) in c for h in hints):
+            return canonical, None, 70
+
+    return "ALTRO", None, 30
+
+
 def norm(s):
     s = s or ""
     s = unicodedata.normalize("NFD", str(s).lower())
@@ -224,6 +347,7 @@ def build(output):
       category TEXT, norm_category TEXT, quantity_text TEXT, quantity_value REAL,
       quantity_unit TEXT, price_eur REAL NOT NULL, unit_price_eur REAL, unit_price_unit TEXT,
       variable_weight INTEGER NOT NULL DEFAULT 0, source_url TEXT, checked_at TEXT,
+      canonical_category TEXT NOT NULL, product_type TEXT, classification_confidence INTEGER NOT NULL,
       UNIQUE(market, product_key)
     );
     CREATE TABLE product_tokens(
@@ -241,9 +365,10 @@ def build(output):
             for p in iter_rows(market, local):
                 price=safe_float(p.get("price"))
                 if not p.get("name") or not price or price <= 0: continue
-                cur=con.execute("""INSERT OR IGNORE INTO products(market,product_key,store,name,norm_name,brand,norm_brand,category,norm_category,quantity_text,quantity_value,quantity_unit,price_eur,unit_price_eur,unit_price_unit,variable_weight,source_url,checked_at)
-                                  VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-                                (market,str(p.get("key") or ""),p.get("store"),p["name"],norm(p["name"]),p.get("brand"),norm(p.get("brand")),p.get("category"),norm(p.get("category")),p.get("quantity_text"),safe_float(p.get("quantity_value")),p.get("quantity_unit"),price,safe_float(p.get("unit_price")),p.get("unit_price_unit"),safe_int(p.get("variable")),p.get("source"),p.get("checked")))
+                canonical, product_type, confidence = canonicalize(p["name"], p.get("brand"), p.get("category"))
+                cur=con.execute("""INSERT OR IGNORE INTO products(market,product_key,store,name,norm_name,brand,norm_brand,category,norm_category,quantity_text,quantity_value,quantity_unit,price_eur,unit_price_eur,unit_price_unit,variable_weight,source_url,checked_at,canonical_category,product_type,classification_confidence)
+                                  VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                                (market,str(p.get("key") or ""),p.get("store"),p["name"],norm(p["name"]),p.get("brand"),norm(p.get("brand")),p.get("category"),norm(p.get("category")),p.get("quantity_text"),safe_float(p.get("quantity_value")),p.get("quantity_unit"),price,safe_float(p.get("unit_price")),p.get("unit_price_unit"),safe_int(p.get("variable")),p.get("source"),p.get("checked"),canonical,product_type,confidence))
                 if cur.rowcount == 0: continue
                 pid=cur.lastrowid
                 con.executemany("INSERT OR IGNORE INTO product_tokens(token,product_id) VALUES(?,?)", [(t,pid) for t in tokens(p["name"],p.get("brand"),p.get("category"))])
@@ -256,7 +381,9 @@ def build(output):
     CREATE INDEX idx_products_market_name ON products(market, norm_name);
     CREATE INDEX idx_products_market_brand ON products(market, norm_brand);
     CREATE INDEX idx_tokens_product ON product_tokens(product_id);
-    INSERT INTO meta(key,value) VALUES('schema_version','1');
+    CREATE INDEX idx_products_canonical_market ON products(canonical_category, market);
+    CREATE INDEX idx_products_type_market ON products(product_type, market);
+    INSERT INTO meta(key,value) VALUES('schema_version','2');
     """)
     con.execute("INSERT INTO meta(key,value) VALUES('built_at',datetime('now'))")
     con.execute("INSERT INTO meta(key,value) VALUES('markets',?)", (','.join(m for m,_ in SOURCES),))
@@ -265,6 +392,11 @@ def build(output):
     con.execute("VACUUM")
     ok = con.execute("PRAGMA integrity_check").fetchone()[0]
     total = con.execute("SELECT count(*) FROM products").fetchone()[0]
+    strong = con.execute("SELECT count(*) FROM products WHERE classification_confidence >= 70").fetchone()[0]
+    exact = con.execute("SELECT count(*) FROM products WHERE classification_confidence = 100").fetchone()[0]
+    other = con.execute("SELECT count(*) FROM products WHERE canonical_category='ALTRO'").fetchone()[0]
+    print(f"CLASSIFICAZIONE: forte={strong}/{total} ({strong*100.0/total:.1f}%) esatta={exact}/{total} ({exact*100.0/total:.1f}%) altro={other}")
+    print("TOP categorie:", con.execute("SELECT canonical_category,count(*) FROM products GROUP BY canonical_category ORDER BY count(*) DESC LIMIT 25").fetchall())
     con.close()
     if ok != "ok" or total == 0:
         raise RuntimeError(f"DB finale non valido: integrity={ok}, products={total}")
