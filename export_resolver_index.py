@@ -18,3 +18,5 @@ with gzip.open(out,"wb",compresslevel=9) as f: f.write(raw)
 print("products",len(products),"raw_mb",round(len(raw)/1048576,2),"gz_mb",round(os.path.getsize(out)/1048576,2))
 
 # refresh_after_piccolo_2026_09_28
+
+# refresh_after_conad_overlay_2026_09_28
