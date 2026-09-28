@@ -19,3 +19,5 @@ jobs:
           set -euo pipefail
           URL='https://bbvxhepsyuejltglojtf.supabase.co/functions/v1/la-mia-spesa-resolver-v1?selftest=1'
           curl -sS --fail --max-time 30 -w '\nHTTP=%{http_code} TOTAL=%{time_total}\n' "$URL"
+
+# mode-both-test
