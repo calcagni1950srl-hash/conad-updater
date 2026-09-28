@@ -8,7 +8,7 @@ products=[]
 sql="""select id,market,name,brand,category,price_eur,unit_price_eur,unit_price_unit,
               variable_weight,quantity_text,quantity_unit,canonical_category,product_type,
               norm_name,norm_brand,norm_category
-       from products where product_type is not null"""
+       from products"""
 for r in db.execute(sql):
     d=dict(r)
     products.append(d)
