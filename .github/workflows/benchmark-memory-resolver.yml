@@ -1,0 +1,18 @@
+name: Benchmark memory resolver
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - server_resolver_memory.py
+      - benchmark_memory_resolver.py
+      - .github/workflows/benchmark-memory-resolver.yml
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python benchmark_memory_resolver.py prezzi_confronto_fast.db
