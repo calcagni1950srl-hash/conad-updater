@@ -63,3 +63,15 @@ ORDER BY n DESC
 LIMIT 100
 """):
     print(row)
+
+
+print("\nPRODUCT TYPE COUNTS BY MARKET")
+for typ in ["carta_igienica","prosciutto_crudo","pasta_secca","acqua","zucchine","patate","cola"]:
+    rows=dict(db.execute("select market,count(*) from products where product_type=? group by market",(typ,)))
+    print(typ,{m:rows.get(m,0) for m in markets})
+
+print("\nLIDL TYPE SAMPLES")
+for typ in ["carta_igienica","prosciutto_crudo","pasta_secca","acqua","zucchine","patate","cola"]:
+    print("TYPE",typ)
+    for r in db.execute("select name,brand,category,quantity_text,price_eur from products where market='Lidl' and product_type=? limit 8",(typ,)):
+        print(" ",r)
