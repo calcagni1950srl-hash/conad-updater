@@ -1,4 +1,6 @@
 name: Conad Capodrise Preconfirm Catalog Probe
+permissions:
+  contents: write
 
 on:
   workflow_dispatch:
