@@ -105,3 +105,17 @@ for r in db.execute("""
   limit 50
 """):
     print(r)
+
+
+print("\nLIDL FRESH CANDIDATES USER")
+for typ in ("zucchine","patate"):
+    print("TYPE",typ)
+    for r in db.execute("""
+      select name,brand,category,quantity_text,quantity_value,quantity_unit,
+             price_eur,unit_price_eur,unit_price_unit,variable_weight,product_type
+      from products
+      where market='Lidl' and product_type=?
+      order by price_eur
+      limit 50
+    """,(typ,)):
+        print(r)
