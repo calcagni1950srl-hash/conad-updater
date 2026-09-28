@@ -71,6 +71,9 @@ for p in products.values():
         "short_description":str(p.get("short_description") or ""),
         "type":str(p.get("type") or ""),
         "value":p.get("value"),
+        "price_per_type":p.get("price_per_type"),
+        "variable_weight":1 if p.get("variable_weight") else 0,
+        "minimum_quantity":p.get("minimum_quantity"),
         "category":str(p.get("category_name") or ""),
         "categories":cats,
         "main_category":str(p.get("main_category_name") or ""),
@@ -90,8 +93,8 @@ db=sqlite3.connect("prezzi_lidl_everli.db")
 db.execute("DROP TABLE IF EXISTS products")
 db.execute("""CREATE TABLE products(
  id TEXT PRIMARY KEY,name TEXT,brand TEXT,price REAL,short_description TEXT,
- type TEXT,value REAL,category TEXT,categories TEXT,main_category TEXT,
- store_id TEXT,image TEXT)""")
+ type TEXT,value REAL,price_per_type REAL,variable_weight INTEGER,minimum_quantity REAL,
+ category TEXT,categories TEXT,main_category TEXT,store_id TEXT,image TEXT)""")
 db.executemany("""INSERT INTO products VALUES(
  :id,:name,:brand,:price,:short_description,:type,:value,:category,:categories,:main_category,:store_id,:image)""",rows)
 db.commit()
@@ -108,6 +111,18 @@ SELECT id AS product_id,
        value AS quantity_value,
        lower(type) AS quantity_unit_raw,
        short_description AS quantity_text,
+       CASE
+         WHEN lower(type)='kilogram' AND price_per_type IS NOT NULL THEN price_per_type/100.0
+         WHEN lower(type)='liter' AND price_per_type IS NOT NULL THEN price_per_type/100.0
+         ELSE NULL
+       END AS unit_price,
+       CASE
+         WHEN lower(type)='kilogram' THEN 'KG'
+         WHEN lower(type)='liter' THEN 'L'
+         ELSE NULL
+       END AS unit_price_unit,
+       variable_weight,
+       minimum_quantity,
        store_id,
        image
 FROM products
