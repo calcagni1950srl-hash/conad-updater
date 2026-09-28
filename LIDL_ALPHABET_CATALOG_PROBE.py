@@ -28,6 +28,7 @@ for q in TERMS:
         if len(ps)<100: break
         time.sleep(.02)
     print("TERM",q,"NEW",qcount,"TOTAL",len(allp))
+report={"final_total":len(allp),"checks":{}}
 print("FINAL_TOTAL",len(allp))
 for key in ["carta igienica","acqua","detersivo","shampoo","prosciutto crudo","pasta","zucchine"]:
     hits=[]
@@ -35,6 +36,11 @@ for key in ["carta igienica","acqua","detersivo","shampoo","prosciutto crudo","p
     for p in allp.values():
         txt=" ".join(str(p.get(k) or "") for k in ["name","brand","category_name","main_category_name"]).lower()
         if all(w in txt for w in kl.split()): hits.append(p)
+    report["checks"][key]=len(hits)
     print("CHECK",key,"COUNT",len(hits))
     for p in hits[:8]:
         print(" ",p.get("name"),p.get("brand"),p.get("category_name"),p.get("main_category_name"),p.get("price"))
+
+
+with open("alphabet_probe_report.json","w",encoding="utf-8") as fh:
+    json.dump(report,fh,ensure_ascii=False,indent=2)
