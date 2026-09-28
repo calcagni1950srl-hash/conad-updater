@@ -75,3 +75,17 @@ for typ in ["carta_igienica","prosciutto_crudo","pasta_secca","acqua","zucchine"
     print("TYPE",typ)
     for r in db.execute("select name,brand,category,quantity_text,price_eur from products where market='Lidl' and product_type=? limit 8",(typ,)):
         print(" ",r)
+
+
+print("\nSOURCE CATEGORY DIAGNOSTICS")
+for market in markets:
+    print("\nMARKET",market)
+    for key in ["acqua","carta","igien","cola","bevande"]:
+        print(" KEY",key)
+        rows=db.execute("""
+          select distinct name,brand,category,canonical_category,product_type,price_eur
+          from products
+          where market=? and (norm_name like ? or norm_category like ?)
+          limit 20
+        """,(market,f"%{key}%",f"%{key}%")).fetchall()
+        for r in rows[:10]: print("  ",r)
