@@ -93,3 +93,15 @@ for market in markets:
 # rebuild_after_lidl_expanded_2026_09_28
 
 # rebuild_after_piccolo_water_paper_2026_09_28
+
+
+print("\nDECO PROSCIUTTO CRUDO CANDIDATES")
+for r in db.execute("""
+  select name,brand,category,quantity_text,quantity_value,quantity_unit,
+         price_eur,unit_price_eur,unit_price_unit,variable_weight,product_type
+  from products
+  where market='Decò' and product_type='prosciutto_crudo'
+  order by price_eur
+  limit 50
+"""):
+    print(r)
