@@ -89,3 +89,5 @@ for market in markets:
           limit 20
         """,(market,f"%{key}%",f"%{key}%")).fetchall()
         for r in rows[:10]: print("  ",r)
+
+# rebuild_after_lidl_expanded_2026_09_28
