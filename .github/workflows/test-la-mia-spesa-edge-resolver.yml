@@ -12,12 +12,14 @@ jobs:
       - name: Cold-ish self test
         run: |
           set -euo pipefail
-          URL='https://bbvxhepsyuejltglojtf.supabase.co/functions/v1/la-mia-spesa-resolver-v1?selftest=1'
+          URL='https://bbvxhepsyuejltglojtf.supabase.co/functions/v1/la-mia-spesa-resolver-v1?selftest=2'
           curl -sS --fail --max-time 30 -w '\nHTTP=%{http_code} TOTAL=%{time_total}\n' "$URL"
       - name: Warm self test
         run: |
           set -euo pipefail
-          URL='https://bbvxhepsyuejltglojtf.supabase.co/functions/v1/la-mia-spesa-resolver-v1?selftest=1'
+          URL='https://bbvxhepsyuejltglojtf.supabase.co/functions/v1/la-mia-spesa-resolver-v1?selftest=2'
           curl -sS --fail --max-time 30 -w '\nHTTP=%{http_code} TOTAL=%{time_total}\n' "$URL"
 
 # mode-both-test
+
+# selftest2
