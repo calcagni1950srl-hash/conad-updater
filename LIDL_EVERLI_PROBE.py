@@ -20,29 +20,41 @@ queries=[
 "zucchine","melanzane","patate","peperoni","scarola","friarielli","broccoli","cavolfiore","carciofi","fagiolini",
 "sedano","carote","piselli","fagioli","ceci","lenticchie","zucca","lattuga","insalata",
 "parmigiano","formaggio grattugiato","pecorino","provola","mozzarella","ricotta","burro","latte","uova","panna",
-"pollo","petto di pollo","manzo","vitello","maiale","salsiccia","guanciale","pancetta","coniglio","agnello",
+"pollo","petto di pollo","manzo","vitello","maiale","salsiccia","guanciale","pancetta","prosciutto","prosciutto crudo","prosciutto cotto","salame","mortadella","coniglio","agnello",
 "cozze","vongole","gamberi","calamari","seppie","polpo","baccala","merluzzo","tonno","sgombro","acciughe","alici",
 "pesce spada","spigola","orata","salmone","frutti di mare","scampi",
-"pane","zucchero","cioccolato","cacao","mascarpone","yogurt","frutta","mele","pere","arance"
-]
+"pane","zucchero","cioccolato","cacao","mascarpone","yogurt","frutta","mele","pere","arance",
+"acqua","acqua minerale","cola","coca cola","bevande","succo","birra","vino",
+"carta igienica","carta cucina","fazzoletti","tovaglioli","detersivo","lavatrice","lavastoviglie","ammorbidente",
+"shampoo","bagnoschiuma","dentifricio","deodorante","sapone","pannolini","cura casa","cura persona",
+"cibo cane","cibo gatto"
+] + list("abcdefghijklmnopqrstuvwxyz") + list("0123456789")
+queries=list(dict.fromkeys(queries))
 
 raw={}
 products={}
 errors={}
 for i,q in enumerate(queries):
+    qrows=[]
     try:
-        data=fetch(q)
-        raw[q]=data
-        stores=data.get("stores") or []
-        ps=(stores[0].get("products") or []) if stores else []
-        print("EVERLI_QUERY",q,"PRODUCTS",len(ps))
-        for p in ps:
-            if str(p.get("store_id")) != STORE_ID: continue
-            price=int(p.get("price") or 0)
-            if price <= 0: continue
-            pid=str(p.get("id") or p.get("ref_id") or "")
-            if not pid: continue
-            products[pid]=p
+        for skip in range(0,2000,100):
+            data=fetch(q,skip=skip,take=100)
+            if skip == 0:
+                raw[q]=data
+            stores=data.get("stores") or []
+            ps=(stores[0].get("products") or []) if stores else []
+            qrows.extend(ps)
+            for p in ps:
+                if str(p.get("store_id")) != STORE_ID: continue
+                price=int(p.get("price") or 0)
+                if price <= 0: continue
+                pid=str(p.get("id") or p.get("ref_id") or "")
+                if not pid: continue
+                products[pid]=p
+            if len(ps) < 100:
+                break
+            time.sleep(0.02)
+        print("EVERLI_QUERY",q,"PRODUCTS",len(qrows),"TOTAL_UNIQUE",len(products))
     except Exception as e:
         errors[q]=repr(e)
         print("EVERLI_ERROR",q,repr(e))
