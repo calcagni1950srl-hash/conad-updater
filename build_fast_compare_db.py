@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import json
 import os
 import re
 import sqlite3
@@ -8,6 +9,8 @@ import time
 import unicodedata
 import urllib.request
 from pathlib import Path
+
+CONAD_OVERLAY_URL = "https://raw.githubusercontent.com/calcagni1950srl-hash/conad-updater/probe-conad-full-catalog/conad_capodrise_search_overlay.json"
 
 SOURCES = [
     ("Piccolo", "https://raw.githubusercontent.com/calcagni1950srl-hash/piccolo-updater/main/prezzi.db"),
@@ -407,6 +410,35 @@ def iter_rows(market, path):
     finally:
         c.close()
 
+
+def load_conad_overlay():
+    req = urllib.request.Request(CONAD_OVERLAY_URL, headers={"User-Agent":"LaMiaSpesa-FastDB/1.0"})
+    with urllib.request.urlopen(req, timeout=45) as r:
+        data = json.load(r)
+    if not data.get("store_selected_verified") or str(data.get("store_code")) != "010548":
+        raise RuntimeError("Overlay Conad non verificato per Capodrise 010548")
+    for x in data.get("products", []):
+        price = safe_float(x.get("price_eur"))
+        if not x.get("name") or not price or price <= 0:
+            continue
+        yield dict(
+            market="Conad",
+            key=f"CONAD:010548:overlay:{x.get('code') or norm(x.get('name'))}",
+            store=data.get("store_name") or DEFAULT_STORE["Conad"],
+            name=x.get("name") or "",
+            brand="Conad" if "conad" in norm(x.get("name")) else None,
+            category=x.get("category"),
+            quantity_text=x.get("name") or "",
+            quantity_value=x.get("quantity_value"),
+            quantity_unit=x.get("quantity_unit"),
+            price=price,
+            unit_price=None,
+            unit_price_unit=None,
+            variable=0,
+            source="Conad Capodrise verified search overlay",
+            checked=None,
+        )
+
 def build(output):
     output = Path(output)
     tmpout = output.with_suffix(output.suffix + ".tmp")
@@ -485,6 +517,25 @@ def build(output):
             counts[market]=n
             con.commit()
             print(f"{market}: {n} prodotti")
+
+        # Overlay verificato sul punto vendita Conad Capodrise 010548.
+        overlay_n = 0
+        for p in load_conad_overlay():
+            price=safe_float(p.get("price"))
+            canonical, product_type, confidence = canonicalize(p["name"], p.get("brand"), p.get("category"))
+            precise = precise_type(p["name"], p.get("brand"), p.get("category"))
+            if precise is not None:
+                canonical, product_type, confidence = precise
+            cur=con.execute("""INSERT OR REPLACE INTO products(market,product_key,store,name,norm_name,brand,norm_brand,category,norm_category,quantity_text,quantity_value,quantity_unit,price_eur,unit_price_eur,unit_price_unit,variable_weight,source_url,checked_at,canonical_category,product_type,classification_confidence)
+                              VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                            ("Conad",str(p.get("key") or ""),p.get("store"),p["name"],norm(p["name"]),p.get("brand"),norm(p.get("brand")),p.get("category"),norm(p.get("category")),p.get("quantity_text"),safe_float(p.get("quantity_value")),p.get("quantity_unit"),price,None,None,0,p.get("source"),None,canonical,product_type,confidence))
+            pid=cur.lastrowid
+            if pid:
+                con.executemany("INSERT OR IGNORE INTO product_tokens(token,product_id) VALUES(?,?)", [(t,pid) for t in tokens(p["name"],p.get("brand"),p.get("category"))])
+                overlay_n += 1
+        counts["Conad"] = counts.get("Conad",0) + overlay_n
+        con.commit()
+        print(f"Conad overlay: {overlay_n} prodotti")
     con.executescript("""
     CREATE INDEX idx_products_market ON products(market);
     CREATE INDEX idx_products_market_name ON products(market, norm_name);
