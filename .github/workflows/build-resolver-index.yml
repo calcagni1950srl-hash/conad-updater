@@ -1,0 +1,29 @@
+name: Build resolver index
+permissions:
+  contents: write
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - prezzi_confronto_fast.db
+      - export_resolver_index.py
+      - .github/workflows/build-resolver-index.yml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python export_resolver_index.py prezzi_confronto_fast.db resolver_index.json.gz
+      - name: Commit index
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f resolver_index.json.gz
+          if ! git diff --cached --quiet; then
+            git commit -m "Update resolver index [skip ci]"
+            git push
+          fi
