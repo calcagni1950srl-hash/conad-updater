@@ -91,3 +91,5 @@ for market in markets:
         for r in rows[:10]: print("  ",r)
 
 # rebuild_after_lidl_expanded_2026_09_28
+
+# rebuild_after_piccolo_water_paper_2026_09_28
