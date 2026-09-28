@@ -146,6 +146,26 @@ async def main():
             await snapshot(catalog,'catalog_carta_igienica')
             html=await catalog.content()
             pp=parse_products(html)
+            positive_pp=[x for x in pp if isinstance(x.get('price'),(int,float)) and x['price']>0]
+            overlay={
+                'store_code':STORE_ID,
+                'store_name':'Conad Superstore Capodrise',
+                'query':'carta igienica',
+                'store_selected_verified':bool(OUT.get('store_selected_contains_010548')),
+                'products':[
+                    {
+                        'code':x.get('code'),
+                        'name':x.get('name'),
+                        'price_eur':x.get('price'),
+                        'quantity_value':x.get('qty'),
+                        'quantity_unit':x.get('unit'),
+                        'category':'Cura persona > Cotone, fazzoletti e carta igienica'
+                    } for x in positive_pp
+                ]
+            }
+            Path('conad_capodrise_search_overlay.json').write_text(
+                json.dumps(overlay,ensure_ascii=False,indent=2),encoding='utf-8'
+            )
             OUT['catalog']={
                 'url':catalog.url,'products_found':len(pp),
                 'positive_prices':sum(1 for x in pp if isinstance(x.get('price'),(int,float)) and x['price']>0),
