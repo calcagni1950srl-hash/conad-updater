@@ -12,8 +12,8 @@ from pathlib import Path
 SOURCES = [
     ("Piccolo", "https://raw.githubusercontent.com/calcagni1950srl-hash/piccolo-updater/main/prezzi.db"),
     ("Decò", "https://raw.githubusercontent.com/calcagni1950srl-hash/conad-updater/main/prezzi_deco.db"),
-    ("Famila", "https://raw.githubusercontent.com/calcagni1950srl-hash/conad-updater/main/prezzi_famila.db"),
-    ("Sole365", "https://raw.githubusercontent.com/calcagni1950srl-hash/conad-updater/main/prezzi_sole365.db"),
+    ("Famila", "https://raw.githubusercontent.com/calcagni1950srl-hash/conad-updater/main/prezzi_famila_all_app.db"),
+    ("Sole365", "https://raw.githubusercontent.com/calcagni1950srl-hash/conad-updater/main/prezzi_sole365_all_app.db"),
     ("Conad", "https://raw.githubusercontent.com/calcagni1950srl-hash/conad-updater/probe-conad-full-catalog/prezzi_conad_capodrise_stable_full.db"),
     ("Lidl", "https://raw.githubusercontent.com/calcagni1950srl-hash/conad-updater/probe-lidl-catalog/prezzi_lidl_everli.db"),
 ]
