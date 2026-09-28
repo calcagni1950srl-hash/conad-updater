@@ -1,0 +1,19 @@
+name: Benchmark server resolver
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - server_resolver.py
+      - benchmark_server_resolver.py
+      - .github/workflows/benchmark-server-resolver.yml
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run resolver benchmark
+        run: python benchmark_server_resolver.py prezzi_confronto_fast.db
