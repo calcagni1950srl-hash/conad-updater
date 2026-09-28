@@ -394,10 +394,13 @@ def rows_lidl(c):
     cols = columns(c, table)
     pid = first(cols,"product_id","id","sku"); name = first(cols,"product_name","name"); brand=first(cols,"brand"); cat=first(cols,"category_name","category"); price=first(cols,"price_eur","price")
     if not pid or not name or not price: return
-    qv=first(cols,"quantity_value"); qu=first(cols,"quantity_unit_raw","quantity_unit"); qt=first(cols,"quantity_text"); store=first(cols,"store_id","store"); src=first(cols,"product_url","source_url")
-    sql=f"SELECT {','.join(select_expr(x) for x in [pid,name,brand,cat,price,qv,qu,qt,store,src])} FROM {q(table)} WHERE {q(price)} > 0"
+    qv=first(cols,"quantity_value"); qu=first(cols,"quantity_unit_raw","quantity_unit"); qt=first(cols,"quantity_text")
+    up=first(cols,"unit_price"); upu=first(cols,"unit_price_unit"); var=first(cols,"variable_weight")
+    minq=first(cols,"minimum_quantity"); store=first(cols,"store_id","store"); src=first(cols,"product_url","source_url")
+    sql=f"SELECT {','.join(select_expr(x) for x in [pid,name,brand,cat,price,qv,qu,qt,up,upu,var,minq,store,src])} FROM {q(table)} WHERE {q(price)} > 0"
     for r in c.execute(sql):
-        yield dict(market="Lidl", key=f"LIDL:{r[0]}", store=r[8] or DEFAULT_STORE["Lidl"], name=r[1] or "", brand=r[2], category=r[3], quantity_text=f"{r[1] or ''} {r[7] or ''}".strip(), quantity_value=r[5], quantity_unit=r[6], price=r[4], unit_price=None, unit_price_unit=None, variable=0, source=r[9], checked=None)
+        extra = f" min_qty {r[11]}" if r[11] not in (None,0,0.0,"") else ""
+        yield dict(market="Lidl", key=f"LIDL:{r[0]}", store=r[12] or DEFAULT_STORE["Lidl"], name=r[1] or "", brand=r[2], category=r[3], quantity_text=f"{r[1] or ''} {r[7] or ''}{extra}".strip(), quantity_value=r[5], quantity_unit=r[6], price=r[4], unit_price=r[8], unit_price_unit=r[9], variable=safe_int(r[10]), source=r[13], checked=None)
 
 def iter_rows(market, path):
     c = sqlite3.connect(path)
