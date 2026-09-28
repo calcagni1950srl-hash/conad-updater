@@ -6,6 +6,18 @@ DB=sys.argv[1] if len(sys.argv)>1 else "prezzi_confronto_fast.db"
 STOP={"di","da","dal","dalla","dello","della","dei","degli","delle","il","lo","la","i","gli","le","un","uno","una","e","con","per","al","alla","allo","ai","alle","del","dell","in","x"}
 SHAPES={"penne","spaghetti","rigatoni","fusilli","farfalle","linguine","bucatini","paccheri","ziti","tortiglioni"}
 FRESH={"zucchine","patate","pomodori","melanzane","peperoni","cipolle","carote","mele","banane","insalata"}
+GENERIC={
+ "pasta":("PASTA_SECCA","pasta_secca"),"riso":("RISO","riso"),"latte":("LATTE","latte"),
+ "uova":("UOVA","uova"),"burro":("BURRO","burro"),"olio":("OLIO","olio"),"farina":("FARINA","farina"),
+ "zucchero":("ZUCCHERO","zucchero"),"sale":("SALE","sale"),"pane":("PANE","pane"),
+ "yogurt":("YOGURT","yogurt"),"mozzarella":("MOZZARELLA","mozzarella"),"parmigiano":("FORMAGGIO","formaggio"),
+ "salame":("SALAME","salame"),"caffe":("CAFFE","caffe"),"shampoo":("SHAMPOO","shampoo"),
+ "dentifricio":("DENTIFRICIO","dentifricio"),"deodorante":("DEODORANTE","deodorante"),
+ "carta cucina":("CARTA_CUCINA","carta_cucina"),"detersivo lavatrice":("DETERSIVO_LAVATRICE","detersivo_lavatrice"),
+ "ammorbidente":("AMMORBIDENTE","ammorbidente"),"detersivo piatti":("DETERSIVO_PIATTI","detersivo_piatti"),
+ "patate":("PATATE_FRESCHE","patate"),"zucchine":("ZUCCHINE_FRESCHE","zucchine"),"pomodori":("POMODORI_FRESCHI","pomodori"),
+ "cipolle":("CIPOLLE_FRESCHE","cipolle"),"carote":("CAROTE_FRESCHE","carote"),"mele":("MELE_FRESCHE","mele"),"banane":("BANANE_FRESCHE","banane")
+}
 
 def norm(s):
     s=unicodedata.normalize("NFD",(s or "").lower())
@@ -64,6 +76,7 @@ class MemoryResolver:
         self.markets=[r[0] for r in db.execute("select distinct market from products order by market")]
         self.by_type=defaultdict(lambda:defaultdict(list))
         self.by_cat=defaultdict(lambda:defaultdict(list))
+        self.token_type=defaultdict(lambda:defaultdict(lambda:defaultdict(list)))
         self.brand_set=set()
         cols="id,market,name,norm_name,brand,norm_brand,category,norm_category,price_eur,unit_price_eur,unit_price_unit,variable_weight,quantity_text,quantity_unit,canonical_category,product_type"
         for r in db.execute("select "+cols+" from products"):
@@ -77,7 +90,11 @@ class MemoryResolver:
             unit=(d["unit_price_unit"] or "").upper()
             d["variable"]=bool(d["variable_weight"] or (unit=="KG" and g is None))
             if d["brand_n"] and len(d["brand_n"])>=3: self.brand_set.add(d["brand_n"])
-            if d["product_type"]: self.by_type[d["product_type"]][d["market"]].append(d)
+            if d["product_type"]:
+                self.by_type[d["product_type"]][d["market"]].append(d)
+                for tok in d["tokens"]:
+                    if len(tok)>=2:
+                        self.token_type[d["product_type"]][d["market"]][tok].append(d)
             self.by_cat[d["canonical_category"]][d["market"]].append(d)
         self.brands=sorted(self.brand_set,key=len,reverse=True)
         self.load_ms=round((time.perf_counter()-t)*1000,2)
@@ -90,6 +107,10 @@ class MemoryResolver:
 
     def interpret(self,req):
         t=req["text"]
+        # common grocery concepts must never go through statistical fallback
+        for phrase,(c,ty) in sorted(GENERIC.items(),key=lambda x:len(x[0]),reverse=True):
+            if re.search(r"(^| )"+re.escape(phrase)+r"( |$)",t):
+                return c,ty
         for a,c,ty in self.aliases:
             if ty and re.search(r"(^| )"+re.escape(a)+r"( |$)",t): return c,ty
         toks=[x for x in t.split() if x not in STOP and len(x)>1]
@@ -108,6 +129,25 @@ class MemoryResolver:
                 for arr in markets.values():
                     if any(p["product_type"]==ty for p in arr[:80]): return c,ty
         return None,None
+
+    def candidates_for(self,ty,market,req):
+        arr=self.by_type.get(ty,{}).get(market,[])
+        if not arr: return []
+        toks=[x for x in req["text"].split() if x not in STOP and len(x)>1]
+        seen={}
+        idx=self.token_type.get(ty,{}).get(market,{})
+        for tok in toks:
+            for p in idx.get(tok,[]):
+                seen[p["id"]]=p
+        rb=self.brand(req)
+        if rb:
+            for p in arr:
+                if rb==p["brand_n"] or rb in p["brand_n"] or rb in p["name_n"]:
+                    seen[p["id"]]=p
+        if seen:
+            return list(seen.values())
+        # generic request: only examine a small cheap shortlist + variable-weight items
+        return sorted(arr,key=lambda p:p["price_eur"])[:60] + [p for p in arr if p["variable"]][:30]
 
     def score(self,p,req,mode):
         score=0
@@ -150,7 +190,8 @@ class MemoryResolver:
         source=self.by_type.get(ty,{}) if ty else self.by_cat.get(cat,{})
         for m in self.markets:
             best=None; bs=-99999
-            for p in source.get(m,[]):
+            arr=self.candidates_for(ty,m,req) if ty else source.get(m,[])
+            for p in arr:
                 s=self.score(p,req,mode)
                 if s>bs or (s==bs and best and p["price_eur"]<best["price_eur"]):
                     bs=s; best=p
