@@ -141,9 +141,9 @@ async def main():
             catalog=await ctx.new_page()
             catalog.on('request',on_request)
             catalog.on('response',lambda r: asyncio.create_task(on_response(r)))
-            await catalog.goto(BASE+'/search?query=latte',wait_until='domcontentloaded',timeout=90000)
+            await catalog.goto(BASE+'/search?query=carta%20igienica',wait_until='domcontentloaded',timeout=90000)
             await catalog.wait_for_timeout(5000)
-            await snapshot(catalog,'catalog_latte')
+            await snapshot(catalog,'catalog_carta_igienica')
             html=await catalog.content()
             pp=parse_products(html)
             OUT['catalog']={
