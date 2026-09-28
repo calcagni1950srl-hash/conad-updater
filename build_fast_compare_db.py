@@ -186,7 +186,13 @@ def canonicalize(name, brand, category):
 
     # poi fallback controllato dalla categoria sorgente
     for canonical, hints in CATEGORY_HINTS:
-        if any(norm(h) in c for h in hints):
+        def hint_match(h):
+            if h.startswith("="):
+                return c == norm(h[1:])
+            if h.startswith("^"):
+                return c.startswith(norm(h[1:]))
+            return norm(h) in c
+        if any(hint_match(h) for h in hints):
             return canonical, None, 70
 
     return "ALTRO", None, 30
