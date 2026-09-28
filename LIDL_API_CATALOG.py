@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 API='https://www.lidl.it/q/api/search'
 BASE={'locale':'it_IT','assortment':'IT','version':'2.1.0','category.id':'10068374'}
 HEADERS={'User-Agent':'Mozilla/5.0','Accept':'application/mindshift.search+json;version=2, application/json'}
-EXCLUDED_CATEGORY_PARTS=('Fiori e piante','Prodotti per la cura della persona','Bilancio','Articoli per animali domestici')
+EXCLUDED_CATEGORY_PARTS=()
 
 def fetch(offset, fetchsize=60):
     params=dict(BASE,offset=offset,fetchsize=fetchsize)
@@ -52,6 +52,20 @@ def extract(data, seen):
         old=seen.get(key)
         if old is None or (not old['price'] and price): seen[key]=rec
 
+def brand_name(p):
+    raw=p.get('raw') or {}
+    candidates=[
+        raw.get('brand'), raw.get('brandName'), raw.get('manufacturer'),
+        (raw.get('keyfacts') or {}).get('brand'),
+        (raw.get('keyfacts') or {}).get('brandName')
+    ]
+    for v in candidates:
+        if isinstance(v,dict):
+            v=v.get('name') or v.get('title') or v.get('label')
+        if v not in (None,''):
+            return str(v).strip()
+    return ''
+
 def category_path(p):
     return str(((p.get('raw') or {}).get('keyfacts') or {}).get('wonCategoryPrimary') or '')
 
@@ -81,6 +95,7 @@ for p in food:
     p['packaging']=packaging(p)
     p['base_price']=base_price(p)
     p['category_path']=category_path(p)
+    p['brand']=brand_name(p)
 
 with_pack=[p for p in food if p['packaging']]
 with_base=[p for p in food if p['base_price']]
@@ -88,9 +103,23 @@ with open('lidl_api_raw.json','w',encoding='utf-8') as f: json.dump(pages,f,ensu
 with open('lidl_api_products.json','w',encoding='utf-8') as f: json.dump(food,f,ensure_ascii=False,indent=2)
 con=sqlite3.connect('prezzi_lidl_api.db')
 con.execute('DROP TABLE IF EXISTS products')
-con.execute('CREATE TABLE products(id TEXT PRIMARY KEY,name TEXT,url TEXT,price REAL,packaging TEXT,base_price TEXT,category_path TEXT)')
+con.execute('CREATE TABLE products(id TEXT PRIMARY KEY,name TEXT,brand TEXT,url TEXT,price REAL,packaging TEXT,base_price TEXT,category_path TEXT)')
 for p in food:
-    con.execute('INSERT OR REPLACE INTO products VALUES(?,?,?,?,?,?,?)',(p['id'] or p['url'],p['name'],p['url'],p['price'],p['packaging'],p['base_price'],p['category_path']))
+    con.execute('INSERT OR REPLACE INTO products VALUES(?,?,?,?,?,?,?,?)',(p['id'] or p['url'],p['name'],p.get('brand',''),p['url'],p['price'],p['packaging'],p['base_price'],p['category_path']))
+con.execute("DROP VIEW IF EXISTS products_android")
+con.execute("""CREATE VIEW products_android AS
+SELECT id AS product_id,
+       name AS product_name,
+       COALESCE(brand,'') AS brand,
+       COALESCE(category_path,'') AS category_name,
+       price AS price_eur,
+       NULL AS quantity_value,
+       NULL AS quantity_unit_raw,
+       COALESCE(packaging,'') AS quantity_text,
+       '9240' AS store_id,
+       url AS product_url
+FROM products
+WHERE price > 0""")
 con.commit(); con.close()
 print(json.dumps({'numFound':num,'pages':len(pages),'candidate_products':len(products),'positive_price_products':len(positive),'verified_food_positive_products':len(food),'with_packaging':len(with_pack),'with_base_price':len(with_base),'excluded_nonfood':len(positive)-len(food)},ensure_ascii=False))
 for p in food[:30]: print(p['name'],p['price'],p['packaging'],p['url'])
