@@ -105,15 +105,15 @@ class Resolver:
                 return rows[0]["canonical_category"],rows[0]["product_type"]
         return None,None
 
-    def candidates(self,market,req,cat,typ,limit=24):
-        key=(market,req["text"],cat,typ,limit)
+    def candidates_all(self,req,cat,typ,limit_per_market=40):
+        key=("ALL",req["text"],cat,typ,limit_per_market)
         if key in self.cache: return self.cache[key]
         params=[]
-        where=["market=?"]; params.append(market)
+        where=[]
         if typ:
-            where.append("product_type=?"); params.append(typ)
+            where.append("p.product_type=?"); params.append(typ)
         elif cat:
-            where.append("canonical_category=?"); params.append(cat)
+            where.append("p.canonical_category=?"); params.append(cat)
         toks=[x for x in req["text"].split() if x not in STOP and len(x)>1]
         token_join=""
         if toks:
@@ -123,12 +123,26 @@ class Resolver:
               where token in ({ph}) group by product_id
             ) h on h.product_id=p.id"""
             params=toks+params
-        sql=f"""select p.*,coalesce(h.hits,0) hits from products p {token_join}
-                where {' and '.join(where)}
-                order by hits desc, p.price_eur asc limit {int(limit)}"""
+        where_sql=("where "+" and ".join(where)) if where else ""
+        sql=f"""
+        with ranked as (
+          select p.*,coalesce(h.hits,0) hits,
+                 row_number() over (
+                   partition by p.market
+                   order by coalesce(h.hits,0) desc,p.price_eur asc
+                 ) rn
+          from products p
+          {token_join}
+          {where_sql}
+        )
+        select * from ranked where rn<=?
+        """
+        params=params+[int(limit_per_market)]
         rows=self.db.execute(sql,params).fetchall()
-        self.cache[key]=rows
-        return rows
+        out=defaultdict(list)
+        for r in rows: out[r["market"]].append(r)
+        self.cache[key]=out
+        return out
 
     def score(self,r,req,mode="cheapest"):
         name=norm(r["name"]); brand=norm(r["brand"] or ""); cat=norm(r["category"] or "")
@@ -156,17 +170,18 @@ class Resolver:
         pg,pml,pp=product_measure(r)
         # Requested pack count means one multipack with that count, not N packs.
         if req["pieces"]:
-            if pp==req["pieces"]: score+=60
-            elif pp is not None: score-=40*abs(pp-req["pieces"])
-            else: score-=35
+            if pp==req["pieces"]:
+                score+=80
+            else:
+                return -9999
 
         # Prefer a true variable-weight / €/kg product for requested deli/fresh weight.
         if req["qty_g"]:
             requested=req["qty_g"]
             unit=(r["unit_price_unit"] or "").upper()
-            variable=int(r["variable_weight"] or 0)==1 or unit=="KG"
+            variable=int(r["variable_weight"] or 0)==1 or (unit=="KG" and pg is None)
             if variable:
-                score+=90
+                score+=110
             elif pg:
                 diff=abs(pg-requested)/max(requested,1)
                 score+=max(-70,55-100*diff)
@@ -182,6 +197,12 @@ class Resolver:
                 diff=abs(total-requested)/max(requested,1)
                 score+=max(-50,45-80*diff)
 
+        # Fresh produce must not resolve to frozen/prepared products.
+        if r["product_type"] in {"zucchine","patate","pomodori","melanzane","peperoni","cipolle","carote","mele","banane","insalata"}:
+            bad=("surgelat","grigliat","burger","crocchett","ripien","minestrone","vellutata","gnocchi","chips","patatin")
+            if any(x in name or x in cat for x in bad):
+                return -9999
+
         # Preserve requested pasta shape when one was explicitly named.
         shapes={"penne","spaghetti","rigatoni","fusilli","farfalle","linguine","bucatini","paccheri","ziti","tortiglioni"}
         wanted=shapes.intersection(set(req["text"].split()))
@@ -194,8 +215,9 @@ class Resolver:
         req=parse_request(raw)
         cat,typ=self.interpret(req)
         out={"request":raw,"canonical_category":cat,"product_type":typ,"requested_brand":self.requested_brand(req),"markets":{}}
+        by_market=self.candidates_all(req,cat,typ,limit_per_market=40)
         for m in self.markets:
-            rows=self.candidates(m,req,cat,typ,limit=40)
+            rows=by_market.get(m,[])
             ranked=sorted(((self.score(r,req,mode),r) for r in rows),key=lambda x:x[0],reverse=True)
             ranked=[x for x in ranked if x[0]>-1000]
             if not ranked:
@@ -203,11 +225,13 @@ class Resolver:
             else:
                 sc,r=ranked[0]
                 pg,pml,pp=product_measure(r)
+                unit=(r["unit_price_unit"] or "").upper()
+                is_variable=bool(r["variable_weight"] or (unit=="KG" and pg is None))
                 out["markets"][m]={
                     "name":r["name"],"brand":r["brand"],"category":r["category"],
                     "price_eur":r["price_eur"],"score":round(sc,1),
                     "product_type":r["product_type"],"pack_grams":pg,"pack_ml":pml,"pack_pieces":pp,
-                    "variable_weight":bool(r["variable_weight"] or (r["unit_price_unit"] or "").upper()=="KG")
+                    "variable_weight":is_variable
                 }
         return out
 
