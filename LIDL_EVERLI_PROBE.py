@@ -116,3 +116,9 @@ db.commit()
 ok=db.execute("PRAGMA integrity_check").fetchone()[0]
 db.close()
 print("EVERLI_SUMMARY",json.dumps({"store_id":STORE_ID,"queries":len(queries),"products_positive":len(rows),"errors":len(errors),"sqlite_integrity":ok},ensure_ascii=False))
+
+
+for p in products.values():
+    n=str(p.get("name") or "").lower()
+    if n in ("zucchine","zucchine bio") or "acqua" in n:
+        print("RAW_USER_CASE", json.dumps(p, ensure_ascii=False)[:12000])
