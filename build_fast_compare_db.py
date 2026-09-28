@@ -186,7 +186,7 @@ def precise_type(name, brand, category):
     # Acqua: deve essere davvero una bevanda/acqua, non "pesce di acqua dolce" o "tonno in acqua".
     water_cat = (
         c == "acqua" or
-        c.startswith("acqua ") or
+        (c.startswith("acqua ") and "bevande" not in c and "vino" not in c and "alcol" not in c) or
         " > acqua > " in (" " + c + " ") or
         "bevande e preparati acqua" in c
     )
@@ -199,7 +199,7 @@ def precise_type(name, brand, category):
     cola_name = (
         "coca cola" in n or "coca-cola" in n or "pepsi" in n or
         n.startswith("cola ") or n == "cola" or
-        b in {"coca cola", "coca-cola", "pepsi", "freeway"}
+        b in {"coca cola", "coca-cola", "pepsi"}
     )
     if (cola_ctx or cola_name) and not any(x in c for x in ["caramelle", "dolci", "pasticceria"]) and not "caramell" in n:
         return ("COLA", "cola", 100)
