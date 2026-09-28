@@ -9,21 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Cold-ish self test
+      - name: Test real POST both modes
         run: |
           set -euo pipefail
-          URL='https://bbvxhepsyuejltglojtf.supabase.co/functions/v1/la-mia-spesa-resolver-v1?selftest=2'
-          curl -sS --fail --max-time 30 -w '\nHTTP=%{http_code} TOTAL=%{time_total}\n' "$URL"
-      - name: Warm self test
-        run: |
-          set -euo pipefail
-          URL='https://bbvxhepsyuejltglojtf.supabase.co/functions/v1/la-mia-spesa-resolver-v1?selftest=2'
-          curl -sS --fail --max-time 30 -w '\nHTTP=%{http_code} TOTAL=%{time_total}\n' "$URL"
-
-# mode-both-test
-
-# selftest2
-
-# rerun-after-oil-fallback
-
-# final-oil-patate-check
+          URL='https://bbvxhepsyuejltglojtf.supabase.co/functions/v1/la-mia-spesa-resolver-v1'
+          BODY='{"mode":"both","items":["carta igienica","prosciutto crudo 200 g","patate 1 kg","acqua Lete 6 bottiglie","penne Barilla 500 g","olio 1 litro"]}'
+          curl -sS --fail --max-time 30             -H 'Content-Type: application/json'             -H 'x-app-key: 2eAqeSBaqR3HY8I4Pywluw7a77193q7Uldd0ptSjaw0'             --data "$BODY"             -w '\nHTTP=%{http_code} TOTAL=%{time_total}\n'             "$URL"
