@@ -92,7 +92,6 @@ jobs:
         if: success()
         run: |
           set -euo pipefail
-          cp prezzi_lidl_api.db prezzi_lidl_everli.db
           test -s prezzi_lidl_everli.db
           test "$(sqlite3 prezzi_lidl_everli.db "PRAGMA integrity_check;")" = "ok"
           COUNT="$(sqlite3 prezzi_lidl_everli.db "SELECT COUNT(*) FROM products_android WHERE price_eur > 0;")"
