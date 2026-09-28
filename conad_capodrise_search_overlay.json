@@ -1,0 +1,32 @@
+{
+  "store_code": "010548",
+  "store_name": "Conad Superstore Capodrise",
+  "query": "carta igienica",
+  "store_selected_verified": true,
+  "products": [
+    {
+      "code": "344865",
+      "name": "Carta Igienica Maxi Rotoli 2 Veli 500 Strappi 4 Rotoli Conad",
+      "price_eur": 2.65,
+      "quantity_value": 1.0,
+      "quantity_unit": "PZ",
+      "category": "Cura persona > Cotone, fazzoletti e carta igienica"
+    },
+    {
+      "code": "400346",
+      "name": "Carta Igienica Profumata 4 Veli 6 Rotoli Conad",
+      "price_eur": 3.99,
+      "quantity_value": 1.0,
+      "quantity_unit": "PZ",
+      "category": "Cura persona > Cotone, fazzoletti e carta igienica"
+    },
+    {
+      "code": "400345",
+      "name": "Carta igienica Maxi Rotoli 2 veli 500 strappi 8 rotoli Conad",
+      "price_eur": 4.89,
+      "quantity_value": 1.0,
+      "quantity_unit": "PZ",
+      "category": "Cura persona > Cotone, fazzoletti e carta igienica"
+    }
+  ]
+}
