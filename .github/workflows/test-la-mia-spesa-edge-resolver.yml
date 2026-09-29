@@ -13,7 +13,7 @@ jobs:
         run: |
           set -euo pipefail
           URL='https://bbvxhepsyuejltglojtf.supabase.co/functions/v1/la-mia-spesa-resolver-v1'
-          BODY='{"mode":"both","items":["olio di oliva","olio extravergine 1 litro"]}'
+          BODY='{"mode":"both","items":["petto di pollo 1 kg","macinato di manzo 500 g","salsiccia 500 g","bistecca di manzo 500 g"]}'
           curl -sS --fail --max-time 30             -H 'Content-Type: application/json'             -H 'x-app-key: 2eAqeSBaqR3HY8I4Pywluw7a77193q7Uldd0ptSjaw0'             --data "$BODY"             -w '\nHTTP=%{http_code} TOTAL=%{time_total}\n'             "$URL"
 
 # fallback-v15
@@ -53,3 +53,5 @@ jobs:
 # verify-oil-v31
 
 # verify-olive-v32
+
+# verify-meat-v33
