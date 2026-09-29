@@ -178,3 +178,26 @@ for market in ["Piccolo","Decò","Famila","Sole365","Conad","Lidl"]:
             for r in rows:
                 if r[0] in seen: continue
                 seen.add(r[0]); print(r)
+
+
+print("\nMEAT REMAINING GAPS V3")
+checks={
+ "Conad":["petto","pollo","macin","bovino","salsicc"],
+ "Decò":["macin","bovino","scottona"],
+ "Lidl":["bistecc","bovino","scottona","fettin","costata","tagliata"]
+}
+for market,terms in checks.items():
+    print("\nMARKET",market)
+    seen=set()
+    for term in terms:
+        rows=db.execute("""
+          select name,brand,category,quantity_text,quantity_value,quantity_unit,
+                 price_eur,unit_price_eur,unit_price_unit,variable_weight,product_type
+          from products
+          where market=? and lower(name) like ?
+          order by price_eur
+          limit 60
+        """,(market,"%"+term+"%")).fetchall()
+        for r in rows:
+            if r[0] in seen: continue
+            seen.add(r[0]); print(r)
