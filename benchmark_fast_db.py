@@ -155,3 +155,26 @@ for market in markets:
         """,(market,pat)).fetchall()
         for r in rows:
             print(r)
+
+
+print("\nMEAT SYNONYM CANDIDATES V2")
+for market in ["Piccolo","Decò","Famila","Sole365","Conad","Lidl"]:
+    print("\nMARKET",market)
+    for label,terms in [
+      ("macinato",["macin","macinat","trit","carne trita","bovino adulto"]),
+      ("bistecca",["bistecc","fettin","scottona","entrecote","controfilet","bovino adulto"])
+    ]:
+        print("QUERY",label)
+        seen=set()
+        for term in terms:
+            rows=db.execute("""
+              select name,brand,category,quantity_text,quantity_value,quantity_unit,
+                     price_eur,unit_price_eur,unit_price_unit,variable_weight,product_type
+              from products
+              where market=? and lower(name) like ?
+              order by price_eur
+              limit 30
+            """,(market,"%"+term+"%")).fetchall()
+            for r in rows:
+                if r[0] in seen: continue
+                seen.add(r[0]); print(r)
