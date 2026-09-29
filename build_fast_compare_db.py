@@ -394,7 +394,7 @@ def rows_lidl(c):
     cols = columns(c, table)
     pid = first(cols,"product_id","id","sku"); name = first(cols,"product_name","name"); brand=first(cols,"brand"); cat=first(cols,"category_name","category"); price=first(cols,"price_eur","price")
     if not pid or not name or not price: return
-    qv=first(cols,"quantity_value"); qu=first(cols,"quantity_unit_raw","quantity_unit"); qt=first(cols,"quantity_text")
+    qv=first(cols,"quantity_value","value"); qu=first(cols,"quantity_unit_raw","quantity_unit","type"); qt=first(cols,"quantity_text","short_description")
     up=first(cols,"unit_price"); upu=first(cols,"unit_price_unit"); var=first(cols,"variable_weight")
     minq=first(cols,"minimum_quantity"); store=first(cols,"store_id","store"); src=first(cols,"product_url","source_url")
     sql=f"SELECT {','.join(select_expr(x) for x in [pid,name,brand,cat,price,qv,qu,qt,up,upu,var,minq,store,src])} FROM {q(table)} WHERE {q(price)} > 0"
