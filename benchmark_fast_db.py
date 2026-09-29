@@ -224,3 +224,17 @@ for market in ["Piccolo","Decò","Famila","Sole365","Conad","Lidl"]:
             for r in rows:
                 if r[0] in seen: continue
                 seen.add(r[0]); print(r)
+
+
+print("\nLIDL_MEAT_META_V5")
+for term in ["Petto di Pollo","Fettine Sottili di Petto di Pollo","Filetto di Petto di Pollo","Salsiccia","Braciole di Suino","Macinato di Bovino"]:
+    print("\nTERM",term)
+    rows=db.execute("""
+      select name,brand,category,quantity_text,quantity_value,quantity_unit,
+             price_eur,unit_price_eur,unit_price_unit,variable_weight,product_type
+      from products
+      where market='Lidl' and lower(name) like ?
+      order by price_eur
+      limit 40
+    """,("%"+term.lower()+"%",)).fetchall()
+    for r in rows: print(r)
