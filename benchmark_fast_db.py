@@ -238,3 +238,24 @@ for term in ["Petto di Pollo","Fettine Sottili di Petto di Pollo","Filetto di Pe
       limit 40
     """,("%"+term.lower()+"%",)).fetchall()
     for r in rows: print(r)
+
+
+print("\nLIDL_RAW_GROUND_V6")
+import urllib.request, sqlite3, os
+raw_url="https://raw.githubusercontent.com/calcagni1950srl-hash/conad-updater/probe-lidl-catalog/prezzi_lidl_everli.db"
+raw_path="/tmp/prezzi_lidl_everli.db"
+urllib.request.urlretrieve(raw_url, raw_path)
+rdb=sqlite3.connect(raw_path)
+print("TABLES", rdb.execute("select name from sqlite_master where type='table'").fetchall())
+for (t,) in rdb.execute("select name from sqlite_master where type='table'").fetchall():
+    try:
+        cols=rdb.execute(f"pragma table_info({t})").fetchall()
+        print("TABLE",t,"COLS",cols)
+        names=[c[1] for c in cols]
+        namecol=next((x for x in names if x.lower() in ("name","nome","product_name","title")),None)
+        if namecol:
+            rows=rdb.execute(f"select * from {t} where lower({namecol}) like '%macinato di bovino%' limit 20").fetchall()
+            if rows:
+                print("GROUND_ROWS",t,rows)
+    except Exception as e:
+        print("ERR",t,e)
