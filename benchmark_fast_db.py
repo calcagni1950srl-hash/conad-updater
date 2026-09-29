@@ -201,3 +201,26 @@ for market,terms in checks.items():
         for r in rows:
             if r[0] in seen: continue
             seen.add(r[0]); print(r)
+
+
+print("\nPHONE_MEAT_EXACT_V4")
+for market in ["Piccolo","Decò","Famila","Sole365","Conad","Lidl"]:
+    print("\nMARKET",market)
+    for label,terms in [
+      ("bistecca_maiale",["bistecc","suino","maiale","lonza","braciola"]),
+      ("carne_macinata",["macin","macinat","trit"])
+    ]:
+        print("QUERY",label)
+        seen=set()
+        for term in terms:
+            rows=db.execute("""
+              select name,brand,category,quantity_text,quantity_value,quantity_unit,
+                     price_eur,unit_price_eur,unit_price_unit,variable_weight,product_type
+              from products
+              where market=? and lower(name) like ?
+              order by price_eur
+              limit 40
+            """,(market,"%"+term+"%")).fetchall()
+            for r in rows:
+                if r[0] in seen: continue
+                seen.add(r[0]); print(r)
