@@ -13,7 +13,7 @@ jobs:
         run: |
           set -euo pipefail
           URL='https://bbvxhepsyuejltglojtf.supabase.co/functions/v1/la-mia-spesa-resolver-v1'
-          BODY='{"mode":"both","items":["Bistecca di maiale","Carne macinata 500 g"]}'
+          BODY='{"mode":"both","items":["Carne macinata 500 g","Bistecca di maiale"]}'
           curl -sS --fail --max-time 30             -H 'Content-Type: application/json'             -H 'x-app-key: 2eAqeSBaqR3HY8I4Pywluw7a77193q7Uldd0ptSjaw0'             --data "$BODY"             -w '\nHTTP=%{http_code} TOTAL=%{time_total}\n'             "$URL"
 
 # fallback-v15
@@ -71,3 +71,5 @@ jobs:
 # verify-meat-v46
 
 # verify-meat-v47
+
+# verify-v48-lidl-ground
