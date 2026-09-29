@@ -131,3 +131,27 @@ for r in db.execute("""
   limit 100
 """):
     print(r)
+
+
+print("\nMEAT USER CASES V1")
+markets=["Piccolo","Decò","Famila","Sole365","Conad","Lidl"]
+queries=[
+ ("petto pollo", "%petto%pollo%"),
+ ("macinato manzo", "%macin%manzo%"),
+ ("salsiccia", "%salsic%"),
+ ("bistecca manzo", "%bistecc%manzo%")
+]
+for market in markets:
+    print("\nMARKET",market)
+    for label,pat in queries:
+        print("QUERY",label)
+        rows=db.execute("""
+          select name,brand,category,quantity_text,quantity_value,quantity_unit,
+                 price_eur,unit_price_eur,unit_price_unit,variable_weight,product_type
+          from products
+          where market=? and lower(name) like ?
+          order by price_eur
+          limit 40
+        """,(market,pat)).fetchall()
+        for r in rows:
+            print(r)
