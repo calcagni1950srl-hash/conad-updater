@@ -276,3 +276,31 @@ for term in terms:
     for r in rows:
         if r[0] in seen: continue
         seen.add(r[0]); print(r)
+
+
+print("\nCONAD_FULL_GROUND_V8")
+import urllib.request, sqlite3, os
+sources=[
+ ("stable_full","https://raw.githubusercontent.com/calcagni1950srl-hash/conad-updater/probe-conad-full-catalog/prezzi_conad_capodrise_stable_full.db"),
+ ("main","https://raw.githubusercontent.com/calcagni1950srl-hash/conad-updater/main/prezzi_conad.db")
+]
+for label,url in sources:
+    path=f"/tmp/{label}_conad.db"
+    try:
+        urllib.request.urlretrieve(url,path)
+        db2=sqlite3.connect(path)
+        print("\nSOURCE",label,"TABLES",db2.execute("select name from sqlite_master where type='table'").fetchall())
+        for (t,) in db2.execute("select name from sqlite_master where type='table'").fetchall():
+            try:
+                cols=db2.execute(f"pragma table_info({t})").fetchall()
+                names=[c[1] for c in cols]
+                namecol=next((x for x in names if x.lower() in ("name","nome","product_name","title")),None)
+                if not namecol: continue
+                rows=db2.execute(f"select * from {t} where lower({namecol}) like '%macin%' limit 100").fetchall()
+                if rows:
+                    print("TABLE",t,"COLS",cols)
+                    for r in rows: print(r)
+            except Exception as e:
+                print("ERR",label,t,e)
+    except Exception as e:
+        print("SOURCE_ERR",label,e)
