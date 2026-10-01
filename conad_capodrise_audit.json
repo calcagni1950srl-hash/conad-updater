@@ -1,6 +1,6 @@
 {
   "status": "OK",
-  "checked_at": "2026-09-30T10:42:35Z",
+  "checked_at": "2026-10-01T11:09:31Z",
   "store_code": "010548",
   "store_name": "Conad Superstore Capodrise",
   "store_address": "Via Retella ex Giard. del Sole, SNC, 81020 Capodrise (CE)",
@@ -42,46 +42,6 @@
   "visual_verified_offers": {
     "inserted": [
       {
-        "product_code": "VISUAL:SPUNTA2026_ACETO_BIANCO_PONTI_1L",
-        "product_name": "Aceto di vino bianco Ponti 1 L",
-        "price_eur": 1.19,
-        "quantity_value": 1.0,
-        "quantity_unit": "L",
-        "valid_from": "2026-08-01",
-        "valid_to": "2026-09-30",
-        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
-      },
-      {
-        "product_code": "VISUAL:SPUNTA4_PETTO_POLLO_KG",
-        "product_name": "Petto di pollo",
-        "price_eur": 9.9,
-        "quantity_value": 1.0,
-        "quantity_unit": "KG",
-        "valid_from": "2026-08-01",
-        "valid_to": "2026-09-30",
-        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
-      },
-      {
-        "product_code": "VISUAL:SPUNTA4_FILETTO_PESCE_SPADA_KG",
-        "product_name": "Filetto di pesce spada decongelato",
-        "price_eur": 16.9,
-        "quantity_value": 1.0,
-        "quantity_unit": "KG",
-        "valid_from": "2026-08-01",
-        "valid_to": "2026-09-30",
-        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
-      },
-      {
-        "product_code": "VISUAL:SPUNTA4_OLIO_ARACHIDE_1L",
-        "product_name": "Olio di semi di arachide Desantis 1 L",
-        "price_eur": 2.99,
-        "quantity_value": 1.0,
-        "quantity_unit": "L",
-        "valid_from": "2026-08-01",
-        "valid_to": "2026-09-30",
-        "source_scope": "OFFICIAL_FLYER_VISUAL_VERIFIED_V81"
-      },
-      {
         "product_code": "VISUAL:GOURMET3_SALSICCIA_CURVA_PICCANTE_300G",
         "product_name": "Salsiccia curva piccante Sapori&Dintorni Conad 300 g",
         "price_eur": 4.79,
@@ -103,6 +63,11 @@
       }
     ],
     "expired": [
+      {
+        "product_code": "VISUAL:SPUNTA2026_ACETO_BIANCO_PONTI_1L",
+        "valid_from": "2026-08-01",
+        "valid_to": "2026-09-30"
+      },
       {
         "product_code": "VISUAL:INTEGRATIVA19_MALDON_SALE_MARINO_125G",
         "valid_from": "2026-09-16",
@@ -137,6 +102,21 @@
         "product_code": "VISUAL:INTEGRATIVA19_FIORDILATTE_VALLELATA_4X180G",
         "valid_from": "2026-09-16",
         "valid_to": "2026-09-22"
+      },
+      {
+        "product_code": "VISUAL:SPUNTA4_PETTO_POLLO_KG",
+        "valid_from": "2026-08-01",
+        "valid_to": "2026-09-30"
+      },
+      {
+        "product_code": "VISUAL:SPUNTA4_FILETTO_PESCE_SPADA_KG",
+        "valid_from": "2026-08-01",
+        "valid_to": "2026-09-30"
+      },
+      {
+        "product_code": "VISUAL:SPUNTA4_OLIO_ARACHIDE_1L",
+        "valid_from": "2026-08-01",
+        "valid_to": "2026-09-30"
       }
     ]
   },
@@ -193,8 +173,8 @@
     "scope": "FIXED_MARKET_AVERAGE_V81"
   },
   "full_db": {
-    "rows": 911,
-    "positive": 911,
+    "rows": 907,
+    "positive": 907,
     "bassi_fissi": 789,
     "local_offers": 111,
     "reference_fallbacks": 5,
@@ -208,7 +188,7 @@
     "reference_fallbacks": 5,
     "local_offers": 0,
     "visual_offers": 0,
-    "temporary_offers_excluded": 117,
+    "temporary_offers_excluded": 113,
     "stable_only": true,
     "stores": [
       "010548"
