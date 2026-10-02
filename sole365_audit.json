@@ -5,8 +5,8 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 9764,
-  "android_food_products_positive_price": 6813,
+  "unique_products_positive_price": 9765,
+  "android_food_products_positive_price": 6814,
   "android_food_categories": 11,
   "android_low_price_rows": 485,
   "android_low_price_rows_with_kg_reference": 485,
@@ -81,7 +81,7 @@
       "name": "Prodotti alimentari",
       "totalResults": 1676,
       "received": 1676,
-      "positive_price_products": 1675
+      "positive_price_products": 1676
     },
     "10013": {
       "name": "Salumi e formaggi",
@@ -108,5 +108,5 @@
       "positive_price_products": 951
     }
   },
-  "merged_at": "2026-10-01T11:55:35.170693+00:00"
+  "merged_at": "2026-10-02T11:28:22.106334+00:00"
 }
