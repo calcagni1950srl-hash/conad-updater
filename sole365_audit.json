@@ -5,8 +5,8 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 9817,
-  "android_food_products_positive_price": 6870,
+  "unique_products_positive_price": 9831,
+  "android_food_products_positive_price": 6884,
   "android_food_categories": 11,
   "android_low_price_rows": 487,
   "android_low_price_rows_with_kg_reference": 487,
@@ -19,9 +19,9 @@
     },
     "10002": {
       "name": "Acqua, bevande, vino e alcolici",
-      "totalResults": 1116,
-      "received": 1116,
-      "positive_price_products": 1116
+      "totalResults": 1115,
+      "received": 1115,
+      "positive_price_products": 1115
     },
     "10003": {
       "name": "Carne",
@@ -31,9 +31,9 @@
     },
     "10004": {
       "name": "Colazione, merenda e dolci",
-      "totalResults": 1432,
-      "received": 1432,
-      "positive_price_products": 1432
+      "totalResults": 1444,
+      "received": 1444,
+      "positive_price_products": 1444
     },
     "10005": {
       "name": "Cura della persona",
@@ -55,21 +55,21 @@
     },
     "10008": {
       "name": "Gelati e surgelati",
-      "totalResults": 323,
-      "received": 323,
-      "positive_price_products": 323
+      "totalResults": 328,
+      "received": 328,
+      "positive_price_products": 328
     },
     "10009": {
       "name": "Latte, burro, uova e yogurt",
-      "totalResults": 622,
-      "received": 622,
-      "positive_price_products": 622
+      "totalResults": 621,
+      "received": 621,
+      "positive_price_products": 621
     },
     "10010": {
       "name": "Pane e pasticceria",
-      "totalResults": 431,
-      "received": 431,
-      "positive_price_products": 431
+      "totalResults": 432,
+      "received": 432,
+      "positive_price_products": 432
     },
     "10011": {
       "name": "Pesce",
@@ -79,9 +79,9 @@
     },
     "10012": {
       "name": "Prodotti alimentari",
-      "totalResults": 1675,
-      "received": 1675,
-      "positive_price_products": 1675
+      "totalResults": 1673,
+      "received": 1673,
+      "positive_price_products": 1673
     },
     "10013": {
       "name": "Salumi e formaggi",
@@ -108,5 +108,5 @@
       "positive_price_products": 951
     }
   },
-  "merged_at": "2026-10-06T12:20:29.957033+00:00"
+  "merged_at": "2026-10-07T12:08:32.999821+00:00"
 }
