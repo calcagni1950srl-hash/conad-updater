@@ -5,11 +5,11 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 9852,
-  "android_food_products_positive_price": 6907,
+  "unique_products_positive_price": 9847,
+  "android_food_products_positive_price": 6902,
   "android_food_categories": 11,
-  "android_low_price_rows": 491,
-  "android_low_price_rows_with_kg_reference": 491,
+  "android_low_price_rows": 492,
+  "android_low_price_rows_with_kg_reference": 492,
   "categories": {
     "10001": {
       "name": "Amici animali",
@@ -31,9 +31,9 @@
     },
     "10004": {
       "name": "Colazione, merenda e dolci",
-      "totalResults": 1464,
-      "received": 1464,
-      "positive_price_products": 1464
+      "totalResults": 1463,
+      "received": 1463,
+      "positive_price_products": 1463
     },
     "10005": {
       "name": "Cura della persona",
@@ -43,9 +43,9 @@
     },
     "10006": {
       "name": "Frutta e verdura",
-      "totalResults": 420,
-      "received": 420,
-      "positive_price_products": 412
+      "totalResults": 417,
+      "received": 417,
+      "positive_price_products": 410
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
@@ -55,9 +55,9 @@
     },
     "10008": {
       "name": "Gelati e surgelati",
-      "totalResults": 338,
-      "received": 338,
-      "positive_price_products": 338
+      "totalResults": 335,
+      "received": 335,
+      "positive_price_products": 335
     },
     "10009": {
       "name": "Latte, burro, uova e yogurt",
@@ -85,9 +85,9 @@
     },
     "10013": {
       "name": "Salumi e formaggi",
-      "totalResults": 416,
-      "received": 416,
-      "positive_price_products": 416
+      "totalResults": 417,
+      "received": 417,
+      "positive_price_products": 417
     },
     "10014": {
       "name": "Tempo libero",
@@ -108,5 +108,5 @@
       "positive_price_products": 951
     }
   },
-  "merged_at": "2026-10-11T11:42:45.867990+00:00"
+  "merged_at": "2026-10-12T13:39:19.236533+00:00"
 }
