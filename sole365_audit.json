@@ -5,47 +5,47 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 9902,
-  "android_food_products_positive_price": 6964,
+  "unique_products_positive_price": 10287,
+  "android_food_products_positive_price": 7285,
   "android_food_categories": 11,
-  "android_low_price_rows": 495,
-  "android_low_price_rows_with_kg_reference": 495,
+  "android_low_price_rows": 498,
+  "android_low_price_rows_with_kg_reference": 498,
   "categories": {
     "10001": {
       "name": "Amici animali",
-      "totalResults": 226,
-      "received": 226,
-      "positive_price_products": 226
+      "totalResults": 228,
+      "received": 228,
+      "positive_price_products": 228
     },
     "10002": {
       "name": "Acqua, bevande, vino e alcolici",
-      "totalResults": 1109,
-      "received": 1109,
-      "positive_price_products": 1109
+      "totalResults": 1180,
+      "received": 1180,
+      "positive_price_products": 1180
     },
     "10003": {
       "name": "Carne",
-      "totalResults": 196,
-      "received": 196,
-      "positive_price_products": 195
+      "totalResults": 198,
+      "received": 198,
+      "positive_price_products": 197
     },
     "10004": {
       "name": "Colazione, merenda e dolci",
-      "totalResults": 1513,
-      "received": 1513,
-      "positive_price_products": 1513
+      "totalResults": 1596,
+      "received": 1596,
+      "positive_price_products": 1596
     },
     "10005": {
       "name": "Cura della persona",
-      "totalResults": 1412,
-      "received": 1412,
-      "positive_price_products": 1411
+      "totalResults": 1450,
+      "received": 1450,
+      "positive_price_products": 1449
     },
     "10006": {
       "name": "Frutta e verdura",
-      "totalResults": 423,
-      "received": 423,
-      "positive_price_products": 416
+      "totalResults": 446,
+      "received": 446,
+      "positive_price_products": 439
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
@@ -55,21 +55,21 @@
     },
     "10008": {
       "name": "Gelati e surgelati",
-      "totalResults": 341,
-      "received": 341,
-      "positive_price_products": 341
+      "totalResults": 350,
+      "received": 350,
+      "positive_price_products": 350
     },
     "10009": {
       "name": "Latte, burro, uova e yogurt",
-      "totalResults": 617,
-      "received": 617,
-      "positive_price_products": 617
+      "totalResults": 655,
+      "received": 655,
+      "positive_price_products": 655
     },
     "10010": {
       "name": "Pane e pasticceria",
-      "totalResults": 432,
-      "received": 432,
-      "positive_price_products": 432
+      "totalResults": 454,
+      "received": 454,
+      "positive_price_products": 454
     },
     "10011": {
       "name": "Pesce",
@@ -79,21 +79,21 @@
     },
     "10012": {
       "name": "Prodotti alimentari",
-      "totalResults": 1666,
-      "received": 1666,
-      "positive_price_products": 1665
+      "totalResults": 1727,
+      "received": 1727,
+      "positive_price_products": 1726
     },
     "10013": {
       "name": "Salumi e formaggi",
-      "totalResults": 418,
-      "received": 418,
-      "positive_price_products": 418
+      "totalResults": 430,
+      "received": 430,
+      "positive_price_products": 430
     },
     "10014": {
       "name": "Tempo libero",
-      "totalResults": 194,
-      "received": 194,
-      "positive_price_products": 194
+      "totalResults": 193,
+      "received": 193,
+      "positive_price_products": 193
     },
     "10015": {
       "name": "Tutto per il bambino",
@@ -103,10 +103,10 @@
     },
     "10016": {
       "name": "Tutto per la casa",
-      "totalResults": 950,
-      "received": 950,
-      "positive_price_products": 948
+      "totalResults": 975,
+      "received": 975,
+      "positive_price_products": 973
     }
   },
-  "merged_at": "2026-10-16T10:14:04.843816+00:00"
+  "merged_at": "2026-10-17T09:48:22.905791+00:00"
 }
