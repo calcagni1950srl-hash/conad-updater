@@ -5,8 +5,8 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 10316,
-  "android_food_products_positive_price": 7306,
+  "unique_products_positive_price": 10317,
+  "android_food_products_positive_price": 7307,
   "android_food_categories": 11,
   "android_low_price_rows": 499,
   "android_low_price_rows_with_kg_reference": 499,
@@ -67,9 +67,9 @@
     },
     "10010": {
       "name": "Pane e pasticceria",
-      "totalResults": 469,
-      "received": 469,
-      "positive_price_products": 469
+      "totalResults": 470,
+      "received": 470,
+      "positive_price_products": 470
     },
     "10011": {
       "name": "Pesce",
@@ -108,5 +108,5 @@
       "positive_price_products": 978
     }
   },
-  "merged_at": "2026-10-20T10:32:46.392261+00:00"
+  "merged_at": "2026-10-21T10:43:17.110541+00:00"
 }
