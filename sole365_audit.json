@@ -5,8 +5,8 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 10280,
-  "android_food_products_positive_price": 7281,
+  "unique_products_positive_price": 10274,
+  "android_food_products_positive_price": 7273,
   "android_food_categories": 11,
   "android_low_price_rows": 499,
   "android_low_price_rows_with_kg_reference": 499,
@@ -37,9 +37,9 @@
     },
     "10005": {
       "name": "Cura della persona",
-      "totalResults": 1447,
-      "received": 1447,
-      "positive_price_products": 1446
+      "totalResults": 1448,
+      "received": 1448,
+      "positive_price_products": 1447
     },
     "10006": {
       "name": "Frutta e verdura",
@@ -49,9 +49,9 @@
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
-      "totalResults": 195,
-      "received": 195,
-      "positive_price_products": 195
+      "totalResults": 194,
+      "received": 194,
+      "positive_price_products": 194
     },
     "10008": {
       "name": "Gelati e surgelati",
@@ -79,9 +79,9 @@
     },
     "10012": {
       "name": "Prodotti alimentari",
-      "totalResults": 1738,
-      "received": 1738,
-      "positive_price_products": 1737
+      "totalResults": 1731,
+      "received": 1731,
+      "positive_price_products": 1730
     },
     "10013": {
       "name": "Salumi e formaggi",
@@ -103,10 +103,10 @@
     },
     "10016": {
       "name": "Tutto per la casa",
-      "totalResults": 983,
-      "received": 983,
-      "positive_price_products": 981
+      "totalResults": 984,
+      "received": 984,
+      "positive_price_products": 982
     }
   },
-  "merged_at": "2026-10-24T09:54:31.951146+00:00"
+  "merged_at": "2026-10-25T10:16:27.316100+00:00"
 }
