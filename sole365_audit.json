@@ -5,17 +5,17 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 10274,
-  "android_food_products_positive_price": 7273,
+  "unique_products_positive_price": 10258,
+  "android_food_products_positive_price": 7256,
   "android_food_categories": 11,
-  "android_low_price_rows": 499,
-  "android_low_price_rows_with_kg_reference": 499,
+  "android_low_price_rows": 494,
+  "android_low_price_rows_with_kg_reference": 494,
   "categories": {
     "10001": {
       "name": "Amici animali",
-      "totalResults": 227,
-      "received": 227,
-      "positive_price_products": 227
+      "totalResults": 228,
+      "received": 228,
+      "positive_price_products": 228
     },
     "10002": {
       "name": "Acqua, bevande, vino e alcolici",
@@ -43,9 +43,9 @@
     },
     "10006": {
       "name": "Frutta e verdura",
-      "totalResults": 442,
-      "received": 442,
-      "positive_price_products": 435
+      "totalResults": 438,
+      "received": 438,
+      "positive_price_products": 431
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
@@ -55,9 +55,9 @@
     },
     "10008": {
       "name": "Gelati e surgelati",
-      "totalResults": 355,
-      "received": 355,
-      "positive_price_products": 355
+      "totalResults": 354,
+      "received": 354,
+      "positive_price_products": 354
     },
     "10009": {
       "name": "Latte, burro, uova e yogurt",
@@ -79,15 +79,15 @@
     },
     "10012": {
       "name": "Prodotti alimentari",
-      "totalResults": 1731,
-      "received": 1731,
-      "positive_price_products": 1730
+      "totalResults": 1725,
+      "received": 1725,
+      "positive_price_products": 1724
     },
     "10013": {
       "name": "Salumi e formaggi",
-      "totalResults": 430,
-      "received": 430,
-      "positive_price_products": 430
+      "totalResults": 424,
+      "received": 424,
+      "positive_price_products": 424
     },
     "10014": {
       "name": "Tempo libero",
@@ -108,5 +108,5 @@
       "positive_price_products": 982
     }
   },
-  "merged_at": "2026-10-25T10:16:27.316100+00:00"
+  "merged_at": "2026-10-26T11:39:49.079248+00:00"
 }
