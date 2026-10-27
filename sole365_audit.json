@@ -5,11 +5,11 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 10258,
-  "android_food_products_positive_price": 7256,
+  "unique_products_positive_price": 10260,
+  "android_food_products_positive_price": 7257,
   "android_food_categories": 11,
-  "android_low_price_rows": 494,
-  "android_low_price_rows_with_kg_reference": 494,
+  "android_low_price_rows": 495,
+  "android_low_price_rows_with_kg_reference": 495,
   "categories": {
     "10001": {
       "name": "Amici animali",
@@ -31,9 +31,9 @@
     },
     "10004": {
       "name": "Colazione, merenda e dolci",
-      "totalResults": 1562,
-      "received": 1562,
-      "positive_price_products": 1562
+      "totalResults": 1561,
+      "received": 1561,
+      "positive_price_products": 1561
     },
     "10005": {
       "name": "Cura della persona",
@@ -43,9 +43,9 @@
     },
     "10006": {
       "name": "Frutta e verdura",
-      "totalResults": 438,
-      "received": 438,
-      "positive_price_products": 431
+      "totalResults": 440,
+      "received": 440,
+      "positive_price_products": 433
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
@@ -103,10 +103,10 @@
     },
     "10016": {
       "name": "Tutto per la casa",
-      "totalResults": 984,
-      "received": 984,
-      "positive_price_products": 982
+      "totalResults": 985,
+      "received": 985,
+      "positive_price_products": 983
     }
   },
-  "merged_at": "2026-10-26T11:39:49.079248+00:00"
+  "merged_at": "2026-10-27T11:07:50.917280+00:00"
 }
