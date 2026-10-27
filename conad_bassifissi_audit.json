@@ -2,9 +2,9 @@
   "status": "OK",
   "store_code": "010548",
   "source_scope": "CONAD_BASSI_E_FISSI_UFFICIALE",
-  "declared_total": 789,
-  "card_count": 789,
-  "unique_products": 789,
+  "declared_total": 790,
+  "card_count": 790,
+  "unique_products": 790,
   "duplicates": 0,
   "pages": 27,
   "page_counts": {
@@ -34,7 +34,7 @@
     "24": 30,
     "25": 30,
     "26": 30,
-    "27": 9
+    "27": 10
   },
   "min_price": 0.3,
   "max_price": 14.65
