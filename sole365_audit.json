@@ -5,7 +5,7 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 10288,
+  "unique_products_positive_price": 10289,
   "android_food_products_positive_price": 7290,
   "android_food_categories": 11,
   "android_low_price_rows": 502,
@@ -91,9 +91,9 @@
     },
     "10014": {
       "name": "Tempo libero",
-      "totalResults": 194,
-      "received": 194,
-      "positive_price_products": 194
+      "totalResults": 195,
+      "received": 195,
+      "positive_price_products": 195
     },
     "10015": {
       "name": "Tutto per il bambino",
@@ -108,5 +108,5 @@
       "positive_price_products": 973
     }
   },
-  "merged_at": "2026-11-03T13:07:31.909980+00:00"
+  "merged_at": "2026-11-04T13:23:33.319969+00:00"
 }
