@@ -5,11 +5,11 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 10333,
-  "android_food_products_positive_price": 7348,
+  "unique_products_positive_price": 10369,
+  "android_food_products_positive_price": 7380,
   "android_food_categories": 11,
-  "android_low_price_rows": 504,
-  "android_low_price_rows_with_kg_reference": 504,
+  "android_low_price_rows": 505,
+  "android_low_price_rows_with_kg_reference": 505,
   "categories": {
     "10001": {
       "name": "Amici animali",
@@ -19,75 +19,75 @@
     },
     "10002": {
       "name": "Acqua, bevande, vino e alcolici",
-      "totalResults": 1162,
-      "received": 1162,
-      "positive_price_products": 1162
+      "totalResults": 1165,
+      "received": 1165,
+      "positive_price_products": 1165
     },
     "10003": {
       "name": "Carne",
-      "totalResults": 198,
-      "received": 198,
-      "positive_price_products": 197
+      "totalResults": 199,
+      "received": 199,
+      "positive_price_products": 198
     },
     "10004": {
       "name": "Colazione, merenda e dolci",
-      "totalResults": 1589,
-      "received": 1589,
-      "positive_price_products": 1589
+      "totalResults": 1603,
+      "received": 1603,
+      "positive_price_products": 1603
     },
     "10005": {
       "name": "Cura della persona",
-      "totalResults": 1461,
-      "received": 1461,
-      "positive_price_products": 1457
+      "totalResults": 1457,
+      "received": 1457,
+      "positive_price_products": 1456
     },
     "10006": {
       "name": "Frutta e verdura",
-      "totalResults": 482,
-      "received": 482,
-      "positive_price_products": 476
+      "totalResults": 483,
+      "received": 483,
+      "positive_price_products": 477
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
-      "totalResults": 215,
-      "received": 215,
-      "positive_price_products": 215
+      "totalResults": 217,
+      "received": 217,
+      "positive_price_products": 217
     },
     "10008": {
       "name": "Gelati e surgelati",
-      "totalResults": 348,
-      "received": 348,
-      "positive_price_products": 348
+      "totalResults": 349,
+      "received": 349,
+      "positive_price_products": 349
     },
     "10009": {
       "name": "Latte, burro, uova e yogurt",
-      "totalResults": 652,
-      "received": 652,
-      "positive_price_products": 652
+      "totalResults": 655,
+      "received": 655,
+      "positive_price_products": 655
     },
     "10010": {
       "name": "Pane e pasticceria",
-      "totalResults": 489,
-      "received": 489,
-      "positive_price_products": 489
+      "totalResults": 495,
+      "received": 495,
+      "positive_price_products": 495
     },
     "10011": {
       "name": "Pesce",
       "totalResults": 72,
       "received": 72,
-      "positive_price_products": 70
+      "positive_price_products": 71
     },
     "10012": {
       "name": "Prodotti alimentari",
-      "totalResults": 1698,
-      "received": 1698,
-      "positive_price_products": 1698
+      "totalResults": 1699,
+      "received": 1699,
+      "positive_price_products": 1699
     },
     "10013": {
       "name": "Salumi e formaggi",
-      "totalResults": 452,
-      "received": 452,
-      "positive_price_products": 452
+      "totalResults": 451,
+      "received": 451,
+      "positive_price_products": 451
     },
     "10014": {
       "name": "Tempo libero",
@@ -97,16 +97,16 @@
     },
     "10015": {
       "name": "Tutto per il bambino",
-      "totalResults": 139,
-      "received": 139,
-      "positive_price_products": 139
+      "totalResults": 140,
+      "received": 140,
+      "positive_price_products": 140
     },
     "10016": {
       "name": "Tutto per la casa",
-      "totalResults": 970,
-      "received": 970,
-      "positive_price_products": 968
+      "totalResults": 974,
+      "received": 974,
+      "positive_price_products": 972
     }
   },
-  "merged_at": "2026-11-07T12:02:11.571989+00:00"
+  "merged_at": "2026-11-08T12:19:35.792808+00:00"
 }
