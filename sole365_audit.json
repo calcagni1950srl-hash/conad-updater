@@ -5,8 +5,8 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 10368,
-  "android_food_products_positive_price": 7383,
+  "unique_products_positive_price": 10371,
+  "android_food_products_positive_price": 7386,
   "android_food_categories": 11,
   "android_low_price_rows": 504,
   "android_low_price_rows_with_kg_reference": 504,
@@ -31,9 +31,9 @@
     },
     "10004": {
       "name": "Colazione, merenda e dolci",
-      "totalResults": 1603,
-      "received": 1603,
-      "positive_price_products": 1603
+      "totalResults": 1604,
+      "received": 1604,
+      "positive_price_products": 1604
     },
     "10005": {
       "name": "Cura della persona",
@@ -43,9 +43,9 @@
     },
     "10006": {
       "name": "Frutta e verdura",
-      "totalResults": 481,
-      "received": 481,
-      "positive_price_products": 475
+      "totalResults": 483,
+      "received": 483,
+      "positive_price_products": 477
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
@@ -108,5 +108,5 @@
       "positive_price_products": 973
     }
   },
-  "merged_at": "2026-11-09T14:29:24.338168+00:00"
+  "merged_at": "2026-11-10T13:53:38.728758+00:00"
 }
