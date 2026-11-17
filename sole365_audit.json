@@ -5,8 +5,8 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 10338,
-  "android_food_products_positive_price": 7370,
+  "unique_products_positive_price": 10373,
+  "android_food_products_positive_price": 7403,
   "android_food_categories": 11,
   "android_low_price_rows": 508,
   "android_low_price_rows_with_kg_reference": 508,
@@ -31,21 +31,21 @@
     },
     "10004": {
       "name": "Colazione, merenda e dolci",
-      "totalResults": 1557,
-      "received": 1557,
-      "positive_price_products": 1557
+      "totalResults": 1584,
+      "received": 1584,
+      "positive_price_products": 1584
     },
     "10005": {
       "name": "Cura della persona",
-      "totalResults": 1444,
-      "received": 1444,
-      "positive_price_products": 1443
+      "totalResults": 1446,
+      "received": 1446,
+      "positive_price_products": 1445
     },
     "10006": {
       "name": "Frutta e verdura",
-      "totalResults": 491,
-      "received": 491,
-      "positive_price_products": 485
+      "totalResults": 492,
+      "received": 492,
+      "positive_price_products": 486
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
@@ -67,9 +67,9 @@
     },
     "10010": {
       "name": "Pane e pasticceria",
-      "totalResults": 494,
-      "received": 494,
-      "positive_price_products": 494
+      "totalResults": 498,
+      "received": 498,
+      "positive_price_products": 498
     },
     "10011": {
       "name": "Pesce",
@@ -79,15 +79,15 @@
     },
     "10012": {
       "name": "Prodotti alimentari",
-      "totalResults": 1683,
-      "received": 1683,
-      "positive_price_products": 1683
+      "totalResults": 1682,
+      "received": 1682,
+      "positive_price_products": 1682
     },
     "10013": {
       "name": "Salumi e formaggi",
-      "totalResults": 450,
-      "received": 450,
-      "positive_price_products": 450
+      "totalResults": 452,
+      "received": 452,
+      "positive_price_products": 452
     },
     "10014": {
       "name": "Tempo libero",
@@ -108,5 +108,5 @@
       "positive_price_products": 965
     }
   },
-  "merged_at": "2026-11-16T14:07:31.613307+00:00"
+  "merged_at": "2026-11-17T15:01:55.774504+00:00"
 }
