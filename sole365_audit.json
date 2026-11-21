@@ -6,7 +6,7 @@
   "categories_expected": 16,
   "categories_downloaded": 16,
   "unique_products_positive_price": 10383,
-  "android_food_products_positive_price": 7410,
+  "android_food_products_positive_price": 7408,
   "android_food_categories": 11,
   "android_low_price_rows": 509,
   "android_low_price_rows_with_kg_reference": 509,
@@ -31,9 +31,9 @@
     },
     "10004": {
       "name": "Colazione, merenda e dolci",
-      "totalResults": 1581,
-      "received": 1581,
-      "positive_price_products": 1581
+      "totalResults": 1576,
+      "received": 1576,
+      "positive_price_products": 1576
     },
     "10005": {
       "name": "Cura della persona",
@@ -43,9 +43,9 @@
     },
     "10006": {
       "name": "Frutta e verdura",
-      "totalResults": 492,
-      "received": 492,
-      "positive_price_products": 486
+      "totalResults": 491,
+      "received": 491,
+      "positive_price_products": 485
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
@@ -55,9 +55,9 @@
     },
     "10008": {
       "name": "Gelati e surgelati",
-      "totalResults": 352,
-      "received": 352,
-      "positive_price_products": 352
+      "totalResults": 351,
+      "received": 351,
+      "positive_price_products": 351
     },
     "10009": {
       "name": "Latte, burro, uova e yogurt",
@@ -67,9 +67,9 @@
     },
     "10010": {
       "name": "Pane e pasticceria",
-      "totalResults": 498,
-      "received": 498,
-      "positive_price_products": 498
+      "totalResults": 504,
+      "received": 504,
+      "positive_price_products": 504
     },
     "10011": {
       "name": "Pesce",
@@ -79,15 +79,15 @@
     },
     "10012": {
       "name": "Prodotti alimentari",
-      "totalResults": 1683,
-      "received": 1683,
-      "positive_price_products": 1683
+      "totalResults": 1681,
+      "received": 1681,
+      "positive_price_products": 1681
     },
     "10013": {
       "name": "Salumi e formaggi",
-      "totalResults": 455,
-      "received": 455,
-      "positive_price_products": 455
+      "totalResults": 456,
+      "received": 456,
+      "positive_price_products": 456
     },
     "10014": {
       "name": "Tempo libero",
@@ -103,10 +103,10 @@
     },
     "10016": {
       "name": "Tutto per la casa",
-      "totalResults": 967,
-      "received": 967,
-      "positive_price_products": 965
+      "totalResults": 969,
+      "received": 969,
+      "positive_price_products": 967
     }
   },
-  "merged_at": "2026-11-20T14:29:24.356677+00:00"
+  "merged_at": "2026-11-21T13:49:54.550975+00:00"
 }
