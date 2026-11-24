@@ -5,8 +5,8 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 10394,
-  "android_food_products_positive_price": 7419,
+  "unique_products_positive_price": 10395,
+  "android_food_products_positive_price": 7420,
   "android_food_categories": 11,
   "android_low_price_rows": 508,
   "android_low_price_rows_with_kg_reference": 508,
@@ -43,9 +43,9 @@
     },
     "10006": {
       "name": "Frutta e verdura",
-      "totalResults": 494,
-      "received": 494,
-      "positive_price_products": 488
+      "totalResults": 495,
+      "received": 495,
+      "positive_price_products": 489
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
@@ -108,5 +108,5 @@
       "positive_price_products": 966
     }
   },
-  "merged_at": "2026-11-23T16:36:28.637022+00:00"
+  "merged_at": "2026-11-24T16:35:22.623106+00:00"
 }
