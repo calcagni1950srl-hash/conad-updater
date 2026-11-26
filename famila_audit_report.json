@@ -1,6 +1,6 @@
 {
   "status": "VALID",
-  "checked_at": "2026-11-25T16:12:58.641202+00:00",
+  "checked_at": "2026-11-26T15:54:50.232179+00:00",
   "store": {
     "site": "familasud",
     "alias": "teverola",
@@ -9,144 +9,144 @@
     "selexCode": "163711"
   },
   "database": "prezzi_famila.db",
-  "unique_products": 10364,
-  "sum_category_total_results": 10378,
-  "fetched_rows_before_dedup": 10378,
+  "unique_products": 10336,
+  "sum_category_total_results": 10340,
+  "fetched_rows_before_dedup": 10340,
   "bad_price": 0,
   "empty_name": 0,
   "duplicate_product_key": 0,
-  "quantity_text_missing": 10364,
-  "unit_price_present": 10349,
+  "quantity_text_missing": 10336,
+  "unit_price_present": 10318,
   "saleable_false": 1,
-  "distinct_categories": 385,
+  "distinct_categories": 387,
   "failed_pages": 0,
   "category_stats": [
     {
       "code": "10006",
       "label": "Frutta e verdura",
-      "totalPages": 22,
-      "totalResults": 435,
-      "rowsFetched": 435,
+      "totalPages": 23,
+      "totalResults": 450,
+      "rowsFetched": 450,
       "failedPages": []
     },
     {
       "code": "10013",
       "label": "Salumi e formaggi",
-      "totalPages": 25,
-      "totalResults": 481,
-      "rowsFetched": 481,
+      "totalPages": 23,
+      "totalResults": 457,
+      "rowsFetched": 457,
       "failedPages": []
     },
     {
       "code": "10007",
       "label": "Gastronomia e pasta fresca",
-      "totalPages": 10,
-      "totalResults": 183,
-      "rowsFetched": 183,
+      "totalPages": 9,
+      "totalResults": 172,
+      "rowsFetched": 172,
       "failedPages": []
     },
     {
       "code": "10009",
       "label": "Latte, burro, uova e yogurt",
-      "totalPages": 36,
-      "totalResults": 703,
-      "rowsFetched": 703,
+      "totalPages": 33,
+      "totalResults": 650,
+      "rowsFetched": 650,
       "failedPages": []
     },
     {
       "code": "10003",
       "label": "Carne",
-      "totalPages": 9,
-      "totalResults": 163,
-      "rowsFetched": 163,
+      "totalPages": 8,
+      "totalResults": 160,
+      "rowsFetched": 160,
       "failedPages": []
     },
     {
       "code": "10011",
       "label": "Pesce",
       "totalPages": 4,
-      "totalResults": 74,
-      "rowsFetched": 74,
+      "totalResults": 69,
+      "rowsFetched": 69,
       "failedPages": []
     },
     {
       "code": "10004",
       "label": "Colazione, merenda e dolci",
       "totalPages": 84,
-      "totalResults": 1678,
-      "rowsFetched": 1678,
+      "totalResults": 1676,
+      "rowsFetched": 1676,
       "failedPages": []
     },
     {
       "code": "10012",
       "label": "Prodotti alimentari",
-      "totalPages": 99,
-      "totalResults": 1976,
-      "rowsFetched": 1976,
+      "totalPages": 100,
+      "totalResults": 1985,
+      "rowsFetched": 1985,
       "failedPages": []
     },
     {
       "code": "10010",
       "label": "Pane e pasticceria",
-      "totalPages": 23,
-      "totalResults": 458,
-      "rowsFetched": 458,
+      "totalPages": 24,
+      "totalResults": 463,
+      "rowsFetched": 463,
       "failedPages": []
     },
     {
       "code": "10008",
       "label": "Gelati e surgelati",
       "totalPages": 19,
-      "totalResults": 377,
-      "rowsFetched": 377,
+      "totalResults": 374,
+      "rowsFetched": 374,
       "failedPages": []
     },
     {
       "code": "10002",
       "label": "Acqua, bevande, vino e alcolici",
-      "totalPages": 51,
-      "totalResults": 1018,
-      "rowsFetched": 1018,
+      "totalPages": 52,
+      "totalResults": 1025,
+      "rowsFetched": 1025,
       "failedPages": []
     },
     {
       "code": "10015",
       "label": "Tutto per il bambino",
       "totalPages": 9,
-      "totalResults": 176,
-      "rowsFetched": 176,
+      "totalResults": 177,
+      "rowsFetched": 177,
       "failedPages": []
     },
     {
       "code": "10001",
       "label": "Amici animali",
       "totalPages": 17,
-      "totalResults": 331,
-      "rowsFetched": 331,
+      "totalResults": 332,
+      "rowsFetched": 332,
       "failedPages": []
     },
     {
       "code": "10005",
       "label": "Cura della persona",
       "totalPages": 65,
-      "totalResults": 1284,
-      "rowsFetched": 1284,
+      "totalResults": 1297,
+      "rowsFetched": 1297,
       "failedPages": []
     },
     {
       "code": "10016",
       "label": "Tutto per la casa",
-      "totalPages": 47,
-      "totalResults": 939,
-      "rowsFetched": 939,
+      "totalPages": 48,
+      "totalResults": 950,
+      "rowsFetched": 950,
       "failedPages": []
     },
     {
       "code": "10014",
       "label": "Tempo libero",
       "totalPages": 6,
-      "totalResults": 102,
-      "rowsFetched": 102,
+      "totalResults": 103,
+      "rowsFetched": 103,
       "failedPages": []
     }
   ]
