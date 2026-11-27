@@ -5,8 +5,8 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 10407,
-  "android_food_products_positive_price": 7438,
+  "unique_products_positive_price": 10405,
+  "android_food_products_positive_price": 7437,
   "android_food_categories": 11,
   "android_low_price_rows": 507,
   "android_low_price_rows_with_kg_reference": 507,
@@ -19,9 +19,9 @@
     },
     "10002": {
       "name": "Acqua, bevande, vino e alcolici",
-      "totalResults": 1195,
-      "received": 1195,
-      "positive_price_products": 1195
+      "totalResults": 1192,
+      "received": 1192,
+      "positive_price_products": 1192
     },
     "10003": {
       "name": "Carne",
@@ -31,15 +31,15 @@
     },
     "10004": {
       "name": "Colazione, merenda e dolci",
-      "totalResults": 1582,
-      "received": 1582,
-      "positive_price_products": 1581
+      "totalResults": 1583,
+      "received": 1583,
+      "positive_price_products": 1582
     },
     "10005": {
       "name": "Cura della persona",
-      "totalResults": 1441,
-      "received": 1441,
-      "positive_price_products": 1440
+      "totalResults": 1440,
+      "received": 1440,
+      "positive_price_products": 1439
     },
     "10006": {
       "name": "Frutta e verdura",
@@ -49,9 +49,9 @@
     },
     "10007": {
       "name": "Gastronomia e pasta fresca",
-      "totalResults": 233,
-      "received": 233,
-      "positive_price_products": 233
+      "totalResults": 234,
+      "received": 234,
+      "positive_price_products": 234
     },
     "10008": {
       "name": "Gelati e surgelati",
@@ -97,16 +97,16 @@
     },
     "10015": {
       "name": "Tutto per il bambino",
-      "totalResults": 139,
-      "received": 139,
-      "positive_price_products": 139
+      "totalResults": 141,
+      "received": 141,
+      "positive_price_products": 141
     },
     "10016": {
       "name": "Tutto per la casa",
-      "totalResults": 968,
-      "received": 968,
-      "positive_price_products": 966
+      "totalResults": 966,
+      "received": 966,
+      "positive_price_products": 964
     }
   },
-  "merged_at": "2026-11-26T15:55:10.194088+00:00"
+  "merged_at": "2026-11-27T15:43:22.418994+00:00"
 }
