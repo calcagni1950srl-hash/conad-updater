@@ -5,11 +5,11 @@
   "store": "marcianise-aurno",
   "categories_expected": 16,
   "categories_downloaded": 16,
-  "unique_products_positive_price": 10405,
-  "android_food_products_positive_price": 7437,
+  "unique_products_positive_price": 10354,
+  "android_food_products_positive_price": 7385,
   "android_food_categories": 11,
-  "android_low_price_rows": 507,
-  "android_low_price_rows_with_kg_reference": 507,
+  "android_low_price_rows": 477,
+  "android_low_price_rows_with_kg_reference": 477,
   "categories": {
     "10001": {
       "name": "Amici animali",
@@ -19,9 +19,9 @@
     },
     "10002": {
       "name": "Acqua, bevande, vino e alcolici",
-      "totalResults": 1192,
-      "received": 1192,
-      "positive_price_products": 1192
+      "totalResults": 1193,
+      "received": 1193,
+      "positive_price_products": 1193
     },
     "10003": {
       "name": "Carne",
@@ -31,15 +31,15 @@
     },
     "10004": {
       "name": "Colazione, merenda e dolci",
-      "totalResults": 1583,
-      "received": 1583,
-      "positive_price_products": 1582
+      "totalResults": 1579,
+      "received": 1579,
+      "positive_price_products": 1578
     },
     "10005": {
       "name": "Cura della persona",
-      "totalResults": 1440,
-      "received": 1440,
-      "positive_price_products": 1439
+      "totalResults": 1441,
+      "received": 1441,
+      "positive_price_products": 1440
     },
     "10006": {
       "name": "Frutta e verdura",
@@ -67,21 +67,21 @@
     },
     "10010": {
       "name": "Pane e pasticceria",
-      "totalResults": 507,
-      "received": 507,
-      "positive_price_products": 507
+      "totalResults": 506,
+      "received": 506,
+      "positive_price_products": 506
     },
     "10011": {
       "name": "Pesce",
-      "totalResults": 74,
-      "received": 74,
-      "positive_price_products": 73
+      "totalResults": 39,
+      "received": 39,
+      "positive_price_products": 38
     },
     "10012": {
       "name": "Prodotti alimentari",
-      "totalResults": 1688,
-      "received": 1688,
-      "positive_price_products": 1688
+      "totalResults": 1675,
+      "received": 1675,
+      "positive_price_products": 1675
     },
     "10013": {
       "name": "Salumi e formaggi",
@@ -108,5 +108,5 @@
       "positive_price_products": 964
     }
   },
-  "merged_at": "2026-11-27T15:43:22.418994+00:00"
+  "merged_at": "2026-11-28T14:39:25.230277+00:00"
 }
